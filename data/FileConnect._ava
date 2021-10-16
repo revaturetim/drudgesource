@@ -1,0 +1,67 @@
+package drudge.data;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import drudge.page.Page;
+
+public interface FileConnect<T> extends Connect {
+
+
+	default public boolean connect() throws IOException {
+	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
+		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+		String[] ns = line.split(Connector.sep);
+			try {
+			T p = (T)new Page(ns[0]);
+			add(p);
+			}
+			catch (URISyntaxException U) {
+			D.error(U);
+			}
+			catch (NotHTMLURLException N) {
+			D.error(N);
+			}
+			catch (MalformedURLException M) {
+			D.error(M);
+			}
+			catch (IOException I) {
+			D.error(I);
+			}
+		}
+	return true;
+	}
+
+	default public boolean disconnect(int data) {
+		try {
+		BufferedWriter link_writer = new BufferedWriter(new FileWriter(source(), false));
+			for (T t : this) {
+			D.checkEntry(t, "Connector.disconnect(Data<Page>, int)");
+			Page tp = (Page)t;
+				//data == 1
+				if (data > 0) {
+				link_writer.append(tp.toString());
+				}
+				//data == 2
+				if (data > 1) {
+				link_writer.append(Connector.sep);
+				link_writer.append(tp.getTitle());
+				}
+				//data == 3 or more
+				if (data > 2) {
+				link_writer.append(Connector.sep);
+				link_writer.append(tp.getKeywords());
+				}
+			link_writer.append("\n");
+			}
+		link_writer.close();
+		}
+		catch (IOException I) {
+		Hashtable<String, Object> t = new Hashtable<String, Object>();
+		t.put("Exception", I);
+		D.error(t);
+		}
+	return true;
+	}
+
+}

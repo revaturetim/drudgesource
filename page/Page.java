@@ -72,9 +72,10 @@ private boolean connected = false;
 	}
 
 	public Data<Page> getLinks() {
-
+		//I just liked anonymous classes/methods so I decided to keep this
+		//It also refers to the this object url variable for its absolute path
 		if (content.wasFilled() && content.size() > 0) {
-			P.GetLinkAction action = new P.GetLinkAction() {
+			P.LinkAction<String> action = new P.LinkAction<String>() {
 				
 				public void act(String link) throws URISyntaxException, UselessURLException, MalformedURLException, IOException {
 				Page p = new Page(url, link);
@@ -83,14 +84,14 @@ private boolean connected = false;
 				dlist.put(p);
 				}
 			};
-		action.get(content);
+		P.GetLinkAction.get(content, action);
 		}
 	Debug.endCycleTime("Getting Links");
 	return dlist;
 	}
 	
 	public Data<URL> getEmails() {
-	elist = P.getEmails(content);
+	elist = P.getEmails(content, elist);
 	Debug.endCycleTime("Getting Emails");
 	return elist;
 	}
@@ -158,7 +159,6 @@ private boolean connected = false;
 	}
 	
 	public Data<String> getRow() {
-	//String[] row = new String[Page.data];
 	DataCollection<String> row = new DataCollection<String>();
 		for (int r = 0; r < Page.data; r++) {
 			if (r == 0) {
@@ -330,14 +330,6 @@ private boolean connected = false;
 		return filled;
 		}
 		
-		public Data<URL> getEmails() {
-		
-			if (filled && size > 0) {
-			P.getEmails(this);
-			}
-		return null;
-		}
-
 		public char charAt(int i) {
 		return allc[i];
 		}

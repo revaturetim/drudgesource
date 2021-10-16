@@ -104,9 +104,8 @@ final static private String Null = "null";
 	return link;
 	}	
 	
-	static Data<URL> getEmails(CharSequence src) {
+	static Data<URL> getEmails(CharSequence src, Data<URL> data) {
 	final String s = src.toString().toLowerCase();
-	DataList<URL> data = new DataList<URL>();
 		
 		for (int b = s.indexOf("\"mailto:"); b != -1; b = s.indexOf("\"mailto:", b + 1)) {
 		int e = s.indexOf("\"", b + 1);
@@ -150,11 +149,14 @@ final static private String Null = "null";
 	return data;
 	}
 
-	static interface GetLinkAction {
+	static interface LinkAction<T> {
 	//this throws a more general uselessurlexception so it can catch all uselessurlexceptions
-	public void act(String u) throws UselessURLException, URISyntaxException, MalformedURLException, IOException;
+	public void act(T u) throws UselessURLException, URISyntaxException, MalformedURLException, IOException;
+	}
+
+	static class GetLinkAction {
 		
-		default void actWith(String link) {
+		private static void actWith(String link, LinkAction<String> action) {
 
 			try {
 			/*Ths is to catch all subdirectories of a link*/
@@ -162,10 +164,10 @@ final static private String Null = "null";
 				for (int slash = link.indexOf("/");slash != -1; slash = link.indexOf("/", slash + 1)) {
 					if (slash > doubleslash + 1 && slash > doubleslash) {
 					String sublink = link.substring(0, slash + 1);
-					act(sublink.toString());
+					action.act(sublink.toString());
 					}
 				}
-			act(link);//this throws exceptions
+			action.act(link);
 			}
 			catch (MalformedURLException M) {
 			Hashtable<String, Object> d = new Hashtable<String, Object>();	
@@ -194,7 +196,7 @@ final static private String Null = "null";
 			}
 		}
 
-		default void get(CharSequence source) {
+		static void get(CharSequence source, LinkAction<String> action) {
 		final String html = source.toString().toLowerCase();
 
 			for (int b = html.indexOf("<"); b != -1; b = html.indexOf("<", b + 1)) {
@@ -215,7 +217,7 @@ final static private String Null = "null";
 				final int rbeg = tag.indexOf("\"", r);
 				final int rend = tag.indexOf("\"", rbeg + 1);
 				String link = tag.substring(rbeg + 1, rend);
-				actWith(link);
+				actWith(link, action);
 				}
 			}
 			for (int b = 0; b != -1; b = html.indexOf(">", b + 1)) {
@@ -230,25 +232,25 @@ final static private String Null = "null";
 				
 				for (String word : words) {
 					if (word.startsWith("http://")) {
-					actWith(word);//found absolute link
+					actWith(word, action);//found absolute link
 					}
 					else if (word.endsWith(".html")) {
-					actWith(word);
+					actWith(word, action);
 					}
 					else if (word.endsWith(".shtml")) {
-					actWith(word);
+					actWith(word, action);
 					}
 					else if (word.endsWith(".htm")) {
-					actWith(word);
+					actWith(word, action);
 					}
 					else if (word.startsWith("https://")) {
-					actWith(word);
+					actWith(word, action);
 					}
 					else if (word.startsWith("../")) {
-					actWith(word);//found relative link
+					actWith(word, action);//found relative link
 					}
 					else if (word.startsWith("/")) {
-					actWith(word);
+					actWith(word, action);
 					}
 					else {
 					//this is do nothing
@@ -258,9 +260,7 @@ final static private String Null = "null";
 		}		
 	}
 	
-	static interface GetLinkActionByRegex {
-	//this throws a more general uselessurlexception so it can catch all uselessurlexceptions
-	public void act(String u) throws UselessURLException, URISyntaxException, MalformedURLException, IOException;
+	static interface GetLinkActionByRegex extends LinkAction<String> {
 	
 		default void get(CharSequence source) {
 		Matcher m1 = Patterns.Links.LINK.match(source);

@@ -111,7 +111,7 @@ private boolean connected = false;
 	}
 	
 	public Data<String> getKeywords() {
-	klist = P.getKeywords(content);
+	klist = P.getKeywords(content, klist);
 	Debug.endCycleTime("Getting Keywords");
 	return klist;
 	}

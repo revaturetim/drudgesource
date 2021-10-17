@@ -260,9 +260,9 @@ final static private String Null = "null";
 		}		
 	}
 	
-	static interface GetLinkActionByRegex extends LinkAction<String> {
+	static class GetLinkActionByRegex {
 	
-		default void get(CharSequence source) {
+		void get(CharSequence source, LinkAction<String> action) {
 		Matcher m1 = Patterns.Links.LINK.match(source);
 		
 			while (m1.find()) {
@@ -281,7 +281,7 @@ final static private String Null = "null";
 							while (m4.find()) {//this treats all subdirectories found as a seperate link
 							String link = href.substring(b, m4.end());
 								try {
-								act(link);
+								action.act(link);
 								}
 								catch (MalformedURLException M) {
 								Hashtable<String, Object> d = new Hashtable<String, Object>();	
@@ -347,9 +347,8 @@ final static private String Null = "null";
 	return title;
 	}
 
-	public static Data<String> getKeywords(final CharSequence source) {
+	public static Data<String> getKeywords(final CharSequence source, Data<String> words) {
 	final String text = source.toString().toLowerCase();
-	DataList<String> words = new DataList<String>();
 	DataList<String> donotusewords = new DataList<String>();
 	donotusewords.add("the");
 	int e = 0;
@@ -377,22 +376,21 @@ final static private String Null = "null";
 	return words;
 	}
 
-	public static String getKeywordsByRegex(final CharSequence source) {
+	public static Data<String> getKeywordsByRegex(final CharSequence source, Data<String> words) {
 	String text = source.toString().toLowerCase();
 		for (Patterns.Keywords p : Patterns.Keywords.values()) {
 		text = p.replace(text, " ");
 		}
-	String[] words = text.split(" ");
-	HashSet<String> set = new HashSet<String>();
-		for (String word : words) {
-		set.add(word);//this is to get rid of duplicate words
+	String[] keywords = text.split(" ");
+		for (String word : keywords) {
+			try {
+			words.put(word);
+			}
+			catch (DuplicateURLException D) {
+
+			}
 		}
-	String keywords = "";
-		for (String word : set) {
-		keywords.concat(word);
-		keywords.concat(" ");
-		}	
-	return keywords;	
+	return words;
 	}
     	
     	static URLConnection getConnection(URL url, Proxy proxy) throws IOException {

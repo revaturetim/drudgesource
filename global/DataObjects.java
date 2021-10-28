@@ -8,6 +8,7 @@ public interface DataObjects {
 //final public static Data<Page> dada = (Data<Page>)new DataBase<Page>("jdbc:default:/home/time/java/db;");
 //final public static Data<Page> dada = (Data<Page>)new DataBase<Page>("jdbc:MySQL://localhost/home/time/java/db;");
 //final public static Data<Page> dada = (Data<Page>)new DataBase<Page>("jdbc:derby:/home/tim/java/db");
+//final public static Data<Page> dada = (Data<Page>)new DataBase<Page>("jdbc", "derby", "/home/tim/java/db", ";create=true");
 final public static Data<Page> dada = (Data<Page>)new DataCollection<Page>(FileNames.links);
 //final public static Data<Page> dada = (Data<Page>)new DataArray<Page>(new Page[10], FileNames.links);
 //final public static Data<Page> dada = (Data<Page>)new DataList<Page>();

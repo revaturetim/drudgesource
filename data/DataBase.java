@@ -8,7 +8,7 @@ import drudge.*;
 
 /*This uses MySQL as its query language*/
 public class DataBase<T> implements Data<T> {
-private String dburl = "jdbc:derby:/home/tim/java/db";
+private String dburl;
 private final String table = "drudge";
 /*data column headers will be url, title, keywords*/
 private final String link = "link";
@@ -22,9 +22,18 @@ insert into drudge values (link, title, keywords);
 	public DataBase() {
 
 	}
+
+	public DataBase(String d) {
+	dburl = d;
+	}
+
+	public DataBase(String p, String d, String u) {
+	dburl = p + ":" + d + ":" + u;	
+	}
 	
-	public DataBase(String b) {
-	dburl = b + ";create=true;";
+	public DataBase(String p, String d, String u, String e) {
+	this(p, d, u);
+	dburl = dburl + e;
 	}
 
 	public int size() {
@@ -76,22 +85,8 @@ insert into drudge values (link, title, keywords);
 	T page = null;	
 	final String query = "SELECT * FROM " + table;
 		try {
-			ResultSet result = connect(query);
+		ResultSet result = connect(query);
 			if (result.absolute(i + 1)) {
-			/*This method should return null and this should be commented out
-			 * String s = result.getString(link);
-				try {
-				page = (T)new Page(s);
-				}
-				catch (UselessURLException U) {
-				D.error(U);
-				}
-				catch (IOException I) {
-				D.error(I);
-				}
-				catch (URISyntaxException U) {
-				D.error(U);
-				}*/
 			result.deleteRow();
 			}
 		}

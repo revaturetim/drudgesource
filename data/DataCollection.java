@@ -13,7 +13,7 @@ import drudge.global.FileNames;
 public class DataCollection<T> extends AbstractCollection<T> implements Data<T> {
 private int size = 0;
 private String source = null;
-private Object[] objs = new Object[size];
+private Object[] objs = new Object[10];
 
 	public DataCollection() {
 
@@ -83,7 +83,7 @@ private Object[] objs = new Object[size];
 		if (contains(page) == false) {
 		size++;//increases size by 1
 			if (size >= objs.length) {
-			objs = Arrays.copyOf(objs, objs.length + 1000);	
+			objs = Arrays.copyOf(objs, objs.length * 2);
 			}
 			if (objs[size - 1] == null) {	
 			objs[size - 1] = page;

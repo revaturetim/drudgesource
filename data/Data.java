@@ -9,13 +9,13 @@ import java.net.*;
 import java.io.*;
 
 /*This interface has the methods that this program will use*/
-public interface Data<T> extends Iterable<T>, RandomAccess, Connect<T> {
+public interface Data<T> extends Iterable<T>, RandomAccess {
 
 	/*These are important methods because they interface with the rest of the program*/
 	public void put(T link) throws DuplicateURLException;
 	public T remove(int cycle);
 	public T get(int cycle);
-
+	public String source();
 
 	default public int size() {
 	int size = 0;
@@ -215,9 +215,9 @@ public interface Data<T> extends Iterable<T>, RandomAccess, Connect<T> {
 		};	
 	return it;
 	}
-	
+		
 	/*The default assumes that it is working with a page object*/	
-	default boolean connect() throws IOException {
+	default void begin() throws Exception {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 		String[] ns = line.split(CountFile.sep);
@@ -243,11 +243,10 @@ public interface Data<T> extends Iterable<T>, RandomAccess, Connect<T> {
 			D.error(I);
 			}
 		}
-	return true;
 	}
 
 	/*The default assumes you are working with a page object.  Subclasses should overrid*/
-	default boolean disconnect() throws IOException {
+	default void end() throws Exception {
 	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source(), false));
 		for (T t : this) {
 		D.checkEntry(t, "Connector.disconnect(Data<Page>, int)");//this checks to make sure there were no null elements in data.
@@ -260,7 +259,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess, Connect<T> {
 		link_writer.append("\n");
 		}
 	link_writer.close();
-	return true;
 	}
 
 	default public String rawString() {

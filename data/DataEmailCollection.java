@@ -9,7 +9,7 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 	super(s);
 	}
 
-	public boolean connect() throws IOException {
+	public Object connect() throws IOException {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 		String[] ns = line.split(CountFile.sep);
@@ -26,10 +26,10 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 			D.error(M);
 			}
 		}
-	return true;
+	return null;
 	}
 	
-	public boolean disconnect(int data) throws IOException {
+	public Object disconnect(int data) throws IOException {
 	BufferedWriter email_writer = new BufferedWriter(new FileWriter(source(), false));
 		for (T t : this) {
 		D.checkEntry(t, "DataEmailCollection.disconnect()");//this checks to make sure there were no null elements in data.
@@ -37,7 +37,7 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 		email_writer.append(email.toString() + "\n");
 		}
 	email_writer.close();
-	return true;
+	return null;
 	}
 
 

@@ -603,15 +603,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					begcyc = CountFile.get();
 					maxcyc = maxcyc + begcyc;
-						try {
-						dada.connect();
-						}
-						catch (Exception E) {
-						Print.error(E);
-						}
+					dada.begin();
 					}
 					catch (IOException I) {
 					Print.error(I);
+					}
+					catch (Exception E) {
+					Print.error(E);
 					}				
 
 				}
@@ -622,16 +620,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					String str = String.valueOf(num - 1);
 					begcyc = Integer.parseUnsignedInt(str);
 					maxcyc = maxcyc + begcyc;
-						try {
-						dada.connect();
-						}
-						catch (Exception E) {
-						Print.error(E);
-						}
+					dada.begin();
 					}
 					catch (NumberFormatException N) {
 					Print.error(N);
 					break;
+					}
+					catch (Exception E) {
+					Print.error(E);
 					}
 			
 				}
@@ -639,13 +635,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					eraseFile(FileNames.links);
 					Page firstpage = createFirstPage(lastarg);
-						try {
-						dada.connect();
-						}
-						catch (Exception E) {
-						Print.error(E);
-						}
 					dada.put(firstpage);
+					dada.begin();
 					}
 					catch (MalformedURLException M) {
 					Print.error(M, lastarg);
@@ -662,15 +653,18 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (IOException I) {
 					Print.error(I);
 					}
+					catch (Exception E) {
+					Print.error(E);
+					}
 				}
 
 			spider = createSpider(crawlmethod);
 			spider.setCheckOK(okays);
 			spider.setRobotsAllowed(norobots);
 
-				if (getemails) {	
-					try {
-					dada_emails.connect();
+				if (getemails) {
+					try {	
+					dada_emails.begin();
 					}
 					catch (Exception E) {
 					Print.error(E);
@@ -707,14 +701,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			Debug.endCycleTime("Spider Crawl");
 				try {
-				dada.disconnect();
+				dada.end();
 				}
 				catch (Exception E) {
 				Print.error(E);
 				}
 				if (getemails) {
 					try {
-					dada_emails.disconnect();
+					dada_emails.end();
 					}
 					catch (Exception E) {
 					Print.error(E);

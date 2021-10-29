@@ -676,9 +676,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				for (Page p = dada.get(begcyc); p != null; p = dada.get(begcyc)) {
 				boolean remove = spider.crawl(p);
 					if (remove == true) {
-					Page r = dada.remove(begcyc);
-					r = null;//this deletes bad data
-					System.gc();
+					dada.remove(begcyc);
 					}
 					else {
 						if (getemails) {

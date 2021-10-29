@@ -48,14 +48,14 @@ private String source = null;
 
 	public T remove(final int i) {
 	D.checkLineEntry(i, size(), "DataArray.remove(int)");
-	T rp = pages[i];//this will get the page item that it needs to return
-	pages[i] = null;
+	T p = pages[i];
+	//pages[i] = null;
 	size--;//decreases size by 1
 		for (int j = i; j < size(); j++) {
 	 	pages[j] = pages[j + 1];
 		D.checkEntry(pages[j], "DataArray.remove(int)");
 		}
-	return rp;
+	return p;
 	}
 
 	//We are assuming that duplicates have been checked before this method was called

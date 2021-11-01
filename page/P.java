@@ -585,8 +585,8 @@ final static private String Null = "null";
 
 	/*These methods are used to directly add a page into the dada variable*/
 	static Data<Page> add(URL url, Data<Page> data) {
-	D.checkEntry(url, "P.add(url), Data<Page>");//this is so I can pass in a non-object 	
-	D.checkEntry(data, "P.add(url), Data<Page>");//this is to check data to see if it is null
+	Debug.check(url, null);
+	Debug.check(data, null);
 	final String msg = "This happen in P.add(URL)";
 
 		try {
@@ -622,15 +622,15 @@ final static private String Null = "null";
 	}
 
 	static Data<Page> add(Page page, Data<Page> data) throws DuplicateURLException {
-	D.checkEntry(page, "P.add(Page, Data<Page>)");//this is so I an pass in a non-object
-	D.checkEntry(data, "P.add(Page, Data<Page>)");//this is to check to make sure data isn't null 
+	Debug.check(page, null);
+	Debug.check(data, null);
 	data.put(page);//this throws duplicateurlexception
 	return data;
 	}
 	
 	static Data<Page> add(Collection<Page> pages, Data<Page> data) {
-	D.checkEntry(pages, "P.add(Collection<Page>, Data<Page>)");
-	D.checkEntry(data, "P.add(Collection<Page>, Data<Page>)");
+	Debug.check(pages, null);
+	Debug.check(data, null);
 		for (Page page : pages) {
 			try {
 			data.put(page);
@@ -643,8 +643,8 @@ final static private String Null = "null";
 	}
 
 	static Data<Page> add(Page[] pages, Data<Page> data) {
-	D.checkEntry(pages, "P.add(Page[], Data<Page>)");
-	D.checkEntry(data, "P.add(Page[], Data<Page>)");
+	Debug.check(pages, null);
+	Debug.check(data, null);
 		for (Page page : pages) {
 			try {
 			data.put(page);

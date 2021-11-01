@@ -2,6 +2,7 @@ package drudge.data;
 
 import java.io.*;
 import java.net.*;
+import drudge.Debug;
 
 public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 
@@ -32,7 +33,7 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 	public Object disconnect(int data) throws IOException {
 	BufferedWriter email_writer = new BufferedWriter(new FileWriter(source(), false));
 		for (T t : this) {
-		D.checkEntry(t, "DataEmailCollection.disconnect()");//this checks to make sure there were no null elements in data.
+		Debug.check(t, null);
 		URL email = t;
 		email_writer.append(email.toString() + "\n");
 		}

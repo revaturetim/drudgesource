@@ -217,8 +217,14 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	}
 		
 	/*The default assumes that it is working with a page object*/	
-	default void begin() throws Exception {
-	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
+	default void begin(boolean append) throws Exception {
+	File linkfile = new File(source());
+		
+		if (append == false) {
+		linkfile.delete();
+		linkfile.createNewFile();
+		}
+	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(linkfile)));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 		String[] ns = line.split(CountFile.sep);
 			try {
@@ -246,10 +252,10 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	}
 
 	/*The default assumes you are working with a page object.  Subclasses should overrid*/
-	default void end() throws Exception {
-	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source(), false));
+	default void end(boolean append) throws Exception {
+	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source(), append));
 		for (T t : this) {
-		D.checkEntry(t, "Connector.disconnect(Data<Page>, int)");//this checks to make sure there were no null elements in data.
+		Debug.check(t, null);
 		Page tp = (Page)t;
 		Data<String> row = tp.getRow();
 			for (String s : row) {
@@ -269,5 +275,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 		}
 	return builder.toString();
 	}
+
 
 }

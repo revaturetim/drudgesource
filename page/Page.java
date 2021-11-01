@@ -28,7 +28,7 @@ private Data<String> klist = new DataList<String>();
 private boolean connected = false;
 
 	public Page(URL u) throws URISyntaxException, NotHTMLURLException, IOException {
-	D.checkEntry(u, "Page(URI) Constructor", P.nopag); 
+	Debug.check(u, null);
 	url = u;
 	P.checkHtmlFile(url);//this will throw nothtmlurlexception when it is not an html file and URISyntaxException
 	connection = P.getConnection(url, proxyserver);//this throws IOException 
@@ -47,7 +47,7 @@ private boolean connected = false;
 	}
 	
 	public boolean equals(Object obj) {
-	D.checkEntry(obj, "Page.equals(obj)", P.nopag);
+	//Debug.check(obj, null, P.nopag);//this is where the null pointerexception is being thrown
 	boolean isequal = false;
 		if (obj instanceof Page) {
 		String urlstring = this.toString();
@@ -66,7 +66,7 @@ private boolean connected = false;
 	}
 	
 	public void connect() throws IOException, SocketTimeoutException {
-	D.checkEntry(connection, "Page.connect()", P.nosrc);
+	Debug.check(connection, null, P.nosrc);
 	connection.connect();
 	connected = true;	
 	}
@@ -131,7 +131,7 @@ private boolean connected = false;
 	public boolean isUselessByURLConnection() throws RedirectedURLException, NotHTMLURLException, 
 	       NotOKURLException, NoContentURLException, BadEncodingURLException {
 	Debug.endCycleTime("Checking Uselessness");
-	D.checkEntry(connection, "Page.isUseless(int)", P.nocon);
+	Debug.check(connection, null, P.nocon);
 	P.checkHeaders(connection);
 	return false; //if it made it this far then this is the default answer
 	}

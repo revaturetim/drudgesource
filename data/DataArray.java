@@ -25,7 +25,7 @@ private String source = null;
 	}
 	
 	public T get(int i) {
-	D.checkLineEntry(i, size(), "DataArray.get(int)");//this throws indexoutofboundsexception if it is outside of the exceptable range
+	Debug.check(i, 0, size(), "DataArray.get(int)");
 	T entry = pages[i];//this throws indexoutofboundsexception if is greater than pages array size
 	return entry;
 	}
@@ -47,20 +47,20 @@ private String source = null;
 	}
 
 	public T remove(final int i) {
-	D.checkLineEntry(i, size(), "DataArray.remove(int)");
+	Debug.check(i, 0, size(), "DataArray.remove(int)");
 	T p = pages[i];
 	//pages[i] = null;
 	size--;//decreases size by 1
 		for (int j = i; j < size(); j++) {
 	 	pages[j] = pages[j + 1];
-		D.checkEntry(pages[j], "DataArray.remove(int)");
+		Debug.check(pages[j], null);
 		}
 	return p;
 	}
 
 	//We are assuming that duplicates have been checked before this method was called
 	public void add(final int i, final T page) {
-	D.checkEntry(page, "DataArray.add(T, int)");//throws nullpointerexception
+	Debug.check(page, null);
 	size++;//increases size by 1
 		////this has to enlarge array when it when it gets to its next to the last element
 		if (size() == pages.length) {
@@ -73,8 +73,8 @@ private String source = null;
 	}
 	
 	public T set(final int i, final T page) {
-	D.checkEntry(page, "DataArray.replace(T, int)", "Attempting to replace element with null object. No! No! No!");//nullpointerexception
-	D.checkLineEntry(i, size(), "DataArray.replace(T, int)");//throws indexoutofboundsexception
+	Debug.check(page, null, "Attempting to replace element with null object. No! No! No!");
+	Debug.check(i, 0, size(), "DataArray.replace(T, int)");//throws indexoutofboundsexception
 	T pp = pages[i];//this is the previous page
 	pages[i] = page;//this assigns the new value to this slot in the array
 	return pp;

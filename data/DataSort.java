@@ -18,7 +18,8 @@ private Comparator<T> compare = new NaturalComparator<T>();
 
 	public DataSort(T[] t, String s, Comparator<T> c) {
 	this(t, s);
-	D.checkEntry(c, "DataSort(T[], String, Comparator<T>)");//this checks to see compare is null
+	//D.checkEntry(c, "DataSort(T[], String, Comparator<T>)");//this checks to see compare is null
+	Debug.check(c, null);
 	compare = c;
 	}
 

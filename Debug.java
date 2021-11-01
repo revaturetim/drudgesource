@@ -13,11 +13,11 @@ public static boolean cycletimeon = false;
 private static boolean begcycletime = false;
 final private static String sep = " | ";
 
-	public static void stop() {
+	public static void stop(Object obj) {
 		if (on) {
 			try {
 			InputStream in = System.in;
-			System.out.print("Stopped");
+			System.out.print(obj.toString());
 			byte[] b = new byte[1];
 			in.read(b);//this blocks until there is something to read
 			}
@@ -27,415 +27,230 @@ final private static String sep = " | ";
 		}
 	}
 
-	public static void stop(Object obj) {
+	public static void stop() {
 		if (on) {
-		print(obj);
-		stop();//this will call the stop method as it is suppose to
+		
+		stop("Stopped: ");//this will call the stop method as it is suppose to
 		}
 	}
 		
-	public static void print(Exception E) {
+	public static void print(Exception...exceptions) {
 		if (on) {
-		System.out.println(E.getMessage());
-		}
-	}
-
-	public static void print(Object j) {
-		if (on) {
-			if (j != null) {
-			Class<? extends Object> c = j.getClass();
-			System.out.printf("%10s=%-10s" + sep, c.getName(), j.toString());
-			}
-			else {
-			System.out.printf("%10s=%-10s" + sep, "Null", "Null");
+			for (Exception E : exceptions) {
+			System.out.print(E.getMessage());
 			}
 		}
 	}
 
-	public static void print(Object j, Object k) {
+	public static void println(Exception...exceptions) {
 		if (on) {
-		print(j);
-		println(k);
-		}	
-	}
-
-	public static void print(Object j, Object k, Object l) {
-		if (on) {
-		print(j);
-		print(k);
-		println(l);
-		}
-	}
-
-	public static void println(Object j) {
-		if (on) {
-			if (j != null) {
-			Class<? extends Object> c = j.getClass();
-			System.out.printf("%10s=%-10s\n", c.getName(), j.toString());
-			}
-			else {
-			System.out.printf("%10s=%-10s\n", "Null", "Null");
+			for (Exception E : exceptions) {
+			System.out.println(E.getMessage());
 			}
 		}
 	}
-
-	public static void println(Object j, Object k) {
+	
+	public static void print(Object...objs) {
 		if (on) {
-		println(j);
-		println(k);
+			for (Object obj : objs) {
+				if (obj != null) {
+				Class<? extends Object> c = obj.getClass();
+				System.out.printf("%10s=%-10s" + sep, c.getName(), obj.toString());
+				}
+				else {
+				System.out.printf("%10s=%-10s" + sep, "Null", "Null");
+				}
+			}
+		}
+	}
+	
+	public static void println(Object...objs) {
+		if (on) {
+			for (Object obj : objs) {
+				if (obj != null) {
+				Class<? extends Object> c = obj.getClass();
+				System.out.printf("%10s=%-10s\n", c.getName(), obj.toString());
+				}
+				else {
+				System.out.printf("%10s=%-10s\n", "Null", "Null");
+				}
+			}
+		}
+	}
+	
+	public static void print(int...ints) {
+		if (on) {
+			for (int j : ints) {
+			System.out.printf("%10s=%-10d" + sep, "integer", j);
+			}
+		}
+	
+	}
+	
+	public static void println(int...ints) {
+		if (on) {
+			for (int j : ints) {
+			System.out.printf("%10s=%-10d\n", "integer", j);
+			}
+		}
+	
+	}
+
+	public static void print(char...chars) {
+		if (on) {
+			for (char c : chars) {
+			System.out.printf("%10s=%-10d" + sep, "character", c);
+			}
+		}
+	
+	}
+	
+	public static void println(char...chars) {
+		if (on) {
+			for (char c : chars) {
+			System.out.printf("%10s=%-10d\n", "character", c);
+			}
+		}
+	
+	}
+	
+
+	public static void print(double...doubles) {
+		if (on) {
+			for (double d : doubles) {
+			System.out.printf("%10s=%-10d" + sep, "double", d);
+			}
+		}
+	}
+	
+	public static void println(double...doubles) {
+		if (on) {
+			for (double d : doubles) {
+			System.out.printf("%10s=%-10d\n", "double", d);
+			}
+		}
+	}
+	
+	public static void print(float...floats) {
+		if (on) {
+			for (float f : floats) {
+			System.out.printf("%10s=%-10d" + sep, "float", f);
+			}
+		}
+	}
+	
+	public static void println(float...floats) {
+		if (on) {
+			for (float f : floats) {
+			System.out.printf("%10s=%-10d\n", "float", f);
+			}
+		}
+	}
+	
+
+	public static void print(byte...bytes) {
+		if (on) {
+			for (byte b : bytes) {
+			System.out.printf("%10s=%-10d" + sep, "byte", b);
+			}
+		}
+	}
+	
+	public static void println(byte...bytes) {
+		if (on) {
+			for (byte b : bytes) {
+			System.out.printf("%10s=%-10d\n", "byte", b);
+			}
+		}
+	}
+
+	
+	public static void print(boolean...booleans) {
+		if (on) {
+			for (boolean b : booleans) {
+			System.out.printf("%10s=%-10b" + sep, "boolean", b);
+			}
 		}	
 	}
 
-	public static void println(Object j, Object k, Object l) {
+	public static void println(boolean...booleans) {
 		if (on) {
-		println(j);
-		println(k);
-		println(l);
-		}
-	}
-
-	public static void println(int j) {
-		if (on) {
-		System.out.printf("%10s=%-10d\n", "integer", j);
-		}
-	
-	}
-
-	public static void println(int j, int k) {
-		if (on) {
-		println(j);
-		println(k);
-		}
-	}
-
-	public static void println(int j, int k, int l) {
-		if (on) {
-		println(j);
-		println(k);
-		println(l);
-		}
-	}
-
-
-	public static void print(int j) {
-		if (on) {
-		System.out.printf("%10s=%-10d" + sep, "integer", j);
-		}
-	
-	}
-
-	public static void print(int j, int k) {
-		if (on) {
-		print(j);
-		println(k);
-		}
-	}
-
-	public static void print(int j, int k, int l) {
-		if (on) {
-		print(j);
-		print(k);
-		println(l);
-		}
-	}
-
-	public static void println(char j) {
-		if (on) {
-		System.out.printf("%10s=%-10d\n", "character", j);
-		}
-	
-	}
-
-	public static void println(char j, char k) {
-		if (on) {
-		println(j);
-		println(k);
-		}
-	}
-
-	public static void println(char j, char k, char l) {
-		if (on) {
-		println(j);
-		println(k);
-		println(l);
-		}
-	}
-
-	public static void print(char j) {
-		if (on) {
-		System.out.printf("%10s=%-10d" + sep, "character", j);
-		}
-	
-	}
-
-	public static void print(char j, char k) {
-		if (on) {
-		print(j);
-		println(k);
-		}
-	}
-
-	public static void print(char j, char k, char l) {
-		if (on) {
-		print(j);
-		print(k);
-		println(l);
-		}
-	}
-
-	public static void println(double j) {
-		if (on) {
-		System.out.printf("%10s=%-10d\n", "double", j);
-		}
-	}
-
-	public static void println(double j, double k) {
-		if (on) {
-		println(j);
-		println(k);
-		}
-	}
-
-	public static void println(double j, double k, double l) {
-		if (on) {
-		println(j);
-		println(k);
-		println(l);
-		}
-	}
-
-	public static void print(double j) {
-		if (on) {
-		System.out.printf("%10s=%-10d" + sep, "double", j);
-		}
-	}
-
-	public static void print(double j, double k) {
-		if (on) {
-		print(j);
-		println(k);
-		}
-	}
-
-	public static void print(double j, double k, double l) {
-		if (on) {
-		print(j);
-		print(k);
-		println(l);
-		}
-	}
-
-	public static void println(float j) {
-		if (on) {
-		System.out.printf("%10s=%-10d\n", "float", j);
-		}
-	}
-
-	public static void println(float j, float k) {
-		if (on) {
-		println(j);
-		println(k);
-		}
-	}
-
-	public static void println(float j, float k, float l) {
-		if (on) {
-		println(j);
-		println(k);
-		println(l);
-		}
-	}
-
-	public static void print(float j) {
-		if (on) {
-		System.out.printf("%10s=%-10d" + sep, "float", j);
-		}
-	}
-
-	public static void print(float j, float k) {
-		if (on) {
-		print(j);
-		println(k);
-		}
-	}
-
-	public static void print(float j, float k, float l) {
-		if (on) {
-		print(j);
-		print(k);
-		println(l);
-		}
-	}
-
-	public static void println(byte j) {
-		if (on) {
-		System.out.printf("%10s=%-10d\n", "byte", j);
-		}
-	}
-
-	public static void println(byte j, byte k) {
-		if (on) {
-		println(j);
-		println(k);
-		}
-	}
-
-	public static void println(byte j, byte k, byte l) {
-		if (on) {
-		println(j);
-		println(k);
-		println(l);
-		}
-	}
-	
-	public static void print(byte j) {
-		if (on) {
-		System.out.printf("%10s=%-10d" + sep, "byte", j);
-		}
-	}
-
-	public static void print(byte j, byte k) {
-		if (on) {
-		print(j);
-		println(k);
-		}
-	}
-
-	public static void print(byte j, byte k, byte l) {
-		if (on) {
-		print(j);
-		print(k);
-		println(l);
-		}
-	}
-
-	public static void println(boolean j) {
-		if (on) {
-		System.out.printf("%10s=%-10b\n", "boolean", j);
+			for (boolean b : booleans) {
+			System.out.printf("%10s=%-10b\n", "boolean", b);
+			}
 		}	
 	}
 
-	public static void println(boolean j, boolean k) {
+	public static void print(long...longs) {
 		if (on) {
-		println(j);
-		println(k);
-		}
-	}
-
-	public static void println(boolean j, boolean k, boolean l) {
-		if (on) {
-		println(j);
-		println(k);
-		println(l);
-		}
-	}
-
-	public static void print(boolean j) {
-		if (on) {
-		System.out.printf("%10s=%-10b" + sep, "boolean", j);
-		}	
-	}
-
-	public static void print(boolean j, boolean k) {
-		if (on) {
-		print(j);
-		println(k);
-		}
-	}
-
-	public static void print(boolean j, boolean k, boolean l) {
-		if (on) {
-		print(j);
-		print(k);
-		println(l);
-		}
-	}
-
-	public static void println(long j) {
-		if (on) {
-		System.out.printf("%10s=%-10d\n", "long", j);
+			for (long l : longs) {
+			System.out.printf("%10s=%-10d" + sep, "long", l);
+			}
 		}
 	}
 	
-	public static void println(long j, long k) {
+	public static void println(long...longs) {
 		if (on) {
-		println(j);
-		println(k);
-		}
-	}
-
-	public static void println(long j, long k, long l) {
-		if (on) {
-		println(j);
-		println(k);
-		println(l);
-		}
-	}
-
-	public static void print(long j) {
-		if (on) {
-		System.out.printf("%10s=%-10d" + sep, "long", j);
+			for (long l : longs) {
+			System.out.printf("%10s=%-10d\n", "long", l);
+			}
 		}
 	}
 	
-	public static void print(long j, long k) {
-		if (on) {
-		print(j);
-		println(k);
-		}
-	}
 
-	public static void print(long j, long k, long l) {
+	public static void print(short...shorts) {
 		if (on) {
-		print(j);
-		print(k);
-		println(l);
-		}
-	}
-
-	public static void println(short j) {
-		if (on) {
-		System.out.printf("%10s=%-10d\n", "short", j);
+			for (short s : shorts) {
+			System.out.printf("%10s=%-10d" + sep, "short", s);
+			}
 		}	
 	}
 
-	public static void println(short j, short k) {
+	public static void println(short...shorts) {
 		if (on) {
-		println(j);
-		println(k);
-		}
-	}
-
-	public static void println(short j, short k, short l) {
-		if (on) {
-		println(j);
-		println(k);
-		println(l);
-		}
-	}
-
-	public static void print(short j) {
-		if (on) {
-		System.out.printf("%10s=%-10d" + sep, "short", j);
+			for (short s : shorts) {
+			System.out.printf("%10s=%-10d\n", "short", s);
+			}
 		}	
 	}
-
-	public static void print(short j, short k) {
+	
+	public static void check(final Object a, final Object b, final String msg) throws IllegalArgumentException {
+	
 		if (on) {
-		print(j);
-		println(k);
-		}
+			if (a == null) {
+			throw new IllegalArgumentException("You can't use a null value as the first argument");
+			}
+			else if (a.equals(b) == true) {
+			throw new IllegalArgumentException(msg);
+			}
+			/*else if (a.equals(b) == false) {
+			
+			}*/
+		}	
+	}
+	
+	public static void check(final Object a, final Object b) throws IllegalArgumentException {
+		//check(a, b, a.toString() + " " + b.toString() + " were not the same.");
+		check(a, b, "");
+		
 	}
 
-	public static void print(short j, short k, short l) {
+	public static void check(final int a, final int b, final int e, final String msg) throws IndexOutOfBoundsException {
 		if (on) {
-		print(j);
-		print(k);
-		println(l);
-		}
+			if (a < b || a > e) {
+			throw new IndexOutOfBoundsException(String.valueOf(a) 
+			+ " was not between " 
+			+ String.valueOf(b) 
+			+ " and " + String.valueOf(e)
+			+ ". \n" + msg);
+			}
+		}		
 	}
-
-
+	
+	public static void check(final int a, final int b, final int e) throws IndexOutOfBoundsException {
+		check(a, b, e, "");
+	}
+	
 	public static void here() {
 	here("here");
 	}

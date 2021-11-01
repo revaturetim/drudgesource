@@ -35,7 +35,8 @@ private Object[] objs = new Object[10];
 	
 	public boolean contains(Object page) {
 	boolean c = false;
-		for (int i = size - 1; i > -1; i--) {
+		
+		for (int i = size; i > 0; i--) {
 		Object p = objs[i];
 			if (page.equals(p)) {
 			c = true;
@@ -78,26 +79,28 @@ private Object[] objs = new Object[10];
 	}
 
 	public boolean add(T page) {
-	D.checkEntry(page, "DataArray.add(T, int)");//throws nullpointerexception
+	Debug.check(page, null);
 	boolean added = false;
 		if (contains(page) == false) {
-		size++;//increases size by 1
-			if (size >= objs.length) {
+		
+			if (size >= objs.length - 1) {
 			objs = Arrays.copyOf(objs, objs.length * 2);
 			}
-			if (objs[size - 1] == null) {	
-			objs[size - 1] = page;
+			if (objs[size] == null) {	
+			objs[size] = page;
 			added = true;
+			size++;//increases size by 1
 			}
 			else {
 			throw new IllegalArgumentException("Size variable was not set correctly.  It is erasing previous data.");
 			}
+		
 		}
 	return added;
 	}
 	
 	public T remove(final int r) {
-	D.checkLineEntry(r, size, "DataArray.remove(int)");
+	Debug.check(r, 0, size, "DataArray.remove(int)");
 	T pagereturn = get(r);
 	remove(pagereturn);
 	return pagereturn;
@@ -110,13 +113,14 @@ private Object[] objs = new Object[10];
 	}
 
 	public T get(int i) {
-	D.checkLineEntry(i, size, "DataArray.get(int)");//this throws indexoutofboundsexception if it is outside of the exceptable range
+	Debug.check(i, 0, size, "DataArray.get(int)");//throws indexoutofboundsexception if it is outside of the exceptable range
 	T entry = (T)objs[i];
 	return entry;
 	}
-
+	
 	public String source() {
 	return source;
 	}
 
+	
 }

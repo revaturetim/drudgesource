@@ -22,6 +22,8 @@ public static String XFACTOR = null;
 	boolean getemails = false;
 	boolean okays = true;
 	boolean norobots = false;
+	boolean appendlinks = true;
+	boolean appendemail = false;
 	Spider spider = null;
 	long MemoryStart = Runtime.getRuntime().freeMemory();
 	eraseFile(FileNames.error);
@@ -566,7 +568,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 			       		try {
-					p.connect();
+						p.connect();
 						try {	
 						p.isUseless();
 						System.out.println("This is not a useless url for this program");	
@@ -603,7 +605,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					begcyc = CountFile.get();
 					maxcyc = maxcyc + begcyc;
-					dada.begin();
+					dada.begin(appendlinks);
 					}
 					catch (IOException I) {
 					Print.error(I);
@@ -620,7 +622,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					String str = String.valueOf(num - 1);
 					begcyc = Integer.parseUnsignedInt(str);
 					maxcyc = maxcyc + begcyc;
-					dada.begin();
+					dada.begin(appendlinks);
 					}
 					catch (NumberFormatException N) {
 					Print.error(N);
@@ -633,10 +635,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				else {
 					try {
-					eraseFile(FileNames.links);
+					appendlinks = false;
 					Page firstpage = createFirstPage(lastarg);
 					dada.put(firstpage);
-					dada.begin();
+					dada.begin(appendlinks);
 					}
 					catch (MalformedURLException M) {
 					Print.error(M, lastarg);
@@ -664,7 +666,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 				if (getemails) {
 					try {	
-					dada_emails.begin();
+					dada_emails.begin(appendemail);
 					}
 					catch (Exception E) {
 					Print.error(E);
@@ -699,14 +701,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			Debug.endCycleTime("Spider Crawl");
 				try {
-				dada.end();
+				dada.end(appendlinks);
 				}
 				catch (Exception E) {
 				Print.error(E);
 				}
 				if (getemails) {
 					try {
-					dada_emails.end();
+					dada_emails.end(appendemail);
 					}
 					catch (Exception E) {
 					Print.error(E);
@@ -836,13 +838,16 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	Debug.endCycleTime("Create Spider Object");
 	return spider;
 	}
-
-	private static boolean eraseFile(String file) {
+	
+	public static boolean eraseFile(String filename) {
 	boolean erased = false;
-	File efile = new File(file);
+	File efile = new File(filename);
 		if (efile.exists()) {
 		erased = efile.delete();
 		}
 	return erased;
 	}
+	
+
+	
 }

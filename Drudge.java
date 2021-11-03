@@ -22,8 +22,6 @@ public static String XFACTOR = null;
 	boolean getemails = false;
 	boolean okays = true;
 	boolean norobots = false;
-	boolean appendlinks = true;
-	boolean appendemail = false;
 	Spider spider = null;
 	long MemoryStart = Runtime.getRuntime().freeMemory();
 	eraseFile(FileNames.error);
@@ -605,7 +603,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					begcyc = CountFile.get();
 					maxcyc = maxcyc + begcyc;
-					dada.begin(appendlinks);
+					dada.begin();
 					}
 					catch (IOException I) {
 					Print.error(I);
@@ -622,7 +620,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					String str = String.valueOf(num - 1);
 					begcyc = Integer.parseUnsignedInt(str);
 					maxcyc = maxcyc + begcyc;
-					dada.begin(appendlinks);
+					dada.begin();
 					}
 					catch (NumberFormatException N) {
 					Print.error(N);
@@ -635,10 +633,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				else {
 					try {
-					appendlinks = false;
+					dada.truncate();//this will delete existing data and start over
 					Page firstpage = createFirstPage(lastarg);
 					dada.put(firstpage);
-					dada.begin(appendlinks);
+					dada.begin();
 					}
 					catch (MalformedURLException M) {
 					Print.error(M, lastarg);
@@ -666,7 +664,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 				if (getemails) {
 					try {	
-					dada_emails.begin(appendemail);
+					dada_emails.begin();
 					}
 					catch (Exception E) {
 					Print.error(E);
@@ -701,14 +699,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			Debug.endCycleTime("Spider Crawl");
 				try {
-				dada.end(appendlinks);
+				dada.end();
 				}
 				catch (Exception E) {
 				Print.error(E);
 				}
 				if (getemails) {
 					try {
-					dada_emails.end(appendemail);
+					dada_emails.end();
 					}
 					catch (Exception E) {
 					Print.error(E);

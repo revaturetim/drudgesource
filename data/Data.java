@@ -217,14 +217,8 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	}
 		
 	/*The default assumes that it is working with a page object*/	
-	default void begin(boolean append) throws Exception {
-	File linkfile = new File(source());
-		
-		if (append == false) {
-		linkfile.delete();
-		linkfile.createNewFile();
-		}
-	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(linkfile)));
+	default void begin() throws Exception {
+	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 		String[] ns = line.split(CountFile.sep);
 			try {
@@ -252,8 +246,8 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	}
 
 	/*The default assumes you are working with a page object.  Subclasses should overrid*/
-	default void end(boolean append) throws Exception {
-	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source(), append));
+	default void end() throws Exception {
+	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
 		for (T t : this) {
 		Debug.check(t, null);
 		Page tp = (Page)t;
@@ -274,6 +268,17 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 		builder.append(" ");
 		}
 	return builder.toString();
+	}
+
+	default void truncate() {
+	File linkfile = new File(source());
+		try {
+		linkfile.delete();
+		linkfile.createNewFile();
+		}
+		catch (IOException I) {
+		D.error(I);
+		}
 	}
 
 

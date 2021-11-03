@@ -17,7 +17,7 @@ final private static String sep = " | ";
 		if (on) {
 			try {
 			InputStream in = System.in;
-			System.out.print(obj.toString());
+			System.out.print("Stopped: " + obj.toString());
 			byte[] b = new byte[1];
 			in.read(b);//this blocks until there is something to read
 			}
@@ -30,7 +30,7 @@ final private static String sep = " | ";
 	public static void stop() {
 		if (on) {
 		
-		stop("Stopped: ");//this will call the stop method as it is suppose to
+		stop("");//this will call the stop method as it is suppose to
 		}
 	}
 		
@@ -213,26 +213,38 @@ final private static String sep = " | ";
 			}
 		}	
 	}
+
+	public static void check(final Object a, final Object b, final String msg, final Class c) throws IllegalArgumentException {
+	
+		if (on) {
+			if (a != null && b != null) {
+				if (a.equals(b) == false) {
+				throw new IllegalArgumentException(msg);
+				}
+			}
+			else if (a == null && b == null) {
+				throw new NullPointerException(msg);
+			}
+		}	
+	}
 	
 	public static void check(final Object a, final Object b, final String msg) throws IllegalArgumentException {
 	
 		if (on) {
-			if (a == null) {
-			throw new IllegalArgumentException("You can't use a null value as the first argument");
+			if (a != null && b != null) {
+				if (a.equals(b) == false) {
+				throw new IllegalArgumentException(msg);
+				}
 			}
-			else if (a.equals(b) == true) {
-			throw new IllegalArgumentException(msg);
+			else if (a == null && b == null) {
+				throw new NullPointerException(msg);
 			}
-			/*else if (a.equals(b) == false) {
-			
-			}*/
+
 		}	
 	}
 	
 	public static void check(final Object a, final Object b) throws IllegalArgumentException {
-		//check(a, b, a.toString() + " " + b.toString() + " were not the same.");
 		check(a, b, "");
-		
 	}
 
 	public static void check(final int a, final int b, final int e, final String msg) throws IndexOutOfBoundsException {
@@ -250,7 +262,103 @@ final private static String sep = " | ";
 	public static void check(final int a, final int b, final int e) throws IndexOutOfBoundsException {
 		check(a, b, e, "");
 	}
-	
+
+	public static void check(final boolean a, final boolean b, final String msg) throws IllegalArgumentException {
+		if (on) {
+			if (a != b) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+	}
+
+	public static void check(final boolean a, final boolean b) throws IllegalArgumentException {
+		check(a, b, "");
+	}
+
+	public static void check(final char a, final char b, final String msg) throws IllegalArgumentException {
+		if (on) {
+			if (a != b) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+	}
+
+	public static void check(final char a, final char b) throws IllegalArgumentException {
+		check(a, b, "");
+	}
+
+	public static void check(final byte a, final byte b, final String msg) throws IllegalArgumentException {
+		if (on) {
+			if (a != b) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+	}
+
+	public static void check(final byte a, final byte b) throws IllegalArgumentException {
+		check(a, b, "");
+	}
+
+	public static void check(final short a, final short b, final String msg) throws IllegalArgumentException {
+		if (on) {
+			if (a != b) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+	}
+
+	public static void check(final short a, final short b) throws IllegalArgumentException {
+		check(a, b, "");
+	}
+
+	public static void check(final int a, final int b, final String msg) throws IllegalArgumentException {
+		if (on) {
+			if (a != b) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+	}
+
+	public static void check(final int a, final int b) throws IllegalArgumentException {
+		check(a, b, "");
+	}
+
+	public static void check(final long a, final long b, final String msg) throws IllegalArgumentException {
+		if (on) {
+			if (a != b) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+	}
+
+	public static void check(final long a, final long b) throws IllegalArgumentException {
+		check(a, b, "");
+	}
+
+	public static void check(final float a, final float b, final String msg) throws IllegalArgumentException {
+		if (on) {
+			if (a != b) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+	}
+
+	public static void check(final float a, final float b) throws IllegalArgumentException {
+		check(a, b, "");
+	}
+
+	public static void check(final double a, final double b, final String msg) throws IllegalArgumentException {
+		if (on) {
+			if (a != b) {
+				throw new IllegalArgumentException(msg);
+			}
+		}
+	}
+
+	public static void check(final double a, final double b) throws IllegalArgumentException {
+		check(a, b, "");
+	}
+
 	public static void here() {
 	here("here");
 	}

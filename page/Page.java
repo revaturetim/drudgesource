@@ -28,7 +28,7 @@ private Data<String> klist = new DataList<String>();
 private boolean connected = false;
 
 	public Page(URL u) throws URISyntaxException, NotHTMLURLException, IOException {
-	Debug.check(u, null);
+	Debug.check(u, null, P.nopag);
 	url = u;
 	P.checkHtmlFile(url);//this will throw nothtmlurlexception when it is not an html file and URISyntaxException
 	connection = P.getConnection(url, proxyserver);//this throws IOException 
@@ -47,7 +47,6 @@ private boolean connected = false;
 	}
 	
 	public boolean equals(Object obj) {
-	//Debug.check(obj, null, P.nopag);//this is where the null pointerexception is being thrown
 	boolean isequal = false;
 		if (obj instanceof Page) {
 		String urlstring = this.toString();

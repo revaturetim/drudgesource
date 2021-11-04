@@ -1,6 +1,7 @@
 package drudge;
 
 import java.io.*;
+import java.util.function.Predicate;
 
 final public class Debug {
 private static long clickbegin = 0;
@@ -212,6 +213,24 @@ final private static String sep = " | ";
 			System.out.printf("%10s=%-10d\n", "short", s);
 			}
 		}	
+	}
+	
+	public static <T> void check(final Predicate<T> P, final T obj, final String msg, final Class c) throws IllegalArgumentException {
+		System.out.println(P.test(obj));
+		if (!P.test(obj)) {//failed test
+			if (c != null) {
+			println("Failed Check Inside of " + c.getName());
+			}
+		throw new IllegalArgumentException(msg);
+		}
+	}
+
+	public static <T> void check(final Predicate P, final T obj, final String msg) throws IllegalArgumentException {
+		check(P, obj, msg, null);
+	}
+
+	public static <T> void check(Predicate P, final T obj) throws IllegalArgumentException {
+		check(P, obj, obj.toString(), null);
 	}
 
 	public static void check(final Object a, final Object b, final String msg, final Class c) throws IllegalArgumentException {

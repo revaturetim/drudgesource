@@ -27,6 +27,7 @@ private Comparator<T> compare = new NaturalComparator<T>();
 	public boolean contains(Object p) {
 	List<T> search = (List<T>)this;
 	Collections.sort(search, compare);
+	@SuppressWarnings("unchecked")	
 	int k = Collections.<T>binarySearch(search, (T)p, compare);
 	return (k > -1) ? true : false;
 	}

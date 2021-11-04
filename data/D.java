@@ -12,6 +12,7 @@ import java.sql.*;
 
 final public class D implements FileNames {
 
+	@SuppressWarnings("unchecked")	
 	public static <T> T getPageFromEntry(String line) {
 	T page = null;
 		try {

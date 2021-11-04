@@ -699,14 +699,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			Debug.endCycleTime("Spider Crawl");
 				try {
-				dada.end();
+				dada.finish();
 				}
 				catch (Exception E) {
 				Print.error(E);
 				}
 				if (getemails) {
 					try {
-					dada_emails.end();
+					dada_emails.finish();
 					}
 					catch (Exception E) {
 					Print.error(E);

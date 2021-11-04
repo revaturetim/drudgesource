@@ -10,6 +10,7 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 	super(s);
 	}
 
+	@SuppressWarnings("unchecked")	
 	public Object connect() throws IOException {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {

@@ -17,16 +17,13 @@
 2.  Elimnate unnescessary variables, methods, and classes in programs for efficiency;
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
 4.  Make a debugger method stop(class) that can give you feed back on variables just like a regular debugger;
-5.  Get rid of warning messages without using annotations;
 6.  BUG!  DataBase.put doens't get title or keywords because it doesn't have the source object yet!
-7.  Find a way to get rid of type-casting warnings without using annotations;
 8.  See if writing page objects instead of text data to a file would be better;
 9.  Make ip to domain name crawler option;
 10. Experiment with DataFile storage to see if file storage is any different than array storage;
 11. BUG! Figure out why Page.getKeyWords returns an empty string with blank spaces in it;
-12. Make webpage for this preferablly from free webspace type thins
+12. BUG! Debug.print(**primitive**) gets confused with Debug.print(**object**);
 13. Have checkError work for all data types so that it will work depending on what data object I use;
-14. BUG! Update D.check methods in page so that they check for filled content in page instead of just for null objects;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
@@ -34,7 +31,6 @@
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
 20. Put in a link that invokes the remove method(s) in test page so we can test it;
 21  Improve the remove function in datacollection so that it is more robust.  It may not work on last element;
-22. Change Data<T>.connect and Data<T>.disconnect to Data<T>.open and Data<T>.close;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
 25. Think about make spider classes and methods static and one method to access them all from Drudge.

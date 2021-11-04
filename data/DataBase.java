@@ -51,6 +51,7 @@ insert into drudge values (link, title, keywords);
 	return size;	
 	}
 
+	@SuppressWarnings("unchecked")	
 	public T get(final int i) {
 	T page = null;
 	final String query = "SELECT " + link + " FROM " + table;

@@ -216,7 +216,8 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return it;
 	}
 		
-	/*The default assumes that it is working with a page object*/	
+	@SuppressWarnings("unchecked")	
+	/*The default assumes that it is working with a page object*/
 	default void begin() throws Exception {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
@@ -246,7 +247,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	}
 
 	/*The default assumes you are working with a page object.  Subclasses should overrid*/
-	default void end() throws Exception {
+	default void finish() throws Exception {
 	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
 		for (T t : this) {
 		Debug.check(t, null);

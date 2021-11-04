@@ -57,6 +57,7 @@ private Object[] objs = new Object[10];
 			return next;	
 			}
 
+			@SuppressWarnings("unchecked")	
 			public T next() {
 			i++;//increment first!
 			return (T)objs[i];
@@ -114,6 +115,7 @@ private Object[] objs = new Object[10];
 
 	public T get(int i) {
 	Debug.check(i, 0, size, "DataArray.get(int)");//throws indexoutofboundsexception if it is outside of the exceptable range
+	@SuppressWarnings("unchecked")	
 	T entry = (T)objs[i];
 	return entry;
 	}

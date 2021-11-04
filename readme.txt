@@ -22,7 +22,6 @@
 9.  Make ip to domain name crawler option;
 10. Experiment with DataFile storage to see if file storage is any different than array storage;
 11. BUG! Figure out why Page.getKeyWords returns an empty string with blank spaces in it;
-12. BUG! Debug.print(**primitive**) gets confused with Debug.print(**object**);
 13. Have checkError work for all data types so that it will work depending on what data object I use;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
@@ -33,7 +32,6 @@
 21  Improve the remove function in datacollection so that it is more robust.  It may not work on last element;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
-25. Think about make spider classes and methods static and one method to access them all from Drudge.
 26. BUG!  Spider class doesn't checkexcluded for redirected urls and should have a checkecluded variable like checkok and norobots;
 
 *************************OFFICIAL FORMAT OF THIS FILE*********************************************************

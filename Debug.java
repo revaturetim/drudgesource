@@ -30,27 +30,10 @@ final private static String sep = " | ";
 
 	public static void stop() {
 		if (on) {
-		
 		stop("");//this will call the stop method as it is suppose to
 		}
 	}
 		
-	public static void print(Exception...exceptions) {
-		if (on) {
-			for (Exception E : exceptions) {
-			System.out.print(E.getMessage());
-			}
-		}
-	}
-
-	public static void println(Exception...exceptions) {
-		if (on) {
-			for (Exception E : exceptions) {
-			System.out.println(E.getMessage());
-			}
-		}
-	}
-	
 	public static void print(Object...objs) {
 		if (on) {
 			for (Object obj : objs) {
@@ -79,157 +62,22 @@ final private static String sep = " | ";
 		}
 	}
 	
-	public static void print(int...ints) {
-		if (on) {
-			for (int j : ints) {
-			System.out.printf("%10s=%-10d" + sep, "integer", j);
-			}
-		}
-	
-	}
-	
-	public static void println(int...ints) {
-		if (on) {
-			for (int j : ints) {
-			System.out.printf("%10s=%-10d\n", "integer", j);
-			}
-		}
-	
-	}
-
-	public static void print(char...chars) {
-		if (on) {
-			for (char c : chars) {
-			System.out.printf("%10s=%-10d" + sep, "character", c);
-			}
-		}
-	
-	}
-	
-	public static void println(char...chars) {
-		if (on) {
-			for (char c : chars) {
-			System.out.printf("%10s=%-10d\n", "character", c);
-			}
-		}
-	
-	}
-	
-
-	public static void print(double...doubles) {
-		if (on) {
-			for (double d : doubles) {
-			System.out.printf("%10s=%-10d" + sep, "double", d);
-			}
-		}
-	}
-	
-	public static void println(double...doubles) {
-		if (on) {
-			for (double d : doubles) {
-			System.out.printf("%10s=%-10d\n", "double", d);
-			}
-		}
-	}
-	
-	public static void print(float...floats) {
-		if (on) {
-			for (float f : floats) {
-			System.out.printf("%10s=%-10d" + sep, "float", f);
-			}
-		}
-	}
-	
-	public static void println(float...floats) {
-		if (on) {
-			for (float f : floats) {
-			System.out.printf("%10s=%-10d\n", "float", f);
-			}
-		}
-	}
-	
-
-	public static void print(byte...bytes) {
-		if (on) {
-			for (byte b : bytes) {
-			System.out.printf("%10s=%-10d" + sep, "byte", b);
-			}
-		}
-	}
-	
-	public static void println(byte...bytes) {
-		if (on) {
-			for (byte b : bytes) {
-			System.out.printf("%10s=%-10d\n", "byte", b);
-			}
-		}
-	}
-
-	
-	public static void print(boolean...booleans) {
-		if (on) {
-			for (boolean b : booleans) {
-			System.out.printf("%10s=%-10b" + sep, "boolean", b);
-			}
-		}	
-	}
-
-	public static void println(boolean...booleans) {
-		if (on) {
-			for (boolean b : booleans) {
-			System.out.printf("%10s=%-10b\n", "boolean", b);
-			}
-		}	
-	}
-
-	public static void print(long...longs) {
-		if (on) {
-			for (long l : longs) {
-			System.out.printf("%10s=%-10d" + sep, "long", l);
-			}
-		}
-	}
-	
-	public static void println(long...longs) {
-		if (on) {
-			for (long l : longs) {
-			System.out.printf("%10s=%-10d\n", "long", l);
-			}
-		}
-	}
-	
-
-	public static void print(short...shorts) {
-		if (on) {
-			for (short s : shorts) {
-			System.out.printf("%10s=%-10d" + sep, "short", s);
-			}
-		}	
-	}
-
-	public static void println(short...shorts) {
-		if (on) {
-			for (short s : shorts) {
-			System.out.printf("%10s=%-10d\n", "short", s);
-			}
-		}	
-	}
-	
 	public static <T> void check(final Predicate<T> P, final T obj, final String msg, final Class c) throws IllegalArgumentException {
-		System.out.println(P.test(obj));
-		if (!P.test(obj)) {//failed test
-			if (c != null) {
-			println("Failed Check Inside of " + c.getName());
+		if (on) {
+			if (!P.test(obj)) {//failed test
+				if (c != null) {
+				println("Failed Check Inside of " + c.getName());
+				}
+			throw new IllegalArgumentException(msg);
 			}
-		throw new IllegalArgumentException(msg);
 		}
 	}
 
-	public static <T> void check(final Predicate P, final T obj, final String msg) throws IllegalArgumentException {
+	public static <T> void check(final Predicate<T> P, final T obj, final String msg) throws IllegalArgumentException {
 		check(P, obj, msg, null);
 	}
 
-	public static <T> void check(Predicate P, final T obj) throws IllegalArgumentException {
+	public static <T> void check(Predicate<T> P, final T obj) throws IllegalArgumentException {
 		check(P, obj, obj.toString(), null);
 	}
 

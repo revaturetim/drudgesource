@@ -41,4 +41,4 @@
 7. Anyone can add to the list of things to do but don't expect people to immediatly work on it since your idea may not be that great;
 
 ************************End User License Agreement*************************************************************************************
-This is opensource freeware.   Do whatever you want with it.
+This software is free for personal use only so if you are a business then you have to pay the author of this program.

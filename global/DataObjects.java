@@ -21,7 +21,7 @@ final public static Data<Page> dada = (Data<Page>)new DataCollection<Page>(FileN
 //final public static Data<URL> dada_emails = (Data<URL>)new DataCollection<URL>(FileNames.emails);
 final public static Data<URL> dada_emails = (Data<URL>)new DataEmailCollection<URL>(FileNames.emails);
 final public static Data<Page> excludedlinks = new DataList<Page>();
-final public static Data<Page> includedlinks = new DataList<Page>();
+//final public static Data<Page> includedlinks = new DataList<Page>();
 
 
 

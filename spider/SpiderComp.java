@@ -23,12 +23,7 @@ private Comparator<Page> compare = new TopComparator<Page>();
 		Collections.sort(pages, compare);//this sorts it the way it should be sorted for this spider	
 			for (Page page : pages) {
 				try {
-				page.isExcluded(Drudge.excorinc);
 				DataObjects.dada.put(page);
-				}
-				catch (ExcludedURLException E) {
-				//Debug.here(E);
-				E.printRow();
 				}
 				catch (DuplicateURLException Du) {
 				//Debug.here("links");

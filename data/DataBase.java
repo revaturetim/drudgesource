@@ -137,6 +137,14 @@ insert into drudge values (link, title, keywords);
 	return result;
 	}
 
+	public boolean check() {
+	return true;
+	}
+	
+	public boolean checkError() {
+	return true;
+	}
+	
 	public String source() {
 	return dburl;
 	}

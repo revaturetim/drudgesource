@@ -22,12 +22,7 @@ private Random random = new Random();
 		Collections.shuffle(pages, random);
 			for (Page page : pages) {
 				try {
-				page.isExcluded(Drudge.excorinc);
 				DataObjects.dada.put(page);
-				}
-				catch (ExcludedURLException E) {
-				//Debug.here(E);
-				E.printRow();
 				}
 				catch (DuplicateURLException Du) {
 				//Debug.here("links");

@@ -64,12 +64,6 @@ private boolean connected = false;
 	return toString().hashCode();
 	}
 	
-	public void connect() throws IOException, SocketTimeoutException {
-	Debug.check(connection, null, P.nosrc);
-	connection.connect();
-	connected = true;	
-	}
-
 	public Data<Page> getLinks() {
 		//I just liked anonymous classes/methods so I decided to keep this
 		//It also refers to the this object url variable for its absolute path

@@ -12,19 +12,18 @@ import java.util.*;
 public class Spider {
 protected boolean checkok = true;
 protected boolean norobots = false;
+protected boolean excludemode = false;
+protected boolean excorinc = true;//true value is exclude and false is include
 
 	//a convenience method for handling links and it makes other spiders do different things
 	protected void links(Page p) {
+		
 		try {
 		p.getSource();
 		Data<Page> pages = p.getLinks();
 			for (Page page : pages) {
 				try {
-				page.isExcluded(Drudge.excorinc);
 				DataObjects.dada.put(page);
-				}
-				catch (ExcludedURLException E) {
-				E.printRow();
 				}
 				catch (DuplicateURLException Du) {
 				Du.printRow();
@@ -53,14 +52,18 @@ protected boolean norobots = false;
 			p.isRobotAllowed();//this throws norobotsallowedexception	
 			Debug.endCycleTime("Checking Robot Allowed");
 			}
+			if (excludemode) {
+			p.isExcluded(excorinc);
+			Debug.endCycleTime("Checking Excluded Link");
+			}
 		links(p);
 		}
 		catch (RedirectedURLException R) {
-		links(p);
 		Page.Header h = p.header();
 		final String redloc = h.getRedirectLocation();
 			try {
 			Page rediruri = new Page(redloc);
+			p.isExcluded(excorinc);
 				try {
 				DataObjects.dada.put(rediruri);
 				Debug.endCycleTime("Redirected");
@@ -81,6 +84,10 @@ protected boolean norobots = false;
 			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, M); 
 			Print.printRow(M, redloc);
 			}
+			catch (ExcludedURLException E) {
+			spinIssue("Found an excludedlinkexception when getting Redirect Link", p, E);
+			E.printRow();
+			}
 			catch (IOException I) {
 			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, I); 
 			Print.printRow(I, redloc);
@@ -100,7 +107,13 @@ protected boolean norobots = false;
 		}
 		catch (NoRobotsURLException N) {
 		//spinIssue("No robots allowed for this link", p, N);
+		remove = true;
 		N.printRow();
+		}
+		catch (ExcludedURLException E) {
+		//spinIssue("This link was excluded from spider", p, N);
+		remove = true;
+		E.printRow();
 		}
 		catch (NoContentURLException N) {
 		//spinIssue("Found a no content link while checking if it is a useless", p, N);
@@ -120,6 +133,16 @@ protected boolean norobots = false;
 	public void setRobotsAllowed(boolean b) {
 	norobots = b;
 	}
+	
+	public void setExcludeMode(boolean b) {
+	excludemode = b;
+	}
+	
+	public void setExcludeMode(boolean b, boolean e) {
+	excludemode = b;
+	excorinc = e;
+	}
+	
 
 	//I thought that calling issue was humorous like you have a issues
 	protected void spinIssue(String i, Object o, Exception e) {

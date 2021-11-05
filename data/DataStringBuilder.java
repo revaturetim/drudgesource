@@ -58,7 +58,15 @@ String file = FileNames.links;
 	String[] barray = bstring.split("\n");
 	return barray.length;
 	}
-
+	
+	public boolean check() {
+	return true;
+	}
+	
+	public boolean checkError() {
+	return true;
+	}
+	
 	public String source() {
 	return file;
 	}

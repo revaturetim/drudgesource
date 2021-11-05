@@ -9,10 +9,8 @@ public class SizeComparator<T extends Page> implements Comparator<T> {
 
 	public int compare(T p1, T p2) {
 		try {
-	p1.connect();
-	p2.connect();
-	p1.getSource();
-	p2.getSource();
+		p1.getSource();
+		p2.getSource();
 		}
 		catch (IOException I) {
 

@@ -42,7 +42,15 @@ private String file = FileNames.links;
 		return null;
 		}
 	}
-
+	
+	public boolean check() {
+	return true;
+	}
+	
+	public boolean checkError() {
+	return true;
+	}
+	
 	public String source() {
 	return file;
 	}

@@ -40,7 +40,15 @@ final private PipedReader preader = new PipedReader();
 		}
 	return new PrintWriter(new BufferedWriter(pwriter));
 	}
-
+	
+	public boolean check() {
+	return true;
+	}
+	
+	public boolean checkError() {
+	return true;
+	}
+	
 	public String source() {
 	return FileNames.links;
 	}

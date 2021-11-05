@@ -11,7 +11,6 @@ import java.util.*;
 import java.nio.file.*;
 
 public class Drudge implements DataObjects {
-public static boolean excorinc = true;
 public static String XFACTOR = null;
 
 	public static void main(final String[] arg) {
@@ -19,9 +18,11 @@ public static String XFACTOR = null;
 	int maxcyc = 1;
 	int crawlmethod = 1;
 	int begcyc = 0;//default starting number for program
-	boolean getemails = false;Debug.print(begcyc);
+	boolean getemails = false;
 	boolean okays = true;
 	boolean norobots = false;
+	boolean excorinc = true;
+	boolean excludemode = false;
 	Spider spider = null;
 	long MemoryStart = Runtime.getRuntime().freeMemory();
 	eraseFile(FileNames.error);
@@ -62,6 +63,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			String[] b = a.split("=", 2);
 			String[] c = b[1].split(",");
 			excorinc = true;
+			excludemode = true;
 				for (String clink : c) {
 					try {
 					Page page = new Page(clink);
@@ -128,6 +130,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			String[] b = a.split("=", 2);
 			String[] c = b[1].split(",");
 			excorinc = false;
+			excludemode = true;
 				for (String clink : c) {
 					try {
 					Page page = new Page(clink);
@@ -226,24 +229,15 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
-					p.connect();
-						try {
-						p.isUseless();	
-						p.isRobotAllowed();
-						System.out.println("Yes!  " + ThisProgram.name + " is allowe");
-						}
-						catch (NoRobotsURLException N) {
-						Print.error(N, p);
-						}
-						catch (UselessURLException U) {
-						Print.error(U, p);
-						}
-					}	
-					catch (SocketTimeoutException S) {
-					Print.error(S, p);
+					p.isUseless();	
+					p.isRobotAllowed();
+					System.out.println("Yes!  " + ThisProgram.name + " is allowed");
 					}
-					catch (IOException I) {
-					Print.error(I, p);
+					catch (NoRobotsURLException N) {
+					Print.error(N, p);
+					}
+					catch (UselessURLException U) {
+					Print.error(U, p);
 					}
 				}
 				catch (MalformedURLException M) {
@@ -253,10 +247,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(U, arg[i + 1]);
 				}
 				catch (NotHTMLURLException N) {
-				Print.error(N);
+				Print.error(N, arg[i + 1]);
+				}
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
@@ -265,12 +262,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			continue;
 			}
 			else if (a.equals("-E") && arg.length == 1) {
-				try {
-				boolean error = dada.checkError();
-				}
-				catch (IOException I) {
-				Print.error(I);
-				}
+			boolean error = dada.checkError();
+			boolean email_error = dada_emails.checkError();
 			System.out.println("Have a nice day :)");
 			break;
 			}
@@ -308,10 +301,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(U, arg[i + 1]);
 				}
 				catch (NotHTMLURLException N) {
-				Print.error(N);
+				Print.error(N, arg[i + 1]);
+				}
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
@@ -332,10 +328,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(U, arg[i + 1]);
 				}
 				catch (NotHTMLURLException N) {
-				Print.error(N);
+				Print.error(N, arg[i + 1]);
+				}
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
@@ -343,24 +342,15 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
-					p.connect();
-						try {
-						p.isUseless();
-						p.getSource();
-						Data<String> keywords = p.getKeywords();
-							for (String keyword : keywords) {
-							System.out.println(keyword);
-							}		
-						}
-						catch (UselessURLException U) {
-						Print.error(U, p);
-						}
+					p.isUseless();
+					p.getSource();
+					Data<String> keywords = p.getKeywords();
+						for (String keyword : keywords) {
+						System.out.println(keyword);
+						}		
 					}
-					catch (SocketTimeoutException S) {
-					Print.error(S, p);
-					}
-					catch (IOException I) {
-					Print.error(I, p);
+					catch (UselessURLException U) {
+					Print.error(U, p);
 					}
 				}
 				catch (MalformedURLException M) {
@@ -370,36 +360,30 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(U, arg[i + 1]);
 				}
 				catch (NotHTMLURLException N) {
-				Print.error(N);
+				Print.error(N, arg[i + 1]);
+				}
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
 			else if (a.equals("-L") && arg.length == 2 && i == 0) {
 				try {
-				Page p = createFirstPage(arg[i + 1]);
+				Page p = createFirstPage(arg[i + 1]);	
 					try {
-					p.connect();
-						try {
-						p.isUseless();	
-						p.getSource();
-						Data<Page> pages = p.getLinks();
-							for (Page page : pages) {
-							System.out.println(page.toString());
-							}
+					p.isUseless();	
+					p.getSource();
+					Data<Page> pages = p.getLinks();
+						for (Page page : pages) {
+						System.out.println(page.toString());
 						}
-						catch (UselessURLException U) {
-						Print.error(U, p);
-						}
+					}
+					catch (UselessURLException U) {
+					Print.error(U, p);
 					}	
-					catch (SocketTimeoutException S) {
-					Print.error(S, p);
-					}
-					catch (IOException I) {
-					Print.error(I, p);
-					}
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -408,35 +392,30 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(U, arg[i + 1]);
 				}
 				catch (NotHTMLURLException N) {
-				Print.error(N);
+				Print.error(N, arg[i + 1]);
+				}
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
 			else if (a.startsWith("-P") && arg.length == 2 && i == 0) {
 				try {
 				long pt = System.currentTimeMillis();
-				Page pinged = createFirstPage(arg[i + 1]);
-					try {
-					pinged.connect();
-
-					//successful connection
-					long et = System.currentTimeMillis();
-					long time = et - pt;
-					System.out.print("The total time it took to connect to ");
-					System.out.print(arg[i + 1]);
-					System.out.print(" was ");
-					Print.totalTime(time);
-					System.out.print("\n");
-					}
-					catch (SocketTimeoutException S) {
-					Print.error(S);	
-					}
-					catch (IOException I) {
-					Print.error(I);
-					}
+				URL url = new URL(arg[i + 1]);
+				URLConnection connection = url.openConnection();
+				connection.connect();
+				//successful connection
+				long et = System.currentTimeMillis();
+				long time = et - pt;
+				System.out.print("The total time it took to connect to ");
+				System.out.print(arg[i + 1]);
+				System.out.print(" was ");
+				Print.totalTime(time);
+				System.out.print("\n");	
 				}
 				catch (IndexOutOfBoundsException I) {
 				Print.error(I);
@@ -444,14 +423,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
-				catch (URISyntaxException U) {
-				Print.error(U, arg[i + 1]);
-				}
-				catch (NotHTMLURLException N) {
-				Print.error(N);
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);	
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
@@ -462,21 +438,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				u = new URL(u, r);
 				Page p = new Page(u);
 					try {
-					p.connect();
-						try {
-						p.isUseless();
-						System.out.println(p.getSource());
-						}
-						catch (UselessURLException U) {
-						Print.error(U, p);
-						}
+					p.isUseless();
+					System.out.println(p.getSource());
 					}
-					catch (SocketTimeoutException S) {
-					Print.error(S, p);
-					}
-					catch (IOException I) {
-					Print.error(I, p);
-					}
+					catch (UselessURLException U) {
+					Print.error(U, p);
+					}	
 				}
 				catch (URISyntaxException U) {
 				Print.error(U, arg[i + 1]);
@@ -485,10 +452,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(M, arg[i + 1]);	
 				}
 				catch (NotHTMLURLException N) {
-				Print.error(N);
+				Print.error(N, arg[i + 1]);
+				}
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error(I, arg[i + 1]);
 				}
 			break;	
 			}
@@ -496,21 +466,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
-					p.connect();
-						try {
-						p.isUseless();
-						System.out.println(p.getSource());
-						}
-						catch (UselessURLException U) {
-						Print.error(U, p);
-						}
+					p.isUseless();
+					System.out.println(p.getSource());
 					}
-					catch (SocketTimeoutException I) {
-					Print.error(I, p);
-					}
-					catch (IOException I) {
-					Print.error(I, p);
-					}
+					catch (UselessURLException U) {
+					Print.error(U, p);
+					}	
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -519,10 +480,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(U, arg[i + 1]);
 				}
 				catch (NotHTMLURLException N) {
-				Print.error(N);
+				Print.error(N, arg[i + 1]);
+				}
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
@@ -530,22 +494,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
-					p.connect();
-						try {
-						p.isUseless();
-						p.getSource(); 
-						String title = p.getTitle();
-						System.out.println(title);
-						}
-						catch (UselessURLException U) {
-						Print.error(U, p);
-						}
-					}	
-					catch (SocketTimeoutException S) {
-					Print.error(S, p);
+					p.isUseless();
+					p.getSource(); 
+					String title = p.getTitle();
+					System.out.println(title);
 					}
-					catch (IOException I) {
-					Print.error(I, p);
+					catch (UselessURLException U) {
+					Print.error(U, p);
 					}
 				}
 				catch (MalformedURLException M) {
@@ -555,31 +510,25 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(U, arg[i + 1]);
 				}
 				catch (NotHTMLURLException N) {
-				Print.error(N);
+				Print.error(N, arg[i + 1]);
+				}
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
 			else if (a.equals("-U") && arg.length == 2 && i == 0) {
 				try {
-				Page p = createFirstPage(arg[i + 1]);
-			       		try {
-						p.connect();
-						try {	
-						p.isUseless();
-						System.out.println("This is not a useless url for this program");	
-						}
-						catch (UselessURLException U) {
-						Print.error(U, p);
-						}
+				Page p = createFirstPage(arg[i + 1]);	
+					try {	
+					p.isUseless();
+					System.out.println("This is not a useless url for this program");	
 					}
-					catch (SocketTimeoutException S) {
-					Print.error(S, p);
-					}
-					catch (IOException I) {
-					Print.error (I, p);
+					catch (UselessURLException U) {
+					Print.error(U, p);
 					}
 				}
 				catch (MalformedURLException M) {
@@ -589,10 +538,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(U, arg[i + 1]);
 				}
 				catch (NotHTMLURLException N) {
-				Print.error(N);
+				Print.error(N, arg[i + 1]);
+				}
+				catch (SocketTimeoutException S) {
+				Print.error(S, arg[i + 1]);
 				}
 				catch (IOException I) {
-				Print.error(I);
+				Print.error (I, arg[i + 1]);
 				}
 			break;
 			}
@@ -661,6 +613,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			spider = createSpider(crawlmethod);
 			spider.setCheckOK(okays);
 			spider.setRobotsAllowed(norobots);
+			spider.setExcludeMode(excludemode, excorinc);
 
 				if (getemails) {
 					try {	

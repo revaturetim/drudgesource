@@ -36,7 +36,15 @@ private final static long serialVersionUID = 0;
 		add(link);
 		}
 	}
-
+	
+	public boolean check() {
+	return true;
+	}
+	
+	public boolean checkError() {
+	return true;
+	}
+	
 	public String source() {
 	return source;
 	}

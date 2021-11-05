@@ -22,17 +22,14 @@
 9.  Make ip to domain name crawler option;
 10. Experiment with DataFile storage to see if file storage is any different than array storage;
 11. BUG! Figure out why Page.getKeyWords returns an empty string with blank spaces in it;
-13. Have checkError work for all data types so that it will work depending on what data object I use;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
-18. Figure out alternative way to ping website without the need do call Page.connect() and do away with the method alltogether;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
 20. Put in a link that invokes the remove method(s) in test page so we can test it;
 21  Improve the remove function in datacollection so that it is more robust.  It may not work on last element;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
-26. BUG!  Spider class doesn't checkexcluded for redirected urls and should have a checkecluded variable like checkok and norobots;
 
 *************************OFFICIAL FORMAT OF THIS FILE*********************************************************
 1. All sections of this file must have ******Section title********** to seperate it from the rest of the file;

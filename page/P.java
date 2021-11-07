@@ -349,8 +349,6 @@ final static private String Null = "null";
 
 	public static Data<String> getKeywords(final CharSequence source, Data<String> words) {
 	final String text = source.toString().toLowerCase();
-	DataList<String> donotusewords = new DataList<String>();
-	donotusewords.add("the");
 	int e = 0;
 		for (int b = 0; b != -1; b = text.indexOf(">", b + 1)) {
 		e = text.indexOf("<", b);
@@ -362,7 +360,7 @@ final static private String Null = "null";
 		String[] somewords = sometext.split("\\s");//this splits and coincidently removes all whitespace characters
 			for (String word : somewords) {
 				if (word.length() > 2) {
-					if (!donotusewords.contains(word)) {	
+					if (!DataObjects.donotusewords.contains(word)) {	
 						try {
 						words.put(word);//this will keep out duplicate entries
 						}

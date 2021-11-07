@@ -23,8 +23,8 @@ private URL url = null;
 private URL roboturl = null;
 private URLConnection connection = null;	
 final private Data<Page> dlist = new DataList<Page>();
-private Data<URL> elist = new DataList<URL>();
-private Data<String> klist = new DataList<String>();
+final private Data<URL> elist = new DataList<URL>();
+final private Data<String> klist = new DataList<String>();
 private boolean connected = false;
 
 	public Page(URL u) throws URISyntaxException, NotHTMLURLException, IOException {
@@ -84,7 +84,7 @@ private boolean connected = false;
 	}
 	
 	public Data<URL> getEmails() {
-	elist = P.getEmails(content, elist);
+	P.getEmails(content, elist);
 	Debug.endCycleTime("Getting Emails");
 	return elist;
 	}
@@ -104,7 +104,7 @@ private boolean connected = false;
 	}
 	
 	public Data<String> getKeywords() {
-	klist = P.getKeywords(content, klist);
+	P.getKeywords(content, klist);
 	Debug.endCycleTime("Getting Keywords");
 	return klist;
 	}

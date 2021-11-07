@@ -40,7 +40,7 @@ insert into drudge values (link, title, keywords);
 	int size = 0;
 	final String query = "SELECT count(link) FROM " + table;
 		try {
-		ResultSet result = connect(query);
+		ResultSet result = query(query);
 		size = result.getInt(1);
 		}
 		catch (SQLException S) {
@@ -56,7 +56,7 @@ insert into drudge values (link, title, keywords);
 	T page = null;
 	final String query = "SELECT " + link + " FROM " + table;
 		try {
-		ResultSet result = connect(query);
+		ResultSet result = query(query);
 
 			if (result.absolute(i + 1)) {
 			String s = result.getString(link);
@@ -86,7 +86,7 @@ insert into drudge values (link, title, keywords);
 	T page = null;	
 	final String query = "SELECT * FROM " + table;
 		try {
-		ResultSet result = connect(query);
+		ResultSet result = query(query);
 			if (result.absolute(i + 1)) {
 			result.deleteRow();
 			}
@@ -111,10 +111,18 @@ insert into drudge values (link, title, keywords);
 		pagekeywords = p.getKeywords().rawString().trim();
 		}
 
-	final String putquery = "INSERT INTO " + table + " values ('" + pagelink + "', '" + pagetitle + "', '" + pagekeywords + "')";
+	
 		try {
 			if (contains(page) == false) {
-			connect(putquery);
+			final String insertquery = "INSERT INTO " + 
+			table + " values ('" + pagelink + "', '" + pagetitle + "', '" + pagekeywords + "')";
+			query(insertquery);
+			}
+			else {
+			final String updatequery = "UPDATE " + table + " SET " + link + "=" + pagelink + ", " +
+			title + "=" + pagetitle + ", " + words + "=" + pagekeywords + 
+			"WHERE " + link + "=" + pagelink;
+			query(updatequery);
 			}
 		}
 		catch (SQLException S) {
@@ -126,11 +134,23 @@ insert into drudge values (link, title, keywords);
 	
 	/*this should always return false since only unique entries are allowed--no repeats possible*/
 	public boolean contains(Object page) {
-	
-	return false;
+	boolean exist = false;
+	final String pagelink = page.toString();
+	final String query = "SELECT count(" + link + ") FROM " + table + " WHERE " + link + "=" + pagelink;
+		try {
+		ResultSet result = query(query);
+		int resultcount = result.getInt(link);
+			if (resultcount > 0) {
+			exist = true;
+			}
+		}
+		catch (SQLException S) {
+		Print.printRow(S, page);
+		}
+	return exist;
 	}
 
-	private ResultSet connect(String query) throws SQLException {
+	private ResultSet query(String query) throws SQLException {
 	Connection con = DriverManager.getConnection(dburl);
 	Statement state = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 	ResultSet result = state.executeQuery(query);

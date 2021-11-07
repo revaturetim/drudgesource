@@ -28,6 +28,13 @@ private final static long serialVersionUID = 0;
 	super(col);
 	}
 	
+	public DataList(String s, T[] words) {
+	this(s);
+		for (T w : words) {
+		add(w);
+		}
+	}
+	
 	public void put(T link) throws DuplicateURLException {
 		if (contains(link)) {
 		throw new DuplicateURLException(link);

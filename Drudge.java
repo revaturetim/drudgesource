@@ -525,7 +525,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Page p = createFirstPage(arg[i + 1]);	
 					try {	
 					p.isUseless();
-					System.out.println("This is not a useless url for this program");	
+					System.out.println(p.toString() + " is not a useless url for this program");	
 					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
@@ -701,8 +701,30 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		String samplepage = absfile.toURI().toString();
 		firstpage = new Page(samplepage);
 		}
-		else {
+		else if (link.matches("http://.*")) {
 		firstpage = new Page(link);
+		}
+		else if (
+		link.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}") || 
+		link.matches(
+		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
+		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." +
+		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
+		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")
+		) {
+		String[] bites = link.split("\\.");
+		byte[] ip = new byte[bites.length];
+			for (int i = 0; i < bites.length; i++) {
+			ip[i] = Byte.valueOf(bites[i]);
+			}
+		InetAddress address = InetAddress.getByAddress(ip);
+		String host = address.getCanonicalHostName();
+		firstpage = new Page(host);
+		}
+		else if (link.equals("yourcomputer")) {
+		InetAddress address = InetAddress.getLocalHost();
+		String host = address.getCanonicalHostName();
+		firstpage = new Page(host);
 		}
 	return firstpage;
 	}

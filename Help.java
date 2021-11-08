@@ -152,21 +152,18 @@ static final private String HELP = "-HELP";
 		System.out.println("Warning: Don't assume this will always work because not all robots.txt files are made correctly!");
 		}
 		else if (key.equals(inc.par) || key.equals(include.par)) {
-		System.out.println("This is to include only urls listed after the \"=\"");
-		System.out.println("This is a very inclusive option because it will exlcude all other website not listed");
-		System.out.println("Example: -exc=http://www.included-website");
-		System.out.println("You can also use -include= instead of -inc=");
-		System.out.println("Example: -include=http://www.included-website.com");
-		System.out.println("You can also include multiple websites by using a comma between each one.");
-		System.out.println("Example: -inlcude=http://www.included-website.com,http://another.included-website.com");
+		System.out.println("This is to include only urls listed in the " + FileNames.exclude + " file");
+		System.out.println("This is a very inclusive option because it will include all urls listed in file");
+		System.out.println("Example: -inc");
+		System.out.println("You can also use -include= if you want to use your own custom file");
+		System.out.println("Example: -include=your/custom/file/here");
 		}
 		else if (key.equals(exc.par) || key.equals(exclude.par)) {
-		System.out.println("This is to exlude urls listed after the \"=\"");
-		System.out.println("Example: -exc=http://www.excluded-website");
-		System.out.println("You can also use -exclude= instead of -exc=");
-		System.out.println("Example: -exclude=http://www.excluded-website.com");
-		System.out.println("You can also exclude multiple websites by using a comma between each one.");
-		System.out.println("Example: -exlcude=http://www.excluded-website.com,http://another.excluded-website.com");
+		System.out.println("This is to exclude urls listed in the " + FileNames.exclude + " file");
+		System.out.println("This is a very exclusive option because it will exlcude all other urls listed in file");
+		System.out.println("Example: -exc");
+		System.out.println("You can also use -exclude= if you want to use your own custom file");
+		System.out.println("Example: -exclude=your/custom/file/here");
 		}
 		else if (key.equals(nok.par)) {
 		System.out.println("This will force the spider to only accept all HTTP responses.");

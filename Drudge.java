@@ -51,6 +51,17 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			String[] b = a.split("=", 2);
 				try {
 				Page.data = Integer.parseUnsignedInt(b[1]);
+					if (Page.data == 3) {
+						try {
+						fillStringFromFile(FileNames.words, donotusewords);
+						}
+						catch (IOException I) {
+						Print.error(I);
+						}
+						catch (DuplicateURLException D) {
+						Print.error(D);
+						}
+					}
 				}
 				catch (NumberFormatException N) {
 				Print.error(N);
@@ -59,33 +70,33 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals("-e")) {
 			getemails = true;
 			}	
-			else if (a.startsWith("-exc=") || a.startsWith("-exclude=")) {
+			else if (a.startsWith("-exc") || a.startsWith("-exclude=")) {
 			String[] b = a.split("=", 2);
-			String[] c = b[1].split(",");
+			String file = FileNames.exclude;
+				//this is for custom exclude file
+				if (b[0].equals("-exclude")) {
+				file = b[1];
+				}
 			excorinc = true;
 			excludemode = true;
-				for (String clink : c) {
-					try {
-					Page page = new Page(clink);
-					excludedlinks.put(page);
-					}
-					catch (URISyntaxException U) {
-					Print.error(U);
-					}
-					catch (NotHTMLURLException N) {
-					Print.error(N);
-					}
-					catch (MalformedURLException M) {
-					Print.error(M);
-					}
-					catch (DuplicateURLException D) {
-					Print.error(D);
-					}
-					catch (IOException I) {
-					Print.error(I);
-					}
+				try {
+				fillDataFromFile(file, excludedlinks);
 				}
-
+				catch (URISyntaxException U) {
+				Print.error(U);
+				}
+				catch (NotHTMLURLException N) {
+				Print.error(N);
+				}
+				catch (MalformedURLException M) {
+				Print.error(M);
+				}
+				catch (DuplicateURLException D) {
+				Print.error(D);
+				}
+				catch (IOException I) {
+				Print.error(I);
+				}	
 			}
 			else if ((a.equals("-help") || a.equals("-h")) && arg.length == 1) {
 			Help.print(a);
@@ -126,32 +137,34 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.startsWith("-inc=") || a.startsWith("-include=")) {
+			else if (a.startsWith("-inc") || a.startsWith("-include=")) {
 			String[] b = a.split("=", 2);
-			String[] c = b[1].split(",");
+			String file = FileNames.exclude;
+				//this is for custom exclude file
+				if (b[0].equals("-include")) {
+				file = b[1];
+				}
 			excorinc = false;
 			excludemode = true;
-				for (String clink : c) {
-					try {
-					Page page = new Page(clink);
-					excludedlinks.put(page);
-					}
-					catch (URISyntaxException U) {
-					Print.error(U);
-					}
-					catch (NotHTMLURLException N) {
-					Print.error(N);
-					}
-					catch (MalformedURLException M) {
-					Print.error(M);
-					}
-					catch (DuplicateURLException D) {
-					Print.error(D);
-					}
-					catch (IOException I) {
-					Print.error(I);
-					}
+				try {
+				fillDataFromFile(file, excludedlinks);
 				}
+				catch (URISyntaxException U) {
+				Print.error(U);
+				}
+				catch (NotHTMLURLException N) {
+				Print.error(N);
+				}
+				catch (MalformedURLException M) {
+				Print.error(M);
+				}
+				catch (DuplicateURLException D) {
+				Print.error(D);
+				}
+				catch (IOException I) {
+				Print.error(I);
+				}
+				
 			}
 			else if (a.equals("-l") && arg.length == 1) {
 			System.out.println("This is a general freeware to do with what you want.");
@@ -701,7 +714,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		String samplepage = absfile.toURI().toString();
 		firstpage = new Page(samplepage);
 		}
-		else if (link.matches("http://.*")) {
+		else if (link.matches("http[s]://.*")) {
 		firstpage = new Page(link);
 		}
 		else if (
@@ -725,6 +738,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		InetAddress address = InetAddress.getLocalHost();
 		String host = address.getCanonicalHostName();
 		firstpage = new Page(host);
+		}
+		else {
+		firstpage = new Page(link);
 		}
 	return firstpage;
 	}
@@ -821,6 +837,31 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	return erased;
 	}
 	
+	public static void fillDataFromFile(String file, Data<Page> data) throws IOException, 
+	URISyntaxException, DuplicateURLException, NotHTMLURLException {
+	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
+	
+		while (true) {
+		String line = reader.readLine();
+			if (line == null) break;
+			else {
+			Page page = new Page(line);
+			data.put(page);
+			}
+		}
+	
+	}
+	
+	public static void fillStringFromFile(String file, Data<String> data) throws IOException, DuplicateURLException {
+	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
+	
+		while (true) {
+		String line = reader.readLine();
+			if (line == null) break;
+			else data.put(line);
+		}
+	
+	}
 
 	
 }

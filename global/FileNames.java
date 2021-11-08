@@ -11,4 +11,6 @@ final static public String gout = "gout";
 final static public String samp = "drudge/sample.html";
 final static public String links = "links";
 final static public String emails = "emails";
+final static public String exclude = "excludedlinks";
+final static public String words = "words";
 }

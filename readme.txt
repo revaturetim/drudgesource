@@ -18,8 +18,10 @@
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
 4.  Make a debugger method stop(class) that can give you feed back on variables just like a regular debugger;
 8.  See if writing page objects instead of text data to a file would be better;
+9.  Make more efficient P.getKeywords method;
 10. Experiment with DataFile storage to see if file storage is any different than array storage;
 11. BUG! Figure out why Page.getKeyWords returns an empty string with blank spaces in it;
+12. BUG! Figure out why first website is added despite being in the excluded link file;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;

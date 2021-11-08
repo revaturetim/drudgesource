@@ -349,6 +349,25 @@ final static private String Null = "null";
 
 	public static Data<String> getKeywords(final CharSequence source, Data<String> words) {
 	final String text = source.toString().toLowerCase();
+	String[] somewords = text.split("<.*>|\\s|<script>.*</script>|<style>.*</style>");//this splits and coincidently removes all whitespace characters
+		for (String word : somewords) {
+			if (word.length() > 2) {
+				if (!DataObjects.donotusewords.contains(word)) {	
+					try {
+					words.put(word);//this will keep out duplicate entries
+					}
+					catch (DuplicateURLException D) {
+	
+					}
+				}
+				//else Debug.print(word);
+			}
+		}
+	return words;
+	}
+	
+	/*public static Data<String> getKeywords(final CharSequence source, Data<String> words) {
+	final String text = source.toString().toLowerCase();
 	int e = 0;
 		for (int b = 0; b != -1; b = text.indexOf(">", b + 1)) {
 		e = text.indexOf("<", b);
@@ -368,11 +387,13 @@ final static private String Null = "null";
 		
 						}
 					}
+					else Debug.print(word);
 				}
 			}
 		}
 	return words;
-	}
+	}*/
+	
 
 	public static Data<String> getKeywordsByRegex(final CharSequence source, Data<String> words) {
 	String text = source.toString().toLowerCase();

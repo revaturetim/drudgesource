@@ -23,9 +23,7 @@ final public static Data<URL> dada_emails = (Data<URL>)new DataEmailCollection<U
 final public static Data<Page> excludedlinks = new DataList<Page>();
 //final public static Data<Page> includedlinks = new DataList<Page>();
 
-
-final public static String[] wordsdonotuse = {"the"};
-final public static Data<String> donotusewords = (Data<String>)new DataList<String>(null, wordsdonotuse);
+final public static Data<String> donotusewords = (Data<String>)new DataList<String>(null);
 
 
 

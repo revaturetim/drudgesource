@@ -21,14 +21,7 @@ protected boolean excorinc = true;//true value is exclude and false is include
 		try {
 		p.getSource();
 		Data<Page> pages = p.getLinks();
-			for (Page page : pages) {
-				try {
-				DataObjects.dada.put(page);
-				}
-				catch (DuplicateURLException Du) {
-				Du.printRow();
-				}
-			}
+		DataObjects.dada.put(pages);
 		}
 		catch (SocketTimeoutException S) {
 		spinIssue("Found a Socket Timeout while getting source", p.getURL(), S);

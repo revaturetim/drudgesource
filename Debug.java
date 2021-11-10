@@ -114,7 +114,7 @@ final private static String sep = " | ";
 		check(a, b, "");
 	}
 
-	public static void check(final int a, final int b, final int e, final String msg) throws IndexOutOfBoundsException {
+	public static void between(final int a, final int b, final int e, final String msg) throws IndexOutOfBoundsException {
 		if (on) {
 			if (a < b || a > e) {
 			throw new IndexOutOfBoundsException(String.valueOf(a) 
@@ -126,8 +126,8 @@ final private static String sep = " | ";
 		}		
 	}
 	
-	public static void check(final int a, final int b, final int e) throws IndexOutOfBoundsException {
-		check(a, b, e, "");
+	public static void between(final int a, final int b, final int e) throws IndexOutOfBoundsException {
+		between(a, b, e, "");
 	}
 
 	public static void check(final boolean a, final boolean b, final String msg) throws IllegalArgumentException {

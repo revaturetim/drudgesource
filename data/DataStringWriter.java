@@ -12,6 +12,7 @@ import drudge.global.FileNames;
 public class DataStringWriter<T> extends DataWriter<T> {
 final private PipedWriter pwriter = new PipedWriter();
 final private PipedReader preader = new PipedReader();
+private int datalevel = 0;
 
 	public DataStringWriter() {
 	PRINTER = createWriter();	
@@ -52,5 +53,24 @@ final private PipedReader preader = new PipedReader();
 	public String source() {
 	return FileNames.links;
 	}
+
+	public void setLevel(int l) {
+	datalevel = l;
+	}
+
+	public int level() {
+	return datalevel;
+	}
+	
+	public void begin() {
+
+	}
+
+	public void finish() {
+
+	}
+
+
+
 
 }

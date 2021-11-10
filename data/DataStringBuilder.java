@@ -11,6 +11,7 @@ import java.util.*;
 public class DataStringBuilder<T> implements Data<T> {
 final private StringBuilder builder = new StringBuilder();
 String file = FileNames.links;
+private int datalevel = 0;
 
 	public T get(final int L) {
 	T p = null;
@@ -70,5 +71,22 @@ String file = FileNames.links;
 	public String source() {
 	return file;
 	}
+
+	public void setLevel(int l) {
+	datalevel = l;
+	}
+
+	public int level() {
+	return datalevel;
+	}
+
+	public void begin() {
+
+	}
+
+	public void finish() {
+
+	}
+
 
 }

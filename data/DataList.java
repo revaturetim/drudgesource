@@ -10,6 +10,7 @@ import drudge.data.*;
 
 public class DataList<T> extends ArrayList<T> implements Data<T> {
 private String source = null;
+private int datalevel = 0;
 private final static long serialVersionUID = 0;
 
 	public DataList() {
@@ -55,5 +56,22 @@ private final static long serialVersionUID = 0;
 	public String source() {
 	return source;
 	}
+
+	public void setLevel(int l) {
+	datalevel = l;
+	}
+
+	public int level() {
+	return datalevel;
+	}
+
+	public void begin() {
+
+	}
+
+	public void finish() {
+
+	}
+
 
 }

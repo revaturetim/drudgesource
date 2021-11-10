@@ -14,6 +14,7 @@ public class DataCollection<T> extends AbstractCollection<T> implements Data<T> 
 private int size = 0;
 private String source = null;
 private Object[] objs = new Object[10];
+private int datalevel = 1;
 
 	public DataCollection() {
 
@@ -101,7 +102,7 @@ private Object[] objs = new Object[10];
 	}
 	
 	public T remove(final int r) {
-	Debug.check(r, 0, size, "DataArray.remove(int)");
+	Debug.between(r, 0, size, "DataArray.remove(int)");
 	T pagereturn = get(r);
 	remove(pagereturn);
 	return pagereturn;
@@ -114,7 +115,7 @@ private Object[] objs = new Object[10];
 	}
 
 	public T get(int i) {
-	Debug.check(i, 0, size, "DataArray.get(int)");//throws indexoutofboundsexception if it is outside of the exceptable range
+	Debug.between(i, 0, size, "DataArray.get(int)");//throws indexoutofboundsexception if it is outside of the exceptable range
 	@SuppressWarnings("unchecked")	
 	T entry = (T)objs[i];
 	return entry;
@@ -221,9 +222,68 @@ private Object[] objs = new Object[10];
 	return (duplicate || linkerror);
 	}
 	
+	@SuppressWarnings("unchecked")	
+	/*The default assumes that it is working with a page object*/
+	public void begin() throws Exception {
+	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
+		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+		String[] ns = line.split(CountFile.sep);
+			try {
+			T p = (T)new Page(ns[0]);
+				try {
+				put(p);
+				}
+				catch (DuplicateURLException Du) {
+				D.error(Du);
+				}
+			}
+			catch (URISyntaxException U) {
+			D.error(U);
+			}
+			catch (NotHTMLURLException N) {
+			D.error(N);
+			}
+			catch (MalformedURLException M) {
+			D.error(M);
+			}
+			catch (IOException I) {
+			D.error(I);
+			}
+		}
+	}
+
+	/*The default assumes you are working with a page object.  Subclasses should override*/
+	public void finish() throws Exception {
+	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
+		for (T t : this) {
+		Debug.check(t, null);
+		Page tp = (Page)t;
+			for (int r = 0; r < level(); r++) {
+				if (r == 0) {
+				link_writer.append(tp.toString() + CountFile.sep);
+				}
+				else if (r == 1) {
+				link_writer.append(tp.getTitle() + CountFile.sep);
+				}
+				else if (r == 2) {
+				link_writer.append(tp.getKeywords().rawString());
+				}
+			}
+		link_writer.append("\n");
+		}
+	link_writer.close();
+	}
+
 	public String source() {
 	return source;
 	}
 
+	public void setLevel(int l) {
+	datalevel = l;
+	}
+
+	public int level() {
+	return datalevel;
+	}
 	
 }

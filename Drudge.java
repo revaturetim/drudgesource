@@ -50,8 +50,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.startsWith("-d=")) {
 			String[] b = a.split("=", 2);
 				try {
-				Page.data = Integer.parseUnsignedInt(b[1]);
-					if (Page.data == 3) {
+				int pagedata = Integer.parseUnsignedInt(b[1]);
+				dada.setLevel(pagedata);
+					if (pagedata == 3) {
 						try {
 						fillStringFromFile(FileNames.words, donotusewords);
 						}
@@ -70,17 +71,17 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals("-e")) {
 			getemails = true;
 			}	
-			else if (a.startsWith("-exc") || a.startsWith("-exclude=")) {
-			String[] b = a.split("=", 2);
+			else if (a.startsWith("-exc") || a.startsWith("-exclude=")) {	
 			String file = FileNames.exclude;
 				//this is for custom exclude file
-				if (b[0].equals("-exclude")) {
+				if (a.startsWith("-exclude=")) {
+				String[] b = a.split("=", 2);
 				file = b[1];
 				}
 			excorinc = true;
 			excludemode = true;
 				try {
-				fillDataFromFile(file, excludedlinks);
+				fillPageFromFile(file, exclude);
 				}
 				catch (URISyntaxException U) {
 				Print.error(U);
@@ -138,16 +139,16 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.startsWith("-inc") || a.startsWith("-include=")) {
-			String[] b = a.split("=", 2);
 			String file = FileNames.exclude;
 				//this is for custom exclude file
-				if (b[0].equals("-include")) {
+				if (a.startsWith("-include=")) {
+				String[] b = a.split("=", 2);
 				file = b[1];
 				}
 			excorinc = false;
 			excludemode = true;
 				try {
-				fillDataFromFile(file, excludedlinks);
+				fillPageFromFile(file, exclude);
 				}
 				catch (URISyntaxException U) {
 				Print.error(U);
@@ -643,22 +644,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				boolean remove = spider.crawl(p);
 					if (remove == true) {
 					dada.remove(begcyc);
+					continue;//this skips all of the rest of the loop and restarts it
 					}
-					else {
-						if (getemails) {
-						Data<URL> emails = p.getEmails();
-							for (URL email : emails) {
-								try {
-								dada_emails.put(email);
-								}
-								catch (DuplicateURLException Du) {
-								Du.printRow();
-								}
-							}
-						}
-					Print.printRow(p, begcyc);
-					begcyc++;
+					if (getemails) {
+					Data<URL> emails = p.getEmails();
+					dada_emails.put(emails);
 					}
+				Print.printRow(p, begcyc);
+				begcyc++;
 					if (begcyc >= maxcyc) {
 					break;
 					}
@@ -684,7 +677,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				CountFile.set(begcyc);
 				}
 				catch (IOException I) {
-				Print.error(I);
 				Print.error(I);
 				}
 			Debug.endCycleTime("Writing Countfile");
@@ -828,7 +820,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	return spider;
 	}
 	
-	public static boolean eraseFile(String filename) {
+	static boolean eraseFile(String filename) {
 	boolean erased = false;
 	File efile = new File(filename);
 		if (efile.exists()) {
@@ -837,7 +829,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	return erased;
 	}
 	
-	public static void fillDataFromFile(String file, Data<Page> data) throws IOException, 
+	static void  fillPageFromFile(String file, Data<Page> data) throws IOException, 
 	URISyntaxException, DuplicateURLException, NotHTMLURLException {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
 	
@@ -852,7 +844,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	
 	}
 	
-	public static void fillStringFromFile(String file, Data<String> data) throws IOException, DuplicateURLException {
+	static void fillStringFromFile(String file, Data<String> data) throws IOException, DuplicateURLException {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
 	
 		while (true) {

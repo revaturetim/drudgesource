@@ -8,6 +8,7 @@ import drudge.*;
 
 /*This uses MySQL as its query language*/
 public class DataBase<T> implements Data<T> {
+private int datalevel = 0;
 private String dburl;
 private final String table = "drudge";
 /*data column headers will be url, title, keywords*/
@@ -34,6 +35,14 @@ insert into drudge values (link, title, keywords);
 	public DataBase(String p, String d, String u, String e) {
 	this(p, d, u);
 	dburl = dburl + e;
+	}
+	
+	public void setLevel(int l) {
+	datalevel = l;
+	}
+
+	public int level() {
+	return datalevel;
 	}
 
 	public int size() {
@@ -104,10 +113,10 @@ insert into drudge values (link, title, keywords);
 	final String pagelink = p.toString();
 	String pagetitle = "null";
 	String pagekeywords = "null";
-		if (Page.data > 1) {
+		if (level() > 1) {
 		pagetitle = p.getTitle().trim();//for some odd reason this needs .trim in there to make it work
 		}
-		if (Page.data > 2) {
+		if (level() > 2) {
 		pagekeywords = p.getKeywords().rawString().trim();
 		}
 
@@ -167,6 +176,14 @@ insert into drudge values (link, title, keywords);
 	
 	public String source() {
 	return dburl;
+	}
+
+	public void begin() {
+
+	}
+
+	public void finish() {
+
 	}
 
 }

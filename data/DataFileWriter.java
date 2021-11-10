@@ -8,6 +8,7 @@ import drudge.global.FileNames;
 
 public class DataFileWriter<T> extends DataWriter<T> {
 private String file = FileNames.links;
+private int datalevel = 0;
 
 	public DataFileWriter() {
 	READER = createReader();
@@ -54,4 +55,21 @@ private String file = FileNames.links;
 	public String source() {
 	return file;
 	}
+
+	public void setLevel(int l) {
+	datalevel = l;
+	}
+
+	public int level() {
+	return datalevel;
+	}
+
+	public void begin() {
+
+	}
+
+	public void finish() {
+
+	}
+
 }

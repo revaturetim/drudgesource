@@ -349,7 +349,7 @@ final static private String Null = "null";
 
 	public static Data<String> getKeywords(final CharSequence source, Data<String> words) {
 	final String text = source.toString().toLowerCase();
-	String[] somewords = text.split("<.*>|\\s|<script>.*</script>|<style>.*</style>");//this splits and coincidently removes all whitespace characters
+	String[] somewords = text.split("<.*>|\\s|<script.*script>|<style.*style>");//this splits and coincidently removes all whitespace characters
 		for (String word : somewords) {
 			if (word.length() > 2) {
 				if (!DataObjects.donotusewords.contains(word)) {	

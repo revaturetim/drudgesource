@@ -13,7 +13,6 @@ import drudge.data.*;
 /*this is the skeletal class of all page objects*/
 final public class Page {
 static public Proxy proxyserver = Proxy.NO_PROXY;
-static public int data = 1;
 final static private int pagesize = 35_000;
 //private variables for info about page itself which are set to the default values
 //The default value for MOST of these should be null
@@ -151,22 +150,6 @@ private boolean connected = false;
 	return content;
 	}
 	
-	public Data<String> getRow() {
-	DataCollection<String> row = new DataCollection<String>();
-		for (int r = 0; r < Page.data; r++) {
-			if (r == 0) {
-			row.add(this.toString());
-			}
-			else if (r == 1) {
-			row.add(this.getTitle());
-			}
-			else if (r == 2) {
-			row.add(this.getKeywords().rawString());
-			}
-		}
-	return row;
-	}
-
 	public URL getURL() {
 	return url;
 	}
@@ -192,9 +175,9 @@ private boolean connected = false;
 	}
 
 	public boolean isExcluded(boolean exc) throws ExcludedURLException {
-	String host1 = getURL().getHost();
-		for (Page elink : Drudge.excludedlinks) {
-		String host2 = elink.getURL().getHost();
+	final String host1 = getURL().getHost();
+		for (Page elink : Drudge.exclude) {
+		final String host2 = elink.getURL().getHost();
 			if (host1.equals(host2) == exc/*This determines the include/exlude behavior*/) {
 			throw new ExcludedURLException(this);
 			}

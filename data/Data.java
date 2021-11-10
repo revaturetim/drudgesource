@@ -16,8 +16,12 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	public T remove(int cycle);
 	public T get(int cycle);
 	public String source();
+	public void setLevel(int l);
+	public int level();
 	public boolean check();
 	public boolean checkError();
+	public void begin() throws Exception;
+	public void finish() throws Exception;
 
 	default public int size() {
 	int size = 0;
@@ -55,7 +59,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	}
 
 	default public boolean put(T[] links) {
-	boolean scs = false;
+	boolean scs = true;
 		for (T link : links) {
 			try {
 			put(link);
@@ -128,52 +132,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return it;
 	}
 		
-	@SuppressWarnings("unchecked")	
-	/*The default assumes that it is working with a page object*/
-	default void begin() throws Exception {
-	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
-		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-		String[] ns = line.split(CountFile.sep);
-			try {
-			T p = (T)new Page(ns[0]);
-				try {
-				put(p);
-				}
-				catch (DuplicateURLException Du) {
-				D.error(Du);
-				}
-			}
-			catch (URISyntaxException U) {
-			D.error(U);
-			}
-			catch (NotHTMLURLException N) {
-			D.error(N);
-			}
-			catch (MalformedURLException M) {
-			D.error(M);
-			}
-			catch (IOException I) {
-			D.error(I);
-			}
-		}
-	}
-
-	/*The default assumes you are working with a page object.  Subclasses should overrid*/
-	default void finish() throws Exception {
-	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
-		for (T t : this) {
-		Debug.check(t, null);
-		Page tp = (Page)t;
-		Data<String> row = tp.getRow();
-			for (String s : row) {
-			link_writer.append(s);
-			link_writer.append(CountFile.sep);
-			}		
-		link_writer.append("\n");
-		}
-	link_writer.close();
-	}
-
 	default public String rawString() {
 	StringBuilder builder = new StringBuilder();
 		for (T t : this) {

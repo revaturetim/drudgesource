@@ -23,6 +23,9 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 				catch (DuplicateURLException Du) {
 				D.error(Du);
 				}
+				catch (ExcludedURLException E) {
+				D.error(E);	
+				}
 			}
 			catch (MalformedURLException M) {
 			D.error(M);

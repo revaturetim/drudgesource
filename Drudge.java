@@ -59,9 +59,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						catch (IOException I) {
 						Print.error(I);
 						}
-						catch (DuplicateURLException D) {
-						Print.error(D);
-						}
 					}
 				}
 				catch (NumberFormatException N) {
@@ -71,15 +68,15 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals("-e")) {
 			getemails = true;
 			}	
-			else if (a.startsWith("-exc") || a.startsWith("-exclude=")) {	
-			String file = FileNames.exclude;
+			else if (a.startsWith("-exc") || a.startsWith("-exclude=")) {
+			dada.setExcluded(true);	
+			String file = exclude.source();
 				//this is for custom exclude file
 				if (a.startsWith("-exclude=")) {
 				String[] b = a.split("=", 2);
 				file = b[1];
 				}
-			excorinc = true;
-			excludemode = true;
+			
 				try {
 				fillPageFromFile(file, exclude);
 				}
@@ -91,9 +88,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				catch (MalformedURLException M) {
 				Print.error(M);
-				}
-				catch (DuplicateURLException D) {
-				Print.error(D);
 				}
 				catch (IOException I) {
 				Print.error(I);
@@ -139,16 +133,15 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.startsWith("-inc") || a.startsWith("-include=")) {
-			String file = FileNames.exclude;
+			dada.setIncluded(true);
+			String file = include.source();
 				//this is for custom exclude file
 				if (a.startsWith("-include=")) {
 				String[] b = a.split("=", 2);
 				file = b[1];
 				}
-			excorinc = false;
-			excludemode = true;
 				try {
-				fillPageFromFile(file, exclude);
+				fillPageFromFile(file, include);
 				}
 				catch (URISyntaxException U) {
 				Print.error(U);
@@ -158,9 +151,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				catch (MalformedURLException M) {
 				Print.error(M);
-				}
-				catch (DuplicateURLException D) {
-				Print.error(D);
 				}
 				catch (IOException I) {
 				Print.error(I);
@@ -601,7 +591,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					dada.truncate();//this will delete existing data and start over
 					Page firstpage = createFirstPage(lastarg);
-					dada.put(firstpage);
+					dada.add(firstpage);
 					dada.begin();
 					}
 					catch (MalformedURLException M) {
@@ -612,9 +602,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}
 					catch (NotHTMLURLException N) {
 					Print.error(N);
-					}
-					catch (DuplicateURLException D) {
-					Print.error(D);
 					}
 					catch (IOException I) {
 					Print.error(I);
@@ -627,7 +614,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			spider = createSpider(crawlmethod);
 			spider.setCheckOK(okays);
 			spider.setRobotsAllowed(norobots);
-			spider.setExcludeMode(excludemode, excorinc);
+			//spider.setExcludeMode(excludemode, excorinc);
 
 				if (getemails) {
 					try {	
@@ -830,7 +817,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	}
 	
 	static void  fillPageFromFile(String file, Data<Page> data) throws IOException, 
-	URISyntaxException, DuplicateURLException, NotHTMLURLException {
+	URISyntaxException, NotHTMLURLException {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
 	
 		while (true) {
@@ -838,19 +825,19 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			if (line == null) break;
 			else {
 			Page page = new Page(line);
-			data.put(page);
+			data.add(page);
 			}
 		}
 	
 	}
 	
-	static void fillStringFromFile(String file, Data<String> data) throws IOException, DuplicateURLException {
+	static void fillStringFromFile(String file, Data<String> data) throws IOException {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
 	
 		while (true) {
 		String line = reader.readLine();
 			if (line == null) break;
-			else data.put(line);
+			else data.add(line);
 		}
 	
 	}

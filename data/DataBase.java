@@ -9,6 +9,8 @@ import drudge.*;
 /*This uses MySQL as its query language*/
 public class DataBase<T> implements Data<T> {
 private int datalevel = 0;
+private boolean exclude = false;
+private boolean include = false;
 private String dburl;
 private final String table = "drudge";
 /*data column headers will be url, title, keywords*/
@@ -35,6 +37,10 @@ insert into drudge values (link, title, keywords);
 	public DataBase(String p, String d, String u, String e) {
 	this(p, d, u);
 	dburl = dburl + e;
+	}
+	
+	public boolean add(T obj) {
+	return false;
 	}
 	
 	public void setLevel(int l) {
@@ -185,5 +191,22 @@ insert into drudge values (link, title, keywords);
 	public void finish() {
 
 	}
+	
+	public void setExcluded(boolean b) {
+	exclude = b;
+	}
+	
+	public boolean excluded() {
+	return exclude;
+	}
+	
+	public void setIncluded(boolean b) {
+	include = b;
+	}
+	
+	public boolean included() {
+	return include;
+	}
+	
 
 }

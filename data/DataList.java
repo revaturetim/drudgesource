@@ -11,6 +11,8 @@ import drudge.data.*;
 public class DataList<T> extends ArrayList<T> implements Data<T> {
 private String source = null;
 private int datalevel = 0;
+private boolean exclude = false;
+private boolean include = false;
 private final static long serialVersionUID = 0;
 
 	public DataList() {
@@ -66,11 +68,27 @@ private final static long serialVersionUID = 0;
 	}
 
 	public void begin() {
-
+	
 	}
-
+	
 	public void finish() {
 
+	}
+	
+	public void setExcluded(boolean b) {
+	
+	}
+	
+	public boolean excluded() {
+	return exclude;
+	}
+	
+	public void setIncluded(boolean b) {
+	include = b;
+	}
+	
+	public boolean included() {
+	return include;
 	}
 
 

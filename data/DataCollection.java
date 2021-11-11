@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.*;
 import drudge.Debug;
 import drudge.page.*;
-import drudge.global.FileNames;
+import drudge.global.*;
 
 /*this class is a superclass of objects that use an array as the storage device*/
 /*T has to be assumed to be an object so it retains is general behavior for all types*/
@@ -15,6 +15,8 @@ private int size = 0;
 private String source = null;
 private Object[] objs = new Object[10];
 private int datalevel = 1;
+private boolean exclude = false;
+private boolean include = false;
 
 	public DataCollection() {
 
@@ -108,10 +110,18 @@ private int datalevel = 1;
 	return pagereturn;
 	}
 
-	public void put(T link) throws DuplicateURLException {
-		if (add(link) == false) {
-		throw new DuplicateURLException(link);
+	public void put(T link) throws DuplicateURLException, ExcludedURLException {
+		if (excluded() == true && DataObjects.exclude.contains(link)) throw new ExcludedURLException(link);
+		if (included() == true) {
+			for (Page p : DataObjects.include) {
+			final String host1 = p.getURL().getHost();
+			final String host2 = ((Page)link).getURL().getHost();
+				if (host1.equals(host2) == false) {
+				throw new ExcludedURLException(link);
+				}
+			}		
 		}
+		if (add(link) == false) throw new DuplicateURLException(link);	
 	}
 
 	public T get(int i) {
@@ -284,6 +294,22 @@ private int datalevel = 1;
 
 	public int level() {
 	return datalevel;
+	}
+	
+	public void setExcluded(boolean b) {
+	exclude = b;
+	}
+	
+	public boolean excluded() {
+	return exclude;
+	}
+	
+	public void setIncluded(boolean b) {
+	include = b;
+	}
+	
+	public boolean included() {
+	return include;
 	}
 	
 }

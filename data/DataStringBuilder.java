@@ -12,6 +12,8 @@ public class DataStringBuilder<T> implements Data<T> {
 final private StringBuilder builder = new StringBuilder();
 String file = FileNames.links;
 private int datalevel = 0;
+private boolean exclude = false;
+private boolean include = false;
 
 	public T get(final int L) {
 	T p = null;
@@ -86,6 +88,25 @@ private int datalevel = 0;
 
 	public void finish() {
 
+	}
+	
+	public void setExcluded(boolean b) {
+	exclude = b;
+	}
+	
+	public boolean excluded() {
+	return exclude;
+	}
+	
+	public void setIncluded(boolean b) {
+	include = b;
+	}
+	
+	public boolean included() {
+	return include;
+	}
+	public boolean add(T obj) {
+	return false;
 	}
 
 

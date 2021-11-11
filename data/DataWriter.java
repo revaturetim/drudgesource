@@ -11,8 +11,12 @@ import drudge.global.*;
  *I thought it was clever to write up
  */
 abstract class DataWriter<T> implements Data<T> {
-PrintWriter PRINTER;
-LineNumberReader READER;
+protected PrintWriter PRINTER;
+protected LineNumberReader READER;
+private String file;
+private int datalevel = 1;
+private boolean include = false;
+private boolean exclude = false;
 
 	//this has to be filled with something in order for subclass works.
 	abstract LineNumberReader createReader();
@@ -64,6 +68,54 @@ LineNumberReader READER;
 		D.error(I);
 		}
 	return p;
+	}
+	
+	public boolean check() {
+	return true;
+	}
+	
+	public boolean checkError() {
+	return true;
+	}
+	
+	public String source() {
+	return file;
+	}
+
+	public void setLevel(int l) {
+	datalevel = l;
+	}
+
+	public int level() {
+	return datalevel;
+	}
+
+	public void begin() {
+
+	}
+
+	public void finish() {
+
+	}
+	
+	public void setExcluded(boolean b) {
+	
+	}
+	
+	public boolean excluded() {
+	return exclude;
+	}
+	
+	public boolean add(T obj) {
+	return false;
+	}
+	
+	public void setIncluded(boolean b) {
+	include = b;
+	}
+	
+	public boolean included() {
+	return include;
 	}
 
 	

@@ -28,6 +28,9 @@ private Random random = new Random();
 				//Debug.here("links");
 				Du.printRow();
 				}
+				catch (ExcludedURLException E) {
+				E.printRow();
+				}
 			}
 		}
 		catch (SocketTimeoutException S) {

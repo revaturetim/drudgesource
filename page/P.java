@@ -145,6 +145,13 @@ final static private String Null = "null";
 			d.put("Location", "P.getEmails(CharSequence)");		
 			D.error(d);
 			}
+			catch (ExcludedURLException E) {
+			Hashtable<String, Object> d = new Hashtable<String, Object>();	
+			d.put("email", address);
+			d.put("Exception", E);
+			d.put("Location", "P.getEmails(CharSequence)");		
+			D.error(d);
+			}
 		}
 	return data;
 	}
@@ -353,14 +360,8 @@ final static private String Null = "null";
 		for (String word : somewords) {
 			if (word.length() > 2) {
 				if (!DataObjects.donotusewords.contains(word)) {	
-					try {
-					words.put(word);//this will keep out duplicate entries
-					}
-					catch (DuplicateURLException D) {
-	
-					}
+				words.add(word);
 				}
-				//else Debug.print(word);
 			}
 		}
 	return words;
@@ -395,19 +396,14 @@ final static private String Null = "null";
 	}*/
 	
 
-	public static Data<String> getKeywordsByRegex(final CharSequence source, Data<String> words) {
+	public static List<String> getKeywordsByRegex(final CharSequence source, List<String> words) {
 	String text = source.toString().toLowerCase();
 		for (Patterns.Keywords p : Patterns.Keywords.values()) {
 		text = p.replace(text, " ");
 		}
 	String[] keywords = text.split(" ");
 		for (String word : keywords) {
-			try {
-			words.put(word);
-			}
-			catch (DuplicateURLException D) {
-
-			}
+		words.add(word);
 		}
 	return words;
 	}
@@ -616,6 +612,10 @@ final static private String Null = "null";
 		D.error(Du);
 		Du.printRow();
 		}
+		catch (ExcludedURLException E) {
+		D.error(E);
+		E.printRow();
+		}
 		catch (URISyntaxException U) {
 		Hashtable<String, Object> t = new Hashtable<String, Object>();
 		t.put(U.getClass().toString(), U);
@@ -640,7 +640,7 @@ final static private String Null = "null";
 	return data;
 	}
 
-	static Data<Page> add(Page page, Data<Page> data) throws DuplicateURLException {
+	static Data<Page> add(Page page, Data<Page> data) throws DuplicateURLException, ExcludedURLException {
 	Debug.check(page, null);
 	Debug.check(data, null);
 	data.put(page);//this throws duplicateurlexception
@@ -657,6 +657,9 @@ final static private String Null = "null";
 			catch (DuplicateURLException Du) {
 			Du.printRow();
 			}
+			catch (ExcludedURLException E) {
+			E.printRow();
+			}
 		}
 	return data;
 	}
@@ -670,6 +673,9 @@ final static private String Null = "null";
 			}
 			catch (DuplicateURLException Du) {
 			Du.printRow();
+			}
+			catch (ExcludedURLException E) {
+			E.printRow();
 			}
 		}
 	return data;

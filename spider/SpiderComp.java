@@ -26,8 +26,10 @@ private Comparator<Page> compare = new TopComparator<Page>();
 				DataObjects.dada.put(page);
 				}
 				catch (DuplicateURLException Du) {
-				//Debug.here("links");
 				Du.printRow();
+				}
+				catch (ExcludedURLException E) {
+				E.printRow();
 				}
 			}
 		}

@@ -18,15 +18,7 @@ protected boolean norobots = false;
 		try {
 		p.getSource();
 		Data<Page> pages = p.getLinks();
-			for (Page page : pages) {
-				try {
-				DataObjects.dada.put(page);
-				}
-				catch (DuplicateURLException Du) {
-				//Debug.here("links");
-				Du.printRow();
-				}
-			}
+		DataObjects.dada.put(pages);
 		}
 		catch (SocketTimeoutException S) {
 		spinIssue("Found a Socket Timeout while getting source", p.getURL(), S);
@@ -71,6 +63,9 @@ protected boolean norobots = false;
 				}
 				catch (DuplicateURLException Du) {
 				Du.printRow();
+				}
+				catch (ExcludedURLException E) {
+				E.printRow();
 				}
 			}
 			catch (NotHTMLURLException N) {

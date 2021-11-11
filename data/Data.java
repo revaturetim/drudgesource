@@ -12,12 +12,17 @@ import java.io.*;
 public interface Data<T> extends Iterable<T>, RandomAccess {
 
 	/*These are important methods because they interface with the rest of the program*/
-	public void put(T link) throws DuplicateURLException;
+	public boolean add(T obj);//this is just to raw add an item into it without checking exceptions
+	public void put(T link) throws DuplicateURLException, ExcludedURLException;
 	public T remove(int cycle);
 	public T get(int cycle);
 	public String source();
 	public void setLevel(int l);
 	public int level();
+	public boolean excluded();
+	public void setExcluded(boolean b);
+	public boolean included();
+	public void setIncluded(boolean b);
 	public boolean check();
 	public boolean checkError();
 	public void begin() throws Exception;
@@ -54,6 +59,10 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			scs = false;
 			Du.printRow();
 			}
+			catch (ExcludedURLException E) {
+			scs = false;
+			E.printRow();
+			}
 		}
 	return scs;
 	}
@@ -68,54 +77,15 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			scs = false;
 			Du.printRow();
 			}
+			catch (ExcludedURLException E) {
+			scs = false;
+			E.printRow();
+			}
 		}
 	
 	return scs;
 	}
 
-	default public void put(T link, Data<T> excludes, boolean exc) throws DuplicateURLException, ExcludedURLException {
-		
-		if (exc) {
-			if (excludes.contains(link) == exc) {
-			throw new ExcludedURLException(link);
-			}
-			else {
-			put(link);
-			}			
-		}
-	}
-
-	default public void put(Data<T> links, Data<T> excludes, boolean exc) {
-	
-			for (T link : links) {
-				try {
-				put(link, excludes, exc);
-				}
-				catch (DuplicateURLException Du) {
-				Du.printRow();
-				}
-				catch (ExcludedURLException E) {
-				E.printRow();
-				}
-			}
-
-	}	
-
-	default public void put(T[] links, Data<T> excludes, boolean exc) {
-			for (T link : links) {
-				try {
-				put(link, excludes, exc);
-				}
-				catch (DuplicateURLException Du) {
-				Du.printRow();
-				}
-				catch (ExcludedURLException E) {
-				E.printRow();
-				}
-			}
-	}
-
-	
 	default Iterator<T> iterator() {
 		Iterator<T> it = new Iterator<T>() {
 		int i = -1;

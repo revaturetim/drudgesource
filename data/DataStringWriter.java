@@ -41,36 +41,5 @@ private int datalevel = 0;
 		}
 	return new PrintWriter(new BufferedWriter(pwriter));
 	}
-	
-	public boolean check() {
-	return true;
-	}
-	
-	public boolean checkError() {
-	return true;
-	}
-	
-	public String source() {
-	return FileNames.links;
-	}
-
-	public void setLevel(int l) {
-	datalevel = l;
-	}
-
-	public int level() {
-	return datalevel;
-	}
-	
-	public void begin() {
-
-	}
-
-	public void finish() {
-
-	}
-
-
-
 
 }

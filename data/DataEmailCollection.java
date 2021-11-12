@@ -17,15 +17,7 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 		String[] ns = line.split(CountFile.sep);
 			try {
 			final URL e = new URL(ns[0]);
-				try {
-				put((T)e);
-				}
-				catch (DuplicateURLException Du) {
-				D.error(Du);
-				}
-				catch (ExcludedURLException E) {
-				D.error(E);	
-				}
+			add((T)e);
 			}
 			catch (MalformedURLException M) {
 			D.error(M);
@@ -50,6 +42,10 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 
 	public int level() {
 	return 1;
+	}
+	
+	public void put(T link) throws DuplicateURLException, ExcludedURLException {
+		if (add(link) == false) throw new DuplicateURLException(link);	
 	}
 
 

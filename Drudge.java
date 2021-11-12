@@ -21,8 +21,6 @@ public static String XFACTOR = null;
 	boolean getemails = false;
 	boolean okays = true;
 	boolean norobots = false;
-	boolean excorinc = true;
-	boolean excludemode = false;
 	Spider spider = null;
 	long MemoryStart = Runtime.getRuntime().freeMemory();
 	eraseFile(FileNames.error);
@@ -614,8 +612,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			spider = createSpider(crawlmethod);
 			spider.setCheckOK(okays);
 			spider.setRobotsAllowed(norobots);
-			//spider.setExcludeMode(excludemode, excorinc);
-
+			
 				if (getemails) {
 					try {	
 					dada_emails.begin();

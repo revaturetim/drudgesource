@@ -26,6 +26,7 @@
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
+18. BUG! email file re-writes first one in test link;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
 20. Put in a link that invokes the remove method(s) in test page so we can test it;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;

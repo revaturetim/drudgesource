@@ -59,11 +59,10 @@ private boolean include = false;
 				}	
 			return next;	
 			}
-
-			@SuppressWarnings("unchecked")	
+	
 			public T next() {
 			i++;//increment first!
-			return (T)objs[i];
+			return get(i);
 			}
 
 			/*This is the remove method that gets used and it has to be independent of every other remove function*/
@@ -240,12 +239,7 @@ private boolean include = false;
 		String[] ns = line.split(CountFile.sep);
 			try {
 			T p = (T)new Page(ns[0]);
-				try {
-				put(p);
-				}
-				catch (DuplicateURLException Du) {
-				D.error(Du);
-				}
+			add(p);
 			}
 			catch (URISyntaxException U) {
 			D.error(U);

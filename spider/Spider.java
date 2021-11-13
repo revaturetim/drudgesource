@@ -50,7 +50,6 @@ protected boolean norobots = false;
 		final String redloc = h.getRedirectLocation();
 			try {
 			Page rediruri = new Page(redloc);
-			//p.isExcluded(excorinc);
 				try {
 				DataObjects.dada.put(rediruri);
 				Debug.endCycleTime("Redirected");

@@ -53,11 +53,7 @@ private boolean include = false;
 		Iterator<T> it = new Iterator<T>() {
 		private int i = -1;
 			public boolean hasNext() {
-			boolean next = false;
-				if (i < size - 1) {
-				next = true;
-				}	
-			return next;	
+			return (i < size - 1);	
 			}
 	
 			public T next() {
@@ -67,14 +63,10 @@ private boolean include = false;
 
 			/*This is the remove method that gets used and it has to be independent of every other remove function*/
 			public void remove() {
-				if (i == size - 1) {
-				objs[i] = null;
+				for (int j = i; j < size - 1; j++) {
+				objs[j] = objs[j + 1];
 				}
-				else {
-					for (int j = i; j < size; j++) {
-					objs[j] = objs[j + 1];
-					}
-				}
+			objs[size - 1] = null;
 			size--;//this has to be last in order to make it work right
 			}
 		};	
@@ -108,7 +100,7 @@ private boolean include = false;
 	remove(pagereturn);
 	return pagereturn;
 	}
-
+	
 	public void put(T link) throws DuplicateURLException, ExcludedURLException {
 		if (excluded() == true && DataObjects.exclude.contains(link)) throw new ExcludedURLException(link);
 		if (included() == true) {
@@ -119,7 +111,7 @@ private boolean include = false;
 				throw new ExcludedURLException(link);
 				}
 			}		
-		}
+		} 
 		if (add(link) == false) throw new DuplicateURLException(link);	
 	}
 
@@ -163,9 +155,8 @@ private boolean include = false;
 	boolean duplicate = false;
 	boolean linkerror = false;
 	int linecount = 0;
-	final String source = source();
 		try { 
-		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source)));
+		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		int firstcolumnlength = 0;
 			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 			linecount = reader.getLineNumber();
@@ -191,7 +182,7 @@ private boolean include = false;
 					if (u.getAuthority() == null) {
 					throw new MalformedURLException("No Host");
 					}
-				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source)));
+				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));
 					for (String line2 = reader2.readLine(); line2 != null; line2 = reader2.readLine()) {
 					int linecount2 = reader2.getLineNumber();
 						if (linecount2 < linecount) {

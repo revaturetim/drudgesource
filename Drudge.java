@@ -156,7 +156,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				
 			}
 			else if (a.equals("-l") && arg.length == 1) {
-			System.out.println("This is a general freeware to do with what you want.");
+			System.out.println(ThisProgram.license);
 			break;
 			}
 			else if (a.startsWith("-m=")) {

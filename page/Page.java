@@ -26,22 +26,22 @@ final private Data<URL> elist = new DataList<URL>();
 final private Data<String> klist = new DataList<String>();
 private boolean connected = false;
 
-	public Page(URL u) throws URISyntaxException, NotHTMLURLException, IOException {
+	public Page(URL u) throws IOException, URISyntaxException, NotHTMLURLException {
 	Debug.check(u, null, P.nopag);
 	url = u;
-	P.checkHtmlFile(url);//this will throw nothtmlurlexception when it is not an html file and URISyntaxException
+	isValidHTML();
 	connection = P.getConnection(url, proxyserver);//this throws IOException 
 	}
 	
-	public Page(URL p, String l) throws URISyntaxException, NotHTMLURLException, MalformedURLException, IOException {
+	public Page(URL p, String l) throws MalformedURLException, IOException, URISyntaxException, NotHTMLURLException  {
 	this(new URL(p, l));//this throws malformedurlexception
 	}
 
-	public Page(String u) throws URISyntaxException, NotHTMLURLException, MalformedURLException, IOException {
+	public Page(String u) throws MalformedURLException, IOException , URISyntaxException, NotHTMLURLException {
 	this(new URL(u));//this will throw malformedurlexception while page(URL) constructor throws the rest
 	}
 	
-	public Page(String u, String l) throws URISyntaxException, NotHTMLURLException, MalformedURLException, IOException {
+	public Page(String u, String l) throws MalformedURLException, IOException, URISyntaxException, NotHTMLURLException  {
 	this(new URL(u), l);//this will throw exceptions
 	}
 	
@@ -126,6 +126,11 @@ private boolean connected = false;
 	Debug.check(connection, null, P.nocon);
 	P.checkHeaders(connection);
 	return false; //if it made it this far then this is the default answer
+	}
+
+	public boolean isValidHTML() throws URISyntaxException, NotHTMLURLException {
+	P.checkHtmlFile(url);//this will throw nothtmlurlexception when it is not an html file and URISyntaxException
+	return true;
 	}
 
 	public Source getSource() throws IOException {

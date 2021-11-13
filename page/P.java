@@ -396,7 +396,7 @@ final static private String Null = "null";
 	}*/
 	
 
-	public static List<String> getKeywordsByRegex(final CharSequence source, List<String> words) {
+	public static Data<String> getKeywordsByRegex(final CharSequence source, Data<String> words) {
 	String text = source.toString().toLowerCase();
 		for (Patterns.Keywords p : Patterns.Keywords.values()) {
 		text = p.replace(text, " ");

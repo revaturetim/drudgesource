@@ -22,12 +22,6 @@ final public class D implements FileNames {
 		catch (MalformedURLException M) {
 		D.error(M);
 		}
-		catch (NotHTMLURLException N) {
-		D.error(N);
-		}
-		catch (URISyntaxException U) {
-		D.error(U);
-		}
 		catch (IOException I) {
 		D.error(I);
 		}

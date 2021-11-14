@@ -78,15 +78,12 @@ insert into drudge values (link, title, keywords);
 				try {
 				page = (T)new Page(s);
 				}
-				catch (UselessURLException U) {
+				catch (MalformedURLException U) {
 				D.error(U);
 				}
 				catch (IOException I) {
 				D.error(I);
-				}
-				catch (URISyntaxException U) {
-				D.error(U);
-				}					
+				}						
 			}
 		}
 		catch (SQLException S) {

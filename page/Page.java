@@ -26,22 +26,21 @@ final private Data<URL> elist = new DataList<URL>();
 final private Data<String> klist = new DataList<String>();
 private boolean connected = false;
 
-	public Page(URL u) throws IOException, URISyntaxException, NotHTMLURLException {
+	public Page(URL u) throws IOException {
 	Debug.check(u, null, P.nopag);
 	url = u;
-	isValidHTML();
-	connection = P.getConnection(url, proxyserver);//this throws IOException 
+	//connection = P.getConnection(url, proxyserver);//this throws IOException 
 	}
 	
-	public Page(URL p, String l) throws MalformedURLException, IOException, URISyntaxException, NotHTMLURLException  {
+	public Page(URL p, String l) throws MalformedURLException, IOException {
 	this(new URL(p, l));//this throws malformedurlexception
 	}
 
-	public Page(String u) throws MalformedURLException, IOException , URISyntaxException, NotHTMLURLException {
+	public Page(String u) throws MalformedURLException, IOException {
 	this(new URL(u));//this will throw malformedurlexception while page(URL) constructor throws the rest
 	}
 	
-	public Page(String u, String l) throws MalformedURLException, IOException, URISyntaxException, NotHTMLURLException  {
+	public Page(String u, String l) throws MalformedURLException, IOException {
 	this(new URL(u), l);//this will throw exceptions
 	}
 	
@@ -113,14 +112,17 @@ private boolean connected = false;
 	}
 
 	//this will essentiallly handle all the prechecking needed before it gets content
-	public boolean isUseless() throws RedirectedURLException, NotHTMLURLException, 
+	public boolean isUseless() throws RedirectedURLException, InvalidURLException, 
 	       NotOKURLException, NoContentURLException, BadEncodingURLException {
 	Debug.endCycleTime("Checking Uselessness");
+	
+	try {connection = P.getConnection(url, proxyserver);}//this throws IOException
+	catch (IOException I) {} 
 	P.checkHeaders(header, toString());
 	return false; //if it made it this far then this is the default answer
 	}
 
-	public boolean isUselessByURLConnection() throws RedirectedURLException, NotHTMLURLException, 
+	public boolean isUselessByURLConnection() throws RedirectedURLException, InvalidURLException, 
 	       NotOKURLException, NoContentURLException, BadEncodingURLException {
 	Debug.endCycleTime("Checking Uselessness");
 	Debug.check(connection, null, P.nocon);
@@ -128,12 +130,13 @@ private boolean connected = false;
 	return false; //if it made it this far then this is the default answer
 	}
 
-	public boolean isValidHTML() throws URISyntaxException, NotHTMLURLException {
-	P.checkHtmlFile(url);//this will throw nothtmlurlexception when it is not an html file and URISyntaxException
+	public boolean isValid() throws URISyntaxException, InvalidURLException {
+	P.checkHtmlFile(url);//this will throw InvalidURLException when it is not an html file and URISyntaxException
 	return true;
 	}
 
 	public Source getSource() throws IOException {
+	connection = P.getConnection(url, proxyserver);//this throws IOException 
 	//throws ioexcpetion above 
 	final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()), content.length());
 	connected = true;

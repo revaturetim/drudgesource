@@ -46,6 +46,7 @@ protected boolean norobots = false;
 		links(p);
 		}
 		catch (RedirectedURLException R) {
+		R.printRow();
 		Page.Header h = p.header();
 		final String redloc = h.getRedirectLocation();
 			try {
@@ -54,21 +55,23 @@ protected boolean norobots = false;
 				DataObjects.dada.put(rediruri);
 				Debug.endCycleTime("Redirected");
 				}
+				catch (URISyntaxException U) {
+				spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
+				Print.printRow(U, redloc);
+				}
+				catch (InvalidURLException I) {
+				spinIssue("Found a InvalidURLException When getting Redirect Link", redloc, I);
+				I.printRow();
+				}
 				catch (DuplicateURLException Du) {
+				spinIssue("Found a DuplicateURLException When getting Redirect Link", redloc, Du);
 				Du.printRow();
 				}
 				catch (ExcludedURLException E) {
+				spinIssue("Found a ExcludedURLException When getting Redirect Link", redloc, E);
 				E.printRow();
 				}
-			}
-			catch (NotHTMLURLException N) {
-			spinIssue("Found a NotHTMLUrlException When getting Redirect Link", redloc, N);
-			N.printRow();
-			}
-			catch (URISyntaxException U) {
-			spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
-			Print.printRow(U, redloc);
-			}
+			}	
 			catch (MalformedURLException M) {
 			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, M); 
 			Print.printRow(M, redloc);
@@ -77,30 +80,28 @@ protected boolean norobots = false;
 			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, I); 
 			Print.printRow(I, redloc);
 			}
-		R.printRow();
 		}
 		//these must be caught here so it can remove it once it is found in data object
-		catch (NotHTMLURLException N) {
-		//spinIssue("Found a non-HTML link while checking if it is a useless", p, N);
+		catch (NotOKURLException N) {
+		spinIssue("Found a not-OK link while checking if it is a useless", p, N);
 		remove = true;	
 		N.printRow();
 		}
-		catch (NotOKURLException N) {
-		//spinIssue("Found a not-OK link while checking if it is a useless", p, N);
-		remove = true;	
-		N.printRow();
+		catch (InvalidURLException I) {
+		spinIssue("Found a InvalidURLException When getting Redirect Link", p, I);
+		I.printRow();
 		}
 		catch (NoRobotsURLException N) {
-		//spinIssue("No robots allowed for this link", p, N);
+		spinIssue("No robots allowed for this link", p, N);
 		remove = true;
 		N.printRow();
 		}
 		catch (NoContentURLException N) {
-		//spinIssue("Found a no content link while checking if it is a useless", p, N);
+		spinIssue("Found a no content link while checking if it is a useless", p, N);
 		N.printRow();
 		}	
 		catch (BadEncodingURLException B) {
-		//spinIssue("Found a bad encoded link while checking if it is a useless", p, B);
+		spinIssue("Found a bad encoded link while checking if it is a useless", p, B);
 		B.printRow();
 		}
 	return remove;

@@ -2,7 +2,7 @@ package drudge.data;
 
 import java.util.function.*;
 import java.util.*;
-import drudge.Debug;
+import drudge.*;
 import drudge.page.*;
 import drudge.global.FileNames;
 import java.net.*;
@@ -13,7 +13,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 
 	/*These are important methods because they interface with the rest of the program*/
 	public boolean add(T obj);//this is just to raw add an item into it without checking exceptions
-	public void put(T link) throws DuplicateURLException, ExcludedURLException;
+	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException;
 	public T remove(int cycle);
 	public T get(int cycle);
 	public String source();
@@ -55,6 +55,14 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			try {
 			put(page);
 			}
+			catch (URISyntaxException U) {
+			scs = false;
+			Print.printRow(U, page);
+			}
+			catch (InvalidURLException I) {
+			scs = false;
+			I.printRow();
+			}
 			catch (DuplicateURLException Du) {
 			scs = false;
 			Du.printRow();
@@ -72,6 +80,14 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 		for (T link : links) {
 			try {
 			put(link);
+			}
+			catch (URISyntaxException U) {
+			scs = false;
+			Print.printRow(U, link);
+			}
+			catch (InvalidURLException I) {
+			scs = false;
+			I.printRow();
 			}
 			catch (DuplicateURLException Du) {
 			scs = false;

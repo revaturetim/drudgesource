@@ -84,7 +84,7 @@ private final static long serialVersionUID = 0;
 	}
 	
 	public void setIncluded(boolean b) {
-	include = b;
+	
 	}
 	
 	public boolean included() {

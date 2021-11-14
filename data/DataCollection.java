@@ -101,7 +101,8 @@ private boolean include = false;
 	return pagereturn;
 	}
 	
-	public void put(T link) throws DuplicateURLException, ExcludedURLException {
+	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
+	((Page)link).isValid();
 		if (excluded() == true && DataObjects.exclude.contains(link)) throw new ExcludedURLException(link);
 		if (included() == true) {
 			for (Page p : DataObjects.include) {
@@ -130,7 +131,7 @@ private boolean include = false;
 		T page = pages.next();
 			try {
 			String link = pages.toString();
-			Page p = new Page(link);//this throws nothtmlurlexception, malformedurlexception, URISyntaxException
+			Page p = new Page(link);//this throws InvalidURLException, malformedurlexception, URISyntaxException
 			URL u = p.getURL();
 				if (u.getAuthority() == null) {
 			
@@ -177,7 +178,8 @@ private boolean include = false;
 			/*This will check for duplicates in the data*/
 			String link = columns[0];
 				try {
-				Page p = new Page(link);//this throws nothtmlurlexception, malformedurlexception, URISyntaxException
+				Page p = new Page(link);//this throws malformedurlexception
+				p.isValid();//this throws InvalidURLException, URISyntaxException
 				URL u = p.getURL();
 					if (u.getAuthority() == null) {
 					throw new MalformedURLException("No Host");
@@ -198,7 +200,7 @@ private boolean include = false;
 						}
 					}
 				}
-				catch (NotHTMLURLException N) {
+				catch (InvalidURLException N) {
 				linkerror = true;
 				System.out.print("Line " + String.valueOf(linecount) + " has a link that isn't an html file: ");
 				System.out.println(link);
@@ -231,12 +233,6 @@ private boolean include = false;
 			try {
 			T p = (T)new Page(ns[0]);
 			add(p);
-			}
-			catch (URISyntaxException U) {
-			D.error(U);
-			}
-			catch (NotHTMLURLException N) {
-			D.error(N);
 			}
 			catch (MalformedURLException M) {
 			D.error(M);

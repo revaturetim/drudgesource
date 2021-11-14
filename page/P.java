@@ -21,7 +21,7 @@ final static String notitle = "NO TITLE FOUND";
 final static private String nowords = "NO KEYWORDS FOUND";
 final static private String Null = "null";
 
-	static void checkHtmlFile(final URL url) throws NotHTMLURLException, URISyntaxException {
+	static void checkHtmlFile(final URL url) throws InvalidURLException, URISyntaxException {
 	//Debug.startWatch();
 	//final String usr = url.getUserInfo();
 	final String aut = url.getAuthority();
@@ -37,18 +37,18 @@ final static private String Null = "null";
 		if (!schm.equals("file")) {
 		URI uri = url.toURI();//this throws URISyntaxExeption
 			if (uri.isOpaque()) {
-			throw new NotHTMLURLException(url);
+			throw new InvalidURLException(url);
 			}
 			if (aut == null) {
-			throw new NotHTMLURLException(url);
+			throw new InvalidURLException(url);
 			}
 			else if (aut.isEmpty()) {
-			throw new NotHTMLURLException(url);
+			throw new InvalidURLException(url);
 			}
 		String ftype = URLConnection.guessContentTypeFromName(url.toString());
 			if (ftype != null) {
 				if (!ftype.startsWith("text")) {
-				throw new NotHTMLURLException(url);
+				throw new InvalidURLException(url);
 				}
 			}
 		}
@@ -149,6 +149,13 @@ final static private String Null = "null";
 			Hashtable<String, Object> d = new Hashtable<String, Object>();	
 			d.put("email", address);
 			d.put("Exception", E);
+			d.put("Location", "P.getEmails(CharSequence)");		
+			D.error(d);
+			}
+			catch (InvalidURLException I) {
+			Hashtable<String, Object> d = new Hashtable<String, Object>();	
+			d.put("email", address);
+			d.put("Exception", I);
 			d.put("Location", "P.getEmails(CharSequence)");		
 			D.error(d);
 			}
@@ -456,7 +463,7 @@ final static private String Null = "null";
 	Debug.endCycleTime("...Response-Code");		
 	}
 
-	static void checkContentType(final String contype, final String con) throws NotHTMLURLException {
+	static void checkContentType(final String contype, final String con) throws InvalidURLException {
 		if (contype != null) {
 		boolean ishtml = false;
 		String[] values = contype.split(" ");
@@ -469,7 +476,7 @@ final static private String Null = "null";
 				}
 			}
 			if (!ishtml) {
-			throw new NotHTMLURLException(con, contype);
+			throw new InvalidURLException(con, contype);
 			}
 		}
 	Debug.endCycleTime("...Content-Type");		
@@ -499,7 +506,7 @@ final static private String Null = "null";
 	/*checkHeaders methods do not throw all uselessurl exceptions so -U option may not catch them all*/
 	static void checkHeaders(final URLConnection con) throws
 	       	BadEncodingURLException, NoContentURLException,
-	       	RedirectedURLException, NotOKURLException, NotHTMLURLException {
+	       	RedirectedURLException, NotOKURLException, InvalidURLException {
 		
 	final String u = con.toString();
 		try {
@@ -525,7 +532,7 @@ final static private String Null = "null";
 
 	static void checkHeaders(final Page.Header h, final String u) throws
 	       	BadEncodingURLException, NoContentURLException,
-	       	RedirectedURLException, NotOKURLException, NotHTMLURLException {
+	       	RedirectedURLException, NotOKURLException, InvalidURLException {
 	
 	final String response = h.getResponse();
 	final String contype = h.getContentType();
@@ -623,7 +630,7 @@ final static private String Null = "null";
 		D.error(t);
 		Print.printRow(U, url);
 		}
-		catch (NotHTMLURLException N) {
+		catch (InvalidURLException N) {
 		Hashtable<String, Object> t = new Hashtable<String, Object>();
 		t.put(N.getClass().toString(), N);
 		t.put(msg, url);
@@ -640,7 +647,8 @@ final static private String Null = "null";
 	return data;
 	}
 
-	static Data<Page> add(Page page, Data<Page> data) throws DuplicateURLException, ExcludedURLException {
+	static Data<Page> add(Page page, Data<Page> data) throws 
+	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
 	Debug.check(page, null);
 	Debug.check(data, null);
 	data.put(page);//this throws duplicateurlexception
@@ -654,11 +662,17 @@ final static private String Null = "null";
 			try {
 			data.put(page);
 			}
+			catch (URISyntaxException U) {
+			Print.printRow(U, page);
+			}
 			catch (DuplicateURLException Du) {
 			Du.printRow();
 			}
 			catch (ExcludedURLException E) {
 			E.printRow();
+			}
+			catch (InvalidURLException I) {
+			I.printRow();
 			}
 		}
 	return data;
@@ -671,11 +685,17 @@ final static private String Null = "null";
 			try {
 			data.put(page);
 			}
+			catch (URISyntaxException U) {
+			Print.printRow(U, page);
+			}
 			catch (DuplicateURLException Du) {
 			Du.printRow();
 			}
 			catch (ExcludedURLException E) {
 			E.printRow();
+			}
+			catch (InvalidURLException I) {
+			I.printRow();
 			}
 		}
 	return data;
@@ -685,12 +705,6 @@ final static private String Null = "null";
 	Page p = null;
 		try {
 		p = new Page(url);
-		}
-		catch (UselessURLException U) {
-		U.printRow();
-		}
-		catch (URISyntaxException U) {
-		D.error(U);
 		}
 		catch (IOException I) {
 		D.error(I);

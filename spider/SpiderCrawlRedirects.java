@@ -61,20 +61,22 @@ protected boolean norobots = false;
 				Debug.endCycleTime("Redirected");
 				crawl(rediruri);//calls itself
 				}
+				catch (URISyntaxException U) {
+				spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
+				Print.printRow(U, redloc);
+				}
+				catch (InvalidURLException I) {
+				spinIssue("Found a InvalidUrlException When getting Redirect Link", redloc, I);
+				I.printRow();
+				}
 				catch (DuplicateURLException Du) {
+				spinIssue("Found a DuplicateUrlException When getting Redirect Link", redloc, Du);
 				Du.printRow();
 				}
 				catch (ExcludedURLException E) {
+				spinIssue("Found an ExcludedUrlException When getting Redirect Link", redloc, E);
 				E.printRow();
 				}
-			}
-			catch (NotHTMLURLException N) {
-			spinIssue("Found a NotHTMLUrlException When getting Redirect Link", redloc, N);
-			N.printRow();
-			}
-			catch (URISyntaxException U) {
-			spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
-			Print.printRow(U, redloc);
 			}
 			catch (MalformedURLException M) {
 			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, M); 
@@ -86,48 +88,25 @@ protected boolean norobots = false;
 			}
 		R.printRow();
 		}
-		//these must be caught here so it can remove it once it is found in data object
-		catch (NotHTMLURLException N) {
-		remove = true;	
-		N.printRow();
+		catch (InvalidURLException I) {
+		spinIssue("Found a InvalidUrlException While Checking if it is Useless", p, I);
+		I.printRow();
 		}
+		//these must be caught here so it can remove it once it is found in data object
 		catch (NotOKURLException N) {
+		spinIssue("Found a NotOKURLException While Checking if it is Useless", p, N);
 		remove = true;	
 		N.printRow();
 		}
 		catch (NoContentURLException N) {
+		spinIssue("Found a NoContentUrlException While Checking if it is Useless", p, N);
 		N.printRow();
 		}	
 		catch (BadEncodingURLException B) {
+		spinIssue("Found a BadEncodingUrlException While Checking if it is Useless", p, B);
 		B.printRow();
 		}
 	return remove;
-	}
-
-	public void setCheckOK(boolean b) {
-	checkok = b;
-	}
-
-	public void setRobotsAllowed(boolean b) {
-	norobots = b;
-	}
-
-	//I thought that calling issue was humorous like you have a issues
-	protected void spinIssue(String i, Object o, Exception e) {
-		if (o == null) {
-		o = "null";
-		}
-		if (e instanceof UselessURLException) {
-		D.error(e);
-		}
-		else {
-		HashMap<String, Object> t = new HashMap<String, Object>();
-		t.put(i + " Issue", o);
-		t.put("Exception", e);
-		t.put("location", "Spider.spin(int)");
-		//t.put("Cycle", cycl);
-		D.error(t);
-		}
 	}
 
 }

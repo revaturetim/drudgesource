@@ -214,7 +214,7 @@ final private static String[] H = {
 	error(u);
 	}
 
-	static void error(NotHTMLURLException n) {
+	static void error(InvalidURLException n) {
 	System.out.println("URL:" + n.getUrl() + " is not a valid html file this program!");
 	}
 	

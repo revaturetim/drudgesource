@@ -20,18 +20,7 @@ private Random random = new Random();
 		p.getSource();
 		DataList<Page> pages = (DataList<Page>)p.getLinks();
 		Collections.shuffle(pages, random);
-			for (Page page : pages) {
-				try {
-				DataObjects.dada.put(page);
-				}
-				catch (DuplicateURLException Du) {
-				//Debug.here("links");
-				Du.printRow();
-				}
-				catch (ExcludedURLException E) {
-				E.printRow();
-				}
-			}
+		DataObjects.dada.put(pages);
 		}
 		catch (SocketTimeoutException S) {
 		spinIssue("Found a Socket Timeout while getting source", p.getURL(), S);

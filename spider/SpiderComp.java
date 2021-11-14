@@ -21,17 +21,7 @@ private Comparator<Page> compare = new TopComparator<Page>();
 		p.getSource();
 		DataList<Page> pages = (DataList<Page>)p.getLinks();
 		Collections.sort(pages, compare);//this sorts it the way it should be sorted for this spider	
-			for (Page page : pages) {
-				try {
-				DataObjects.dada.put(page);
-				}
-				catch (DuplicateURLException Du) {
-				Du.printRow();
-				}
-				catch (ExcludedURLException E) {
-				E.printRow();
-				}
-			}
+		DataObjects.dada.put(pages);
 		}
 		catch (SocketTimeoutException S) {
 		spinIssue("Found a Socket Timeout while getting source", p.getURL(), S);

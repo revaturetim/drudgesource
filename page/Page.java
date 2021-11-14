@@ -29,7 +29,6 @@ private boolean connected = false;
 	public Page(URL u) throws IOException {
 	Debug.check(u, null, P.nopag);
 	url = u;
-	//connection = P.getConnection(url, proxyserver);//this throws IOException 
 	}
 	
 	public Page(URL p, String l) throws MalformedURLException, IOException {
@@ -136,7 +135,6 @@ private boolean connected = false;
 	}
 
 	public Source getSource() throws IOException {
-	connection = P.getConnection(url, proxyserver);//this throws IOException 
 	//throws ioexcpetion above 
 	final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()), content.length());
 	connected = true;

@@ -165,7 +165,7 @@ final static private String Null = "null";
 
 	static interface LinkAction<T> {
 	//this throws a more general uselessurlexception so it can catch all uselessurlexceptions
-	public void act(T u) throws UselessURLException, URISyntaxException, MalformedURLException, IOException;
+	public void act(T u) throws UselessURLException, URISyntaxException, MalformedURLException;
 	}
 
 	static class GetLinkAction {
@@ -196,13 +196,6 @@ final static private String Null = "null";
 			d.put("Exception", U);		
 			D.error(d);
 			Print.printRow(U, link);
-			}
-			catch (IOException I) {
-			Hashtable<String, Object> d = new Hashtable<String, Object>();
-			d.put("Link Variable", link);
-			d.put("Exception", I);		
-			D.error(d);
-			Print.printRow(I, link);
 			}
 			//This is not a program error so it doensn't need to write out to the error file
 			catch (UselessURLException U) {
@@ -311,13 +304,6 @@ final static private String Null = "null";
 								D.error(d);
 								Print.printRow(U, link);
 								}
-								catch (IOException I) {
-								Hashtable<String, Object> d = new Hashtable<String, Object>();
-								d.put("Link Variable", link);
-								d.put("Exception", I);		
-								D.error(d);
-								Print.printRow(I, link);
-								}
 								//This is not a program error so it doensn't need to write out to the error file
 								catch (UselessURLException U) {
 								U.printRow();
@@ -374,7 +360,7 @@ final static private String Null = "null";
 	return words;
 	}
 	
-	/*public static Data<String> getKeywords(final CharSequence source, Data<String> words) {
+	public static Data<String> getKeywords_old(final CharSequence source, Data<String> words) {
 	final String text = source.toString().toLowerCase();
 	int e = 0;
 		for (int b = 0; b != -1; b = text.indexOf(">", b + 1)) {
@@ -388,19 +374,14 @@ final static private String Null = "null";
 			for (String word : somewords) {
 				if (word.length() > 2) {
 					if (!DataObjects.donotusewords.contains(word)) {	
-						try {
-						words.put(word);//this will keep out duplicate entries
-						}
-						catch (DuplicateURLException D) {
-		
-						}
+					words.add(word);
 					}
 					else Debug.print(word);
 				}
 			}
 		}
 	return words;
-	}*/
+	}
 	
 
 	public static Data<String> getKeywordsByRegex(final CharSequence source, Data<String> words) {
@@ -637,13 +618,7 @@ final static private String Null = "null";
 		D.error(t);
 		N.printRow();	
 		}
-		catch (IOException I) {
-		Hashtable<String, Object> t = new Hashtable<String, Object>();
-		t.put(I.getClass().toString(), I);
-		t.put(msg, url);
-		D.error(t);
-		Print.printRow(I, url);
-		}
+		
 	return data;
 	}
 

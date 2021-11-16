@@ -76,10 +76,6 @@ protected boolean norobots = false;
 			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, M); 
 			Print.printRow(M, redloc);
 			}
-			catch (IOException I) {
-			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, I); 
-			Print.printRow(I, redloc);
-			}
 		}
 		//these must be caught here so it can remove it once it is found in data object
 		catch (NotOKURLException N) {
@@ -104,6 +100,10 @@ protected boolean norobots = false;
 		spinIssue("Found a bad encoded link while checking if it is a useless", p, B);
 		B.printRow();
 		}
+		catch (IOException I) {
+		spinIssue("Found an IOException while checking if it is useless", p, I); 
+		Print.printRow(I, p);
+		}
 	return remove;
 	}
 
@@ -117,7 +117,7 @@ protected boolean norobots = false;
 
 	//I thought that calling issue was humorous like you have a issues
 	protected void spinIssue(String i, Object o, Exception e) {
-		if (o == null || i == null || e == null) {
+		if (o == null | i == null | e == null) {
 		throw new NullPointerException("You are attemping to pass a null value into Spider.spinIssue");
 		}
 	HashMap<String, Object> h = new HashMap<String, Object>();

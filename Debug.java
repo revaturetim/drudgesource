@@ -114,6 +114,8 @@ final private static String sep = " | ";
 		check(a, b, "");
 	}
 
+	
+	
 	public static void between(final int a, final int b, final int e, final String msg) throws IndexOutOfBoundsException {
 		if (on) {
 			if (a < b || a > e) {
@@ -128,102 +130,6 @@ final private static String sep = " | ";
 	
 	public static void between(final int a, final int b, final int e) throws IndexOutOfBoundsException {
 		between(a, b, e, "");
-	}
-
-	public static void check(final boolean a, final boolean b, final String msg) throws IllegalArgumentException {
-		if (on) {
-			if (a != b) {
-				throw new IllegalArgumentException(msg);
-			}
-		}
-	}
-
-	public static void check(final boolean a, final boolean b) throws IllegalArgumentException {
-		check(a, b, "");
-	}
-
-	public static void check(final char a, final char b, final String msg) throws IllegalArgumentException {
-		if (on) {
-			if (a != b) {
-				throw new IllegalArgumentException(msg);
-			}
-		}
-	}
-
-	public static void check(final char a, final char b) throws IllegalArgumentException {
-		check(a, b, "");
-	}
-
-	public static void check(final byte a, final byte b, final String msg) throws IllegalArgumentException {
-		if (on) {
-			if (a != b) {
-				throw new IllegalArgumentException(msg);
-			}
-		}
-	}
-
-	public static void check(final byte a, final byte b) throws IllegalArgumentException {
-		check(a, b, "");
-	}
-
-	public static void check(final short a, final short b, final String msg) throws IllegalArgumentException {
-		if (on) {
-			if (a != b) {
-				throw new IllegalArgumentException(msg);
-			}
-		}
-	}
-
-	public static void check(final short a, final short b) throws IllegalArgumentException {
-		check(a, b, "");
-	}
-
-	public static void check(final int a, final int b, final String msg) throws IllegalArgumentException {
-		if (on) {
-			if (a != b) {
-				throw new IllegalArgumentException(msg);
-			}
-		}
-	}
-
-	public static void check(final int a, final int b) throws IllegalArgumentException {
-		check(a, b, "");
-	}
-
-	public static void check(final long a, final long b, final String msg) throws IllegalArgumentException {
-		if (on) {
-			if (a != b) {
-				throw new IllegalArgumentException(msg);
-			}
-		}
-	}
-
-	public static void check(final long a, final long b) throws IllegalArgumentException {
-		check(a, b, "");
-	}
-
-	public static void check(final float a, final float b, final String msg) throws IllegalArgumentException {
-		if (on) {
-			if (a != b) {
-				throw new IllegalArgumentException(msg);
-			}
-		}
-	}
-
-	public static void check(final float a, final float b) throws IllegalArgumentException {
-		check(a, b, "");
-	}
-
-	public static void check(final double a, final double b, final String msg) throws IllegalArgumentException {
-		if (on) {
-			if (a != b) {
-				throw new IllegalArgumentException(msg);
-			}
-		}
-	}
-
-	public static void check(final double a, final double b) throws IllegalArgumentException {
-		check(a, b, "");
 	}
 
 	public static void here() {

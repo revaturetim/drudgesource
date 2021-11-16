@@ -82,10 +82,6 @@ protected boolean norobots = false;
 			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, M); 
 			Print.printRow(M, redloc);
 			}
-			catch (IOException I) {
-			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, I); 
-			Print.printRow(I, redloc);
-			}
 		R.printRow();
 		}
 		catch (InvalidURLException I) {
@@ -105,6 +101,10 @@ protected boolean norobots = false;
 		catch (BadEncodingURLException B) {
 		spinIssue("Found a BadEncodingUrlException While Checking if it is Useless", p, B);
 		B.printRow();
+		}
+		catch (IOException I) {
+		spinIssue("Found an IOException while checking if it is useless", p, I); 
+		Print.printRow(I, p);
 		}
 	return remove;
 	}

@@ -80,10 +80,7 @@ insert into drudge values (link, title, keywords);
 				}
 				catch (MalformedURLException U) {
 				D.error(U);
-				}
-				catch (IOException I) {
-				D.error(I);
-				}						
+				}					
 			}
 		}
 		catch (SQLException S) {

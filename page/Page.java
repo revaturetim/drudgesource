@@ -26,20 +26,20 @@ final private Data<URL> elist = new DataList<URL>();
 final private Data<String> klist = new DataList<String>();
 private boolean connected = false;
 
-	public Page(URL u) throws IOException {
+	public Page(URL u) {
 	Debug.check(u, null, P.nopag);
 	url = u;
 	}
 	
-	public Page(URL p, String l) throws MalformedURLException, IOException {
+	public Page(URL p, String l) throws MalformedURLException {
 	this(new URL(p, l));//this throws malformedurlexception
 	}
 
-	public Page(String u) throws MalformedURLException, IOException {
+	public Page(String u) throws MalformedURLException {
 	this(new URL(u));//this will throw malformedurlexception while page(URL) constructor throws the rest
 	}
 	
-	public Page(String u, String l) throws MalformedURLException, IOException {
+	public Page(String u, String l) throws MalformedURLException {
 	this(new URL(u), l);//this will throw exceptions
 	}
 	
@@ -67,7 +67,7 @@ private boolean connected = false;
 		if (content.wasFilled() && content.size() > 0) {
 			P.LinkAction<String> action = new P.LinkAction<String>() {
 				
-				public void act(String link) throws URISyntaxException, UselessURLException, MalformedURLException, IOException {
+				public void act(String link) throws URISyntaxException, UselessURLException, MalformedURLException {
 				Page p = new Page(url, link);
 				//WeakReference<Page> w = new WeakReference<Page>(p);
 				//SoftReference<Page> s = new SoftReference<Page>(p);
@@ -112,19 +112,17 @@ private boolean connected = false;
 
 	//this will essentiallly handle all the prechecking needed before it gets content
 	public boolean isUseless() throws RedirectedURLException, InvalidURLException, 
-	       NotOKURLException, NoContentURLException, BadEncodingURLException {
+	       NotOKURLException, NoContentURLException, BadEncodingURLException, IOException {
 	Debug.endCycleTime("Checking Uselessness");
-	
-	try {connection = P.getConnection(url, proxyserver);}//this throws IOException
-	catch (IOException I) {} 
+	connection = P.getConnection(url, proxyserver);//this throws IOException
 	P.checkHeaders(header, toString());
 	return false; //if it made it this far then this is the default answer
 	}
 
 	public boolean isUselessByURLConnection() throws RedirectedURLException, InvalidURLException, 
-	       NotOKURLException, NoContentURLException, BadEncodingURLException {
+	       NotOKURLException, NoContentURLException, BadEncodingURLException, IOException {
 	Debug.endCycleTime("Checking Uselessness");
-	Debug.check(connection, null, P.nocon);
+	connection = P.getConnection(url, proxyserver);
 	P.checkHeaders(connection);
 	return false; //if it made it this far then this is the default answer
 	}
@@ -135,8 +133,7 @@ private boolean connected = false;
 	}
 
 	public Source getSource() throws IOException {
-	//throws ioexcpetion above 
-	final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()), content.length());
+	final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()), content.length());//throws ioexcpetion above 
 	connected = true;
 		for (int i = 0; i < content.length(); i++) {
 			try {

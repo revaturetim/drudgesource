@@ -107,7 +107,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					
 					}
 				main(inputs);
-				//break; I'm not sure if I want to terminate loop after this
 				}
 				catch (FileNotFoundException F) {
 				System.out.println("File " + FileNames.in + " could not be foun");
@@ -230,6 +229,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						Print.error(N, arg[i + 1]);
 						}
 					}
+					catch (IOException I) {
+					Print.error(I, p);
+					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
@@ -237,11 +239,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
-				catch (SocketTimeoutException S) {
-				Print.error(S, arg[i + 1]);
-				}
-				catch (IOException I) {
-				Print.error(I, arg[i + 1]);
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
 				}
 			break;
 			}
@@ -269,27 +268,29 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if ((a.equals("-H")) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
-				URLConnection c = p.connection();	
-				System.out.println("----------------Request-Fields------------------");
-				Map<String, List<String>> request = c.getRequestProperties();
-					for (Map.Entry<String, List<String>> entry: request.entrySet()) {
-					System.out.println( entry.getKey() + " : " + entry.getValue());
-					}	
-		
-				System.out.println("----------------Response-Headers----------------");	
-				Map<String, List<String>> heads = c.getHeaderFields();
-					for (Map.Entry<String, List<String>> entry : heads.entrySet()) {
-					System.out.println(entry.getKey() + " : " + entry.getValue());
+					try {	
+					URLConnection c = p.openConnection();
+					System.out.println("----------------Request-Fields------------------");
+					Map<String, List<String>> request = c.getRequestProperties();
+						for (Map.Entry<String, List<String>> entry: request.entrySet()) {
+						System.out.println( entry.getKey() + " : " + entry.getValue());
+						}	
+			
+					System.out.println("----------------Response-Headers----------------");	
+					Map<String, List<String>> heads = c.getHeaderFields();
+						for (Map.Entry<String, List<String>> entry : heads.entrySet()) {
+						System.out.println(entry.getKey() + " : " + entry.getValue());
+						}
+					}
+					catch (IOException I) {
+					Print.error(I, p);
 					}
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
-				catch (SocketTimeoutException S) {
-				Print.error(S, arg[i + 1]);
-				}
-				catch (IOException I) {
-				Print.error(I, arg[i + 1]);
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
 				}
 			break;
 			}
@@ -315,11 +316,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
-				catch (SocketTimeoutException S) {
-				Print.error(S, arg[i + 1]);
-				}
-				catch (IOException I) {
-				Print.error(I, arg[i + 1]);
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
 				}
 			break;
 			}
@@ -343,6 +341,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						Print.error(N, arg[i + 1]);
 						}	
 					}
+					catch (IOException I) {
+					Print.error(I, p);
+					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
@@ -350,11 +351,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
-				catch (SocketTimeoutException S) {
-				Print.error(S, arg[i + 1]);
-				}
-				catch (IOException I) {
-				Print.error(I, arg[i + 1]);
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
 				}
 			break;
 			}
@@ -378,6 +376,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						Print.error(N, arg[i + 1]);
 						}
 					}
+					catch (IOException I) {
+					Print.error(I, p);
+					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}	
@@ -385,11 +386,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
-				catch (SocketTimeoutException S) {
-				Print.error(S, arg[i + 1]);
-				}
-				catch (IOException I) {
-				Print.error(I, arg[i + 1]);
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
 				}
 			break;
 			}
@@ -407,9 +405,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				System.out.print(" was ");
 				Print.totalTime(time);
 				System.out.print("\n");	
-				}
-				catch (IndexOutOfBoundsException I) {
-				Print.error(I);
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -441,18 +436,15 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						Print.error(N, arg[i + 1]);
 						}
 					}
+					catch (IOException I) {
+					Print.error(I, p);
+					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}	
 				}
 				catch (MalformedURLException M) {
-				Print.error(M, arg[i + 1]);	
-				}
-				catch (SocketTimeoutException S) {
-				Print.error(S, arg[i + 1]);
-				}
-				catch (IOException I) {
-				Print.error(I, arg[i + 1]);
+				Print.error(M, arg[i + 1]);
 				}
 			break;	
 			}
@@ -472,6 +464,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						Print.error(N, arg[i + 1]);
 						}
 					}
+					catch (IOException I) {
+					Print.error(I, p);
+					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}	
@@ -479,11 +474,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
-				catch (SocketTimeoutException S) {
-				Print.error(S, arg[i + 1]);
-				}
-				catch (IOException I) {
-				Print.error(I, arg[i + 1]);
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
 				}
 			break;
 			}
@@ -505,18 +497,18 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						Print.error(U, arg[i + 1]);
 						}
 					}
+					catch (IOException I) {
+					Print.error(I, p);
+					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
-				}	
-				catch (SocketTimeoutException S) {
-				Print.error(S, arg[i + 1]);
 				}
-				catch (IOException I) {
-				Print.error(I, arg[i + 1]);
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
 				}
 			break;
 			}
@@ -527,6 +519,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					p.isUseless();
 					System.out.println(p.toString() + " is not a useless url for this program");	
 					}
+					catch (IOException I) {
+					Print.error(I, p);
+					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
@@ -534,16 +529,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
-				catch (SocketTimeoutException S) {
-				Print.error(S, arg[i + 1]);
-				}
-				catch (IOException I) {
-				Print.error (I, arg[i + 1]);
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
 				}
 			break;
 			}
 			/*!this is the last parameter in the program!*/
 			else if (i == arg.length - 1) {
+			Print.printColumnHeaders();//this should be called first to show errors correctly in output columns
 			String lastarg = arg[arg.length - 1];
 				if (lastarg.equals("-s")) {
 					try {
@@ -581,23 +574,29 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					dada.truncate();//this will delete existing data and start over
 					Page firstpage = createFirstPage(lastarg);
-					dada.add(firstpage);
+					dada.put(firstpage);
 					dada.begin();
 					}
 					catch (MalformedURLException M) {
-					Print.error(M, lastarg);
+					Print.printRow(M, lastarg);
 					}
-					/*catch (URISyntaxException U) {
-					Print.error(U, lastarg);
+					catch (UnknownHostException U) {
+					Print.printRow(U, lastarg);
 					}
-					catch (NotHTMLURLException N) {
-					Print.error(N);
-					}*/
-					catch (IOException I) {
-					Print.error(I);
+					catch (URISyntaxException U) {
+					Print.printRow(U, lastarg);
+					}
+					catch (InvalidURLException N) {
+					N.printRow();
+					}
+					catch (ExcludedURLException E) {
+					E.printRow();
+					}
+					catch (DuplicateURLException D) {
+					D.printRow();
 					}
 					catch (Exception E) {
-					Print.error(E);
+					Print.printRow(E, lastarg);
 					}
 				}
 
@@ -613,7 +612,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					Print.error(E);
 					}
 				}
-			Print.printColumnHeaders();
+			
 			Debug.endCycleTime("Print Column Headers");
 			long begintime = System.currentTimeMillis(); 
 				for (Page p = dada.get(begcyc); p != null; p = dada.get(begcyc)) {
@@ -674,7 +673,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		}//end of loop
 	}//end of program
 
-	static Page createFirstPage(String link) throws IOException, MalformedURLException {
+	static Page createFirstPage(String link) throws MalformedURLException, UnknownHostException {
 	Page firstpage = null;
 		if (link.equals("-samp") || link.equals("-t")) {
 		File sampf = new File(FileNames.samp);
@@ -814,19 +813,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else {
 				try {
 				Page page = new Page(line);
-				data.put(page);
-				}
-				catch (URISyntaxException U) {
-				Print.error(U);
-				}
-				catch (ExcludedURLException D) {
-				Print.error(D);
-				}
-				catch (DuplicateURLException D) {
-				Print.error(D);
-				}
-				catch (InvalidURLException N) {
-				Print.error(N);
+				data.add(page);//use raw add so that you don't undo another spider's data 
 				}
 				catch (MalformedURLException M) {
 				Print.error(M);

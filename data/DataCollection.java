@@ -95,7 +95,7 @@ private boolean include = false;
 	}
 	
 	public T remove(final int r) {
-	Debug.between(r, 0, size, "DataArray.remove(int)");
+	Debug.between("DataArray.remove(int)", r, 0, size);
 	T pagereturn = get(r);
 	remove(pagereturn);
 	return pagereturn;
@@ -117,7 +117,7 @@ private boolean include = false;
 	}
 
 	public T get(int i) {
-	Debug.between(i, 0, size, "DataArray.get(int)");//throws indexoutofboundsexception if it is outside of the exceptable range
+	Debug.between("DataArray.get(int)", i, 0, size);//throws indexoutofboundsexception if it is outside of the exceptable range
 	@SuppressWarnings("unchecked")	
 	T entry = (T)objs[i];
 	return entry;

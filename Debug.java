@@ -62,61 +62,56 @@ final private static String sep = " | ";
 		}
 	}
 	
-	public static <T> void check(final Predicate<T> P, final T obj, final String msg, final Class c) throws IllegalArgumentException {
+	public static <T> void check(final String msg, final Predicate<T> P, final T...objs) throws IllegalArgumentException {
 		if (on) {
-			if (!P.test(obj)) {//failed test
-				if (c != null) {
-				println("Failed Check Inside of " + c.getName());
+			for (T obj : objs) {
+				if (!P.test(obj)) {//failed test
+					if (msg.equals("")) {	
+					throw new IllegalArgumentException();
+					}
+					else {
+					throw new IllegalArgumentException(msg);
+					}
 				}
-			throw new IllegalArgumentException(msg);
 			}
 		}
 	}
 
-	public static <T> void check(final Predicate<T> P, final T obj, final String msg) throws IllegalArgumentException {
-		check(P, obj, msg, null);
+	public static <T> void check(Predicate<T> P, final T...objs) throws IllegalArgumentException {
+		check("", P, objs);
 	}
-
-	public static <T> void check(Predicate<T> P, final T obj) throws IllegalArgumentException {
-		check(P, obj, obj.toString(), null);
-	}
-
-	public static void check(final Object a, final Object b, final String msg, final Class c) throws IllegalArgumentException {
+	
+	public static void check(final String msg, final Object...objs) throws IllegalArgumentException {
 	
 		if (on) {
-			if (a != null && b != null) {
-				if (a.equals(b) == false) {
-				throw new IllegalArgumentException(msg);
+			for (int i = 1; i < objs.length; i++) {
+				if (objs[i] != null && objs[i - 1] != null) {
+					if (objs[i].equals(objs[i - 1]) == false) {
+						if (msg.equals("")) {	
+						throw new IllegalArgumentException();
+						}
+						else {
+						throw new IllegalArgumentException(msg);
+						}
+					}
 				}
-			}
-			else if (a == null && b == null) {
-				throw new NullPointerException(msg);
+				else if (objs[i] == null && objs[i - 1] == null) {
+					if (msg.equals("")) {	
+					throw new NullPointerException();
+					}
+					else {
+					throw new NullPointerException(msg);
+					}
+				}
 			}
 		}	
 	}
 	
-	public static void check(final Object a, final Object b, final String msg) throws IllegalArgumentException {
-	
-		if (on) {
-			if (a != null && b != null) {
-				if (a.equals(b) == false) {
-				throw new IllegalArgumentException(msg);
-				}
-			}
-			else if (a == null && b == null) {
-				throw new NullPointerException(msg);
-			}
-
-		}	
+	public static void check(final Object...objs) {
+		check("", objs);
 	}
 	
-	public static void check(final Object a, final Object b) throws IllegalArgumentException {
-		check(a, b, "");
-	}
-
-	
-	
-	public static void between(final int a, final int b, final int e, final String msg) throws IndexOutOfBoundsException {
+	public static void between(final String msg, final int a, final int b, final int e) throws IndexOutOfBoundsException {
 		if (on) {
 			if (a < b || a > e) {
 			throw new IndexOutOfBoundsException(String.valueOf(a) 
@@ -129,7 +124,7 @@ final private static String sep = " | ";
 	}
 	
 	public static void between(final int a, final int b, final int e) throws IndexOutOfBoundsException {
-		between(a, b, e, "");
+		between("", a, b, e);
 	}
 
 	public static void here() {

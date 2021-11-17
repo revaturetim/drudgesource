@@ -27,20 +27,26 @@ final private Data<String> klist = new DataList<String>();
 private boolean connected = false;
 
 	public Page(URL u) {
-	Debug.check(u, null, P.nopag);
-	url = u;
+	Debug.check(P.nopag, u, null);
+	this.url = u;
 	}
 	
 	public Page(URL p, String l) throws MalformedURLException {
-	this(new URL(p, l));//this throws malformedurlexception
+	this.url = new URL(p, l);//this throws malformedurlexception
 	}
 
 	public Page(String u) throws MalformedURLException {
-	this(new URL(u));//this will throw malformedurlexception while page(URL) constructor throws the rest
+	this.url = new URL(u);//this will throw malformedurlexception
 	}
 	
 	public Page(String u, String l) throws MalformedURLException {
-	this(new URL(u), l);//this will throw exceptions
+	URL purl = new URL(u);//this will throw malformedurlexception
+	this.url = new URL(purl, l);//this will throw malformedurlexception
+	}
+	
+	public Page(Page op, String l) throws MalformedURLException {
+	URL oldurl = op.getURL();
+	this.url = new URL(oldurl, l);//this will throw malformedurlexception
 	}
 	
 	public boolean equals(Object obj) {
@@ -157,7 +163,8 @@ private boolean connected = false;
 	return url;
 	}
 
-	public URLConnection connection() {
+	public URLConnection openConnection() throws IOException {
+	connection = P.getConnection(url, proxyserver);
 	return connection;
 	}
 

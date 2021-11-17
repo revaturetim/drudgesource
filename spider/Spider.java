@@ -117,9 +117,7 @@ protected boolean norobots = false;
 
 	//I thought that calling issue was humorous like you have a issues
 	protected void spinIssue(String i, Object o, Exception e) {
-		if (o == null | i == null | e == null) {
-		throw new NullPointerException("You are attemping to pass a null value into Spider.spinIssue");
-		}
+	Debug.check("You are attemping to pass a null value into Spider.spinIssue", i, null, o, null, e, null);
 	HashMap<String, Object> h = new HashMap<String, Object>();
 	h.put(i + " Issue", o);
 	h.put("Exception", e);

@@ -91,7 +91,7 @@ insert into drudge values (link, title, keywords);
 	return page; 
 	}
 
-	public T remove(int i) {
+	public T delete(int i) {
 	T page = null;	
 	final String query = "SELECT * FROM " + table;
 		try {

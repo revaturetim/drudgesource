@@ -47,6 +47,10 @@ private final static long serialVersionUID = 0;
 		}
 	}
 	
+	public T delete(int i) {
+	return remove(i);
+	}
+	
 	public boolean check() {
 	return true;
 	}

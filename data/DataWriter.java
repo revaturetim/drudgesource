@@ -11,9 +11,7 @@ import drudge.global.*;
  *I thought it was clever to write up
  */
 abstract class DataWriter<T> implements Data<T> {
-protected PrintWriter PRINTER;
-protected LineNumberReader READER;
-private String file;
+protected String source;
 private int datalevel = 1;
 private boolean include = false;
 private boolean exclude = false;
@@ -21,48 +19,99 @@ private boolean exclude = false;
 	//this has to be filled with something in order for subclass works.
 	abstract LineNumberReader createReader();
 	abstract PrintWriter createWriter();
-
-	public void put(T page) throws DuplicateURLException {
-	Debug.print(page);
-	PRINTER.println(page.toString());
-	PRINTER.close();
+	
+	@SuppressWarnings("unchecked")
+	protected T getPageFromEntry(String line) {
+	T page = null;
+		try {
+		String[] entries = line.split(CountFile.sep);
+		page = (T)new Page(entries[0]);
+		}
+		catch (MalformedURLException M) {
+		D.error(M);
+		}
+	return page;
+	}
+	
+	protected void writePageEntry(Page page) throws IOException {
+	Debug.check(page, null);
+	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
+		for (int r = 0; r < level(); r++) {
+			if (r == 0) {
+			link_writer.append(page.toString() + CountFile.sep);
+			}
+			else if (r == 1) {
+			link_writer.append(page.getTitle() + CountFile.sep);
+			}
+			else if (r == 2) {
+			link_writer.append(page.getKeywords().rawString());
+			}
+		}
+	link_writer.append("\n");
+	link_writer.close();
+	}
+	
+	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
+	((Page)link).isValid();
+		if (excluded() == true && DataObjects.exclude.contains(link)) throw new ExcludedURLException(link);
+		if (included() == true) {
+			for (Page p : DataObjects.include) {
+			final String host1 = p.getURL().getHost();
+			final String host2 = ((Page)link).getURL().getHost();
+				if (host1.equals(host2) == false) {
+				throw new ExcludedURLException(link);
+				}
+			}		
+		} 
+		if (add(link) == false) throw new DuplicateURLException(link);	
 	}
 
-	public T get(int n) {
+
+	public T get(final int n) {
 	T entry = null;
 		try {
-		READER.reset();//ensures that it is resetted
+		LineNumberReader READER = createReader();
+		READER.setLineNumber(-1);
 			for (String line = READER.readLine(); line != null; line = READER.readLine()) {
-				if (READER.getLineNumber() == n + 1) {//index number has to be increased by one because line nmbers are 1 based
-				entry = D.getPageFromEntry(line);
-				Debug.print(entry);
+			final int c = READER.getLineNumber();
+				if (c == n) {
+				entry = this.getPageFromEntry(line);
 				break;
 				}
 			}
 		READER.close();
 		}
 		catch (IOException I) {
-		Debug.here(I);
 		D.error(I);
 		}
 	return entry;
 	}
 
 
-	public T remove(int l) {
+	public T delete(final int l) {
 	T p = null;
+	StringBuffer buff = new StringBuffer();
 		try {
-		READER.reset();
-			for (String line = READER.readLine(); line != null; line = READER.readLine()) {
-				if (READER.getLineNumber() != l + 1) {
-				PRINTER.write(line);	
+		LineNumberReader reader = createReader();
+		reader.setLineNumber(-1);
+			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+				if (reader.getLineNumber() != l) {
+				buff.append(line);
+				buff.append("\n");
 				}
 				else {
-				p = D.getPageFromEntry(line);			
+				p = this.getPageFromEntry(line);			
 				}
 			} 
-		//PRINTER.close();//this should write to new buffer
-		//READER.close();
+		reader.close();
+		}
+		catch (IOException I) {
+		D.error(I);
+		}
+		try {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(source()));
+		writer.append(buff);
+		writer.close();
 		}
 		catch (IOException I) {
 		D.error(I);
@@ -70,16 +119,8 @@ private boolean exclude = false;
 	return p;
 	}
 	
-	public boolean check() {
-	return true;
-	}
-	
-	public boolean checkError() {
-	return true;
-	}
-	
 	public String source() {
-	return file;
+	return source;
 	}
 
 	public void setLevel(int l) {

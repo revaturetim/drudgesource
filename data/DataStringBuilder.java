@@ -22,7 +22,7 @@ private boolean include = false;
 		reader.setLineNumber(-1);//this is so index and line number will be the same
 			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 				if (reader.getLineNumber() == L) {
-				p = D.getPageFromEntry(line);
+				//p = this.getPageFromEntry(line);
 				break;
 				}	
 			}
@@ -44,7 +44,7 @@ private boolean include = false;
 		}
 	}
 	
-	public T remove(int l) {
+	public T delete(int l) {
 	int L = 1;
 		for (int i = 0; i != -1; i = builder.indexOf("\n", i + 1)) {
 			if (L == l) {

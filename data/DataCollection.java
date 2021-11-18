@@ -48,26 +48,22 @@ private boolean include = false;
 		}
 	return c;
 	}
-
+	
 	public Iterator<T> iterator() {
 		Iterator<T> it = new Iterator<T>() {
-		private int i = -1;
+		int i = -1;
 			public boolean hasNext() {
-			return (i < size - 1);	
+			boolean next =  (get(i + 1) != null); 
+			return next;	
 			}
-	
+
 			public T next() {
 			i++;//increment first!
 			return get(i);
 			}
-
-			/*This is the remove method that gets used and it has to be independent of every other remove function*/
+			
 			public void remove() {
-				for (int j = i; j < size - 1; j++) {
-				objs[j] = objs[j + 1];
-				}
-			objs[size - 1] = null;
-			size--;//this has to be last in order to make it work right
+			delete(i);
 			}
 		};	
 	return it;
@@ -94,11 +90,15 @@ private boolean include = false;
 	return added;
 	}
 	
-	public T remove(final int r) {
-	Debug.between("DataArray.remove(int)", r, 0, size);
-	T pagereturn = get(r);
-	remove(pagereturn);
-	return pagereturn;
+	public T delete(final int i) {
+	Debug.between("DataArray.remove(int)", i, 0, size);
+	T toberemoved = (T)objs[i];
+		for (int j = i; j < size - 1; j++) {
+		objs[j] = objs[j + 1];
+		}
+	objs[size - 1] = null;
+	size--;//this has to be last in order to make it work right
+	return toberemoved;
 	}
 	
 	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
@@ -121,107 +121,6 @@ private boolean include = false;
 	@SuppressWarnings("unchecked")	
 	T entry = (T)objs[i];
 	return entry;
-	}
-	
-	/*this is an internal check to check the data within the data object itself not its source*/
-	public boolean check() /*throws UselessURLException, IOException, URISyntaxException*/ {
-	Iterator<T> pages = this.iterator();
-
-		for (int linecount = 1; pages.hasNext(); linecount++) {
-		T page = pages.next();
-			try {
-			String link = pages.toString();
-			Page p = new Page(link);//this throws InvalidURLException, malformedurlexception, URISyntaxException
-			URL u = p.getURL();
-				if (u.getAuthority() == null) {
-			
-				}
-				Iterator<T> pages2 = this.iterator();
-				for (int linecount2 = 1; pages2.hasNext(); linecount2++) {
-				T page2 = pages2.next();
-				String link2 = page2.toString();
-					if (link.equals(link2) && linecount != linecount2) {
-		String msg =  "[" + link + "] Duplicate entry found at " + String.valueOf(linecount) + " and " + 			String.valueOf(linecount2);
-					}
-				}
-			}
-			catch (Exception E) {
-			
-			}
-		}
-	return true;
-	}
-	
-	public boolean checkError() {
-	boolean duplicate = false;
-	boolean linkerror = false;
-	int linecount = 0;
-		try { 
-		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
-		int firstcolumnlength = 0;
-			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-			linecount = reader.getLineNumber();
-			String[] columns = line.split(CountFile.sep);
-			/*This will see if the total number of columns for each line is the same as the previous one*/
-				if (linecount == 1) {
-				firstcolumnlength = columns.length;
-				}
-				if (columns.length != firstcolumnlength) {
-				System.out.println("There is a column length error at line " + String.valueOf(linecount));
-				}
-			/*this will check for decoding errors*/
-				for (String col : columns) {
-					if (col.contains("%")) {
-					System.out.println("Possible encoding error at line " + String.valueOf(linecount));
-					}
-				}
-			/*This will check for duplicates in the data*/
-			String link = columns[0];
-				try {
-				Page p = new Page(link);//this throws malformedurlexception
-				p.isValid();//this throws InvalidURLException, URISyntaxException
-				URL u = p.getURL();
-					if (u.getAuthority() == null) {
-					throw new MalformedURLException("No Host");
-					}
-				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));
-					for (String line2 = reader2.readLine(); line2 != null; line2 = reader2.readLine()) {
-					int linecount2 = reader2.getLineNumber();
-						if (linecount2 < linecount) {
-						String[] columns2 = line2.split(CountFile.sep);
-						String link2 = columns2[0];
-							if (link.equals(link2)) {
-							duplicate = true;
-							System.out.print(link + " is a duplicate entry found at ");
-					       	System.out.println(String.valueOf(linecount) 
-					       	+ " and " 
-					       	+ String.valueOf(linecount2));
-							}
-						}
-					}
-				}
-				catch (InvalidURLException N) {
-				linkerror = true;
-				System.out.print("Line " + String.valueOf(linecount) + " has a link that isn't an html file: ");
-				System.out.println(link);
-				}
-				catch (URISyntaxException U) {
-				linkerror = true;
-				System.out.print("Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
-				}
-				catch (MalformedURLException M) {
-				linkerror = true;
-				System.out.print("Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
-				}
-			}
-		System.out.println("The number of lines in " + source +  " is "  + linecount);
-		}
-		catch (IOException I) {
-		System.out.println(I);
-		}
-	return (duplicate || linkerror);
 	}
 	
 	@SuppressWarnings("unchecked")	

@@ -12,18 +12,6 @@ import java.sql.*;
 
 final public class D implements FileNames {
 
-	@SuppressWarnings("unchecked")	
-	public static <T> T getPageFromEntry(String line) {
-	T page = null;
-		try {
-		String[] entries = line.split(CountFile.sep);
-		page = (T)new Page(entries[0]);
-		}
-		catch (MalformedURLException M) {
-		D.error(M);
-		}
-	return page;
-	}
 
 	public static void error(Map<String, Object> M) {
 	final String beg = "!-----";

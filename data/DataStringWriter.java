@@ -10,15 +10,14 @@ import drudge.global.FileNames;
  */
 
 public class DataStringWriter<T> extends DataWriter<T> {
-final private PipedWriter pwriter = new PipedWriter();
-final private PipedReader preader = new PipedReader();
+final private StringWriter buffer = new StringWriter();
 
 	public DataStringWriter() {
-	
+
 	}
 
 	protected LineNumberReader createReader() {
-	LineNumberReader reader = new LineNumberReader(new BufferedReader(preader));
+	LineNumberReader reader = new LineNumberReader(new BufferedReader(new StringReader(buffer.toString())));
 		try {
 		reader.setLineNumber(0);
 		reader.mark(0);
@@ -29,15 +28,13 @@ final private PipedReader preader = new PipedReader();
 	return reader;
 	}
 
-	protected PrintWriter createWriter() {
-	StringWriter stringwriter = new StringWriter();
-		try {
-		pwriter.connect(preader);
-		}
-		catch (IOException I) {
-		D.error(I);
-		}
-	return new PrintWriter(new BufferedWriter(pwriter));
+	protected StringWriter createWriter() {
+	return buffer;
+	}
+	
+	public boolean add(T page) {
+	
+	return false;
 	}
 
 }

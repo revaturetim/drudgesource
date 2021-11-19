@@ -101,4 +101,16 @@ final public class D implements FileNames {
 	String time = y + " " + o + " " + d + " " + h + ":" + m + " " + a;
 	return time;
 	}
+	
+	static Page getPageFromEntry(String line) {
+	Page page = null;
+		try {
+		String[] entries = line.split(CountFile.sep);
+		page = new Page(entries[0]);
+		}
+		catch (MalformedURLException M) {
+		D.error(M);
+		}
+	return page;
+	}
 }

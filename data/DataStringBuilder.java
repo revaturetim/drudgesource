@@ -8,40 +8,18 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class DataStringBuilder<T> implements Data<T> {
+public class DataStringBuilder<T> extends DataWriter<T> {
 final private StringBuilder builder = new StringBuilder();
-String file = FileNames.links;
 private int datalevel = 0;
 private boolean exclude = false;
 private boolean include = false;
 
-	public T get(final int L) {
-	T p = null;
-		try {
-		LineNumberReader reader = new LineNumberReader(new BufferedReader(new StringReader(builder.toString())));
-		reader.setLineNumber(-1);//this is so index and line number will be the same
-			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-				if (reader.getLineNumber() == L) {
-				//p = this.getPageFromEntry(line);
-				break;
-				}	
-			}
-		reader.close();
-		}
-		catch (IOException I) {
-		D.error(I);
-		}
-	return p;
+	public PrintWriter createWriter() {
+	return new PrintWriter(new BufferedWriter(new StringWriter()));
 	}
-
-	public void put(T page) throws DuplicateURLException {
-		if (contains(page)) {
-		throw new DuplicateURLException(page);
-		}
-		else {
-		builder.append(page.toString());
-		builder.append("\n");
-		}
+	
+	protected LineNumberReader createReader() {
+	return new LineNumberReader(new BufferedReader(new StringReader(builder.toString())));	
 	}
 	
 	public T delete(int l) {
@@ -71,7 +49,7 @@ private boolean include = false;
 	}
 	
 	public String source() {
-	return file;
+	return source;
 	}
 
 	public void setLevel(int l) {

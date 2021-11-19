@@ -100,21 +100,6 @@ private boolean include = false;
 	size--;//this has to be last in order to make it work right
 	return toberemoved;
 	}
-	
-	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
-	((Page)link).isValid();
-		if (excluded() == true && DataObjects.exclude.contains(link)) throw new ExcludedURLException(link);
-		if (included() == true) {
-			for (Page p : DataObjects.include) {
-			final String host1 = p.getURL().getHost();
-			final String host2 = ((Page)link).getURL().getHost();
-				if (host1.equals(host2) == false) {
-				throw new ExcludedURLException(link);
-				}
-			}		
-		} 
-		if (add(link) == false) throw new DuplicateURLException(link);	
-	}
 
 	public T get(int i) {
 	Debug.between("DataArray.get(int)", i, 0, size);//throws indexoutofboundsexception if it is outside of the exceptable range
@@ -145,18 +130,7 @@ private boolean include = false;
 		for (T t : this) {
 		Debug.check(t, null);
 		Page tp = (Page)t;
-			for (int r = 0; r < level(); r++) {
-				if (r == 0) {
-				link_writer.append(tp.toString() + CountFile.sep);
-				}
-				else if (r == 1) {
-				link_writer.append(tp.getTitle() + CountFile.sep);
-				}
-				else if (r == 2) {
-				link_writer.append(tp.getKeywords().rawString());
-				}
-			}
-		link_writer.append("\n");
+		writeEntry(tp, link_writer);
 		}
 	link_writer.close();
 	}

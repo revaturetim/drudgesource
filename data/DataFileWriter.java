@@ -43,21 +43,14 @@ public class DataFileWriter<T> extends DataWriter<T> {
 		if (contains(page) == false) {
 		Page tp = (Page)page;
 		PrintWriter PRINTER = createWriter();
-		
-			for (int r = 0; r < level(); r++) {
-				if (r == 0) {
-				PRINTER.append(tp.toString() + CountFile.sep);
-				}
-				else if (r == 1) {
-				PRINTER.append(tp.getTitle() + CountFile.sep);
-				}
-				else if (r == 2) {
-				PRINTER.append(tp.getKeywords().rawString());
-				}
+			try {
+			writeEntry(tp, PRINTER);
+			PRINTER.close();
+			added = true;
 			}
-		PRINTER.append("\n");
-		PRINTER.close();
-		added = true;
+			catch (IOException I) {
+			D.error(I);
+			}
 		}
 	return added;
 	}

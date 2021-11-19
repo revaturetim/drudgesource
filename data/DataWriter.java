@@ -17,55 +17,11 @@ private boolean include = false;
 private boolean exclude = false;
 
 	//this has to be filled with something in order for subclass works.
-	abstract LineNumberReader createReader();
-	abstract PrintWriter createWriter();
+	abstract <R extends Reader> R createReader();
+	abstract <W extends Writer> W createWriter();
+	abstract public boolean add(T obj);
 	
-	@SuppressWarnings("unchecked")
-	protected T getPageFromEntry(String line) {
-	T page = null;
-		try {
-		String[] entries = line.split(CountFile.sep);
-		page = (T)new Page(entries[0]);
-		}
-		catch (MalformedURLException M) {
-		D.error(M);
-		}
-	return page;
-	}
 	
-	protected void writePageEntry(Page page) throws IOException {
-	Debug.check(page, null);
-	BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
-		for (int r = 0; r < level(); r++) {
-			if (r == 0) {
-			link_writer.append(page.toString() + CountFile.sep);
-			}
-			else if (r == 1) {
-			link_writer.append(page.getTitle() + CountFile.sep);
-			}
-			else if (r == 2) {
-			link_writer.append(page.getKeywords().rawString());
-			}
-		}
-	link_writer.append("\n");
-	link_writer.close();
-	}
-	
-	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
-	((Page)link).isValid();
-		if (excluded() == true && DataObjects.exclude.contains(link)) throw new ExcludedURLException(link);
-		if (included() == true) {
-			for (Page p : DataObjects.include) {
-			final String host1 = p.getURL().getHost();
-			final String host2 = ((Page)link).getURL().getHost();
-				if (host1.equals(host2) == false) {
-				throw new ExcludedURLException(link);
-				}
-			}		
-		} 
-		if (add(link) == false) throw new DuplicateURLException(link);	
-	}
-
 
 	public T get(final int n) {
 	T entry = null;
@@ -75,7 +31,7 @@ private boolean exclude = false;
 			for (String line = READER.readLine(); line != null; line = READER.readLine()) {
 			final int c = READER.getLineNumber();
 				if (c == n) {
-				entry = this.getPageFromEntry(line);
+				entry = (T)D.getPageFromEntry(line);
 				break;
 				}
 			}
@@ -100,7 +56,7 @@ private boolean exclude = false;
 				buff.append("\n");
 				}
 				else {
-				p = this.getPageFromEntry(line);			
+				p = (T)D.getPageFromEntry(line);			
 				}
 			} 
 		reader.close();
@@ -145,10 +101,6 @@ private boolean exclude = false;
 	
 	public boolean excluded() {
 	return exclude;
-	}
-	
-	public boolean add(T obj) {
-	return false;
 	}
 	
 	public void setIncluded(boolean b) {

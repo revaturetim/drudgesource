@@ -2,18 +2,19 @@ package drudge.data;
 
 import java.util.function.*;
 import java.util.*;
-import drudge.*;
-import drudge.page.*;
-import drudge.global.FileNames;
 import java.net.*;
 import java.io.*;
+import drudge.*;
+import drudge.page.*;
+import drudge.global.*;
+
 
 /*This interface has the methods that this program will use*/
 public interface Data<T> extends Iterable<T>, RandomAccess {
 
 	/*These are important methods because they interface with the rest of the program*/
 	public boolean add(T obj);//this is just to raw add an item into it without checking exceptions
-	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException;
+	//public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException;
 	public T delete(int cycle);
 	public T get(int cycle);
 	public String source();
@@ -48,6 +49,22 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return has;
 	}
 	
+	default public void put(T link) throws 
+	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
+	((Page)link).isValid();
+		if (excluded() == true && DataObjects.exclude.contains(link)) throw new ExcludedURLException(link);
+		if (included() == true) {
+			for (Page p : DataObjects.include) {
+			final String host1 = p.getURL().getHost();
+			final String host2 = ((Page)link).getURL().getHost();
+				if (host1.equals(host2) == false) {
+				throw new ExcludedURLException(link);
+				}
+			}		
+		} 
+		if (add(link) == false) throw new DuplicateURLException(link);	
+	}
+
 	default public boolean put(Data<T> d) {
 	boolean scs = true;
 
@@ -122,7 +139,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return it;
 	}
 		
-	default public String rawString() {
+	default String rawString() {
 	StringBuilder builder = new StringBuilder();
 		for (T t : this) {
 		builder.append(t.toString());
@@ -131,6 +148,21 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return builder.toString();
 	}
 
+	default void writeEntry(Page p, Writer w) throws IOException {
+		for (int r = 0; r < level(); r++) {
+			if (r == 0) {
+			w.append(p.toString() + CountFile.sep);
+			}
+			else if (r == 1) {
+			w.append(p.getTitle() + CountFile.sep);
+			}
+			else if (r == 2) {
+			w.append(p.getKeywords().rawString());
+			}
+		w.append("\n");
+		}
+	}
+	
 	default void truncate() {
 	File linkfile = new File(source());
 		try {

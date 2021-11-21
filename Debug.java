@@ -2,6 +2,7 @@ package drudge;
 
 import java.io.*;
 import java.util.function.Predicate;
+import java.lang.reflect.*;
 
 final public class Debug {
 private static long clickbegin = 0;
@@ -14,13 +15,98 @@ public static boolean cycletimeon = false;
 private static boolean begcycletime = false;
 final private static String sep = " | ";
 
-	public static void stop(Object obj) {
+	public static void stop(String msg, Class klass, Object...values) {
 		if (on) {
+		String stop = (msg == null) ? "Stopped: " : msg.toString() + ": ";
 			try {
-			InputStream in = System.in;
-			System.out.print("Stopped: " + obj.toString());
-			byte[] b = new byte[1];
-			in.read(b);//this blocks until there is something to read
+			
+OUTER:				while (true) {
+				System.out.print(stop);
+				byte[] b = new byte[20];
+				System.in.read(b);//this blocks until there is something to read
+				String action = new String(b).trim();
+INNER:					while (true) {
+						if (action.equals("continue")) {
+						break OUTER;	
+						}
+						else if (action.equals("exit")) {
+						System.exit(0);
+						}
+						else if (action.equals("value")) {
+							for (Object value : values) {
+								if (value != null) {
+								String type = value.getClass().getName();
+								System.out.println(type + "\t" + value);
+								}
+								else {
+								System.out.println(null + "\t\t\t" + value);
+								}
+							}
+						break INNER;
+						}
+						else if (klass != null) {
+							if (action.equals("field")) {
+							Field[] fs = klass.getFields();
+								for (Field f : fs) {
+								System.out.print(f.toGenericString());
+								System.out.print("=");
+									try {
+									System.out.println(f.get(klass));
+									}
+									catch (Exception E) {
+									
+									}
+								}
+							}
+							else if (action.startsWith("set ")) {
+								String[] params = action.split(" ");
+								try {
+								Field f = klass.getField(params[1]);
+								f.set(klass, params[2]);
+								}
+								catch (Exception E) {
+								System.out.println(E.toString());
+								}
+							}
+							else if (action.equals("method")) {
+							Method[] ms = klass.getMethods();
+								for (Method m : ms) {
+								System.out.println(m.toGenericString());
+							 	}
+							}
+							else if (action.equals("class")) {
+							Class[] cs = klass.getClasses();
+								for (Class c : cs) {
+								System.out.println(c.toGenericString());
+								} 
+							}
+							else if (action.equals("constructor")) {
+							Constructor[] cons = klass.getConstructors();
+								for (Constructor con : cons) {
+								System.out.println(con.toGenericString());
+								}
+							}
+							else if (action.equals("package")) {
+							Package pack = klass.getPackage();
+							System.out.println(pack.getName());
+							}
+							else if (action.equals("enclose")) {
+							
+								if (klass.isLocalClass()) {
+								Method m = klass.getEnclosingMethod();
+								System.out.println(m.toGenericString());
+								}
+								else {
+								System.out.println(klass.getName() + " is not an local class");
+								}
+							}
+						break INNER;
+						}
+						else {
+						break INNER;//for some reason this has to break inner loop
+						}
+					}
+				}
 			}
 			catch (IOException I) {
 			System.out.println("Stop method broke");
@@ -28,12 +114,22 @@ final private static String sep = " | ";
 		}
 	}
 
-	public static void stop() {
-		if (on) {
-		stop("");//this will call the stop method as it is suppose to
-		}
+	public static void stop(Class klass, Object...values) {
+	stop(null, klass, values);
 	}
-		
+	
+	public static void stop(Class klass) {
+	stop(null, klass, new Object[0]);
+	}
+	
+	public static void stop(Object...values) {
+	stop(null, null, values);
+	}
+	
+	public static void stop() {
+	stop(null, null, new Object[0]);
+	}
+
 	public static void print(Object...objs) {
 		if (on) {
 			for (Object obj : objs) {
@@ -127,19 +223,17 @@ final private static String sep = " | ";
 		between("", a, b, e);
 	}
 
+	public static void here(Object...objs) {
+		if (on) {
+			for (Object obj : objs) {
+			System.out.printf("%10s=%S\n", "Location", obj.toString());
+			}
+		}
+	}
+		
 	public static void here() {
 	here("here");
 	}
-
-	public static void here(String m) {
-		if (on) {
-		System.out.printf("%10s=%S\n", "Location", m);
-		}
-	}
-
-	public static void here(Object obj) {
-	here(obj.toString());
-	}	
 
 	public static void startWatch() {
 

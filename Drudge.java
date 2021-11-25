@@ -24,7 +24,7 @@ public static String XFACTOR = null;
 	Spider spider = null;
 	long MemoryStart = Runtime.getRuntime().freeMemory();
 	eraseFile(FileNames.error);
-
+	Debug.stop(Drudge.class);
 		//this is the main program loop
 LOOP:		for (int i = 0; i < arg.length; i++) {
 		String a = arg[i];
@@ -613,7 +613,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}
 				}
 			
-			Debug.endCycleTime("Print Column Headers");
+			Debug.time("Print Column Headers");
 			long begintime = System.currentTimeMillis(); 
 				for (Page p = dada.get(begcyc); p != null; p = dada.get(begcyc)) {
 				boolean remove = spider.crawl(p);
@@ -631,7 +631,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					break;
 					}
 				}
-			Debug.endCycleTime("Spider Crawl");
+			Debug.time("Spider Crawl");
 				try {
 				dada.finish();
 				}
@@ -647,14 +647,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}
 				}
 			long endtime = System.currentTimeMillis();
-			Debug.endCycleTime("DataBase disconnect");
+			Debug.time("DataBase disconnect");
 				try {
 				CountFile.set(begcyc);
 				}
 				catch (IOException I) {
 				Print.error(I);
 				}
-			Debug.endCycleTime("Writing Countfile");
+			Debug.time("Writing Countfile");
 				
 			//this is to print out last stats of progam	
 			System.out.printf("Links:\t\t%d\n",  dada.size());
@@ -671,6 +671,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			System.out.println("Option " + a + " was ignored by this program.");
 			}//end of lastarg of loop
 		}//end of loop
+		Debug.stop();
 	}//end of program
 
 	static Page createFirstPage(String link) throws MalformedURLException, UnknownHostException {
@@ -713,7 +714,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	}
 
 	static Spider createSpider(int c) {
-	Debug.begCycleTime();//this starts cycle time for entire thing
+	Debug.time("Creating Spider");//this starts cycle time for entire thing
 	Spider spider = null;
 		switch (c) {
 			
@@ -791,7 +792,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 		}
 		
-	Debug.endCycleTime("Create Spider Object");
+	Debug.time("Create Spider Object");
 	return spider;
 	}
 	

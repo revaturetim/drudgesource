@@ -29,7 +29,7 @@ protected boolean norobots = false;
 		spinIssue("Found and Input/Output while getting source", p.getURL(), I);
 		Print.printRow(I, p);
 		}
-	Debug.endCycleTime("End Links");
+	Debug.time("End Links");
 	}
 
 	public boolean crawl(Page p) {
@@ -37,11 +37,11 @@ protected boolean norobots = false;
 		try {
 			if (checkok) {
 			p.isUseless();//this throws uselessurlexception(s)
-			Debug.endCycleTime("Checing is UseLess");
+			Debug.time("Checing is UseLess");
 			}
 			if (norobots) {
 			p.isRobotAllowed();//this throws norobotsallowedexception	
-			Debug.endCycleTime("Checking Robot Allowed");
+			Debug.time("Checking Robot Allowed");
 			}
 		links(p);
 		}
@@ -53,7 +53,7 @@ protected boolean norobots = false;
 			Page rediruri = new Page(redloc);
 				try {
 				DataObjects.dada.put(rediruri);
-				Debug.endCycleTime("Redirected");
+				Debug.time("Redirected");
 				}
 				catch (URISyntaxException U) {
 				spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 

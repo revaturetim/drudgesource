@@ -429,7 +429,7 @@ final static private String Null = "null";
 			throw new NotOKURLException(page);
 			}
 		}
-	Debug.endCycleTime("...Response-Code");		
+	Debug.time("...Response-Code");		
 	}
 
 	static void checkResponse(final String response, final String page) throws NoContentURLException, RedirectedURLException, NotOKURLException {
@@ -441,7 +441,7 @@ final static private String Null = "null";
 			checkResponse(code, page);
 			}	
 		}
-	Debug.endCycleTime("...Response-Code");		
+	Debug.time("...Response-Code");		
 	}
 
 	static void checkContentType(final String contype, final String con) throws InvalidURLException {
@@ -460,7 +460,7 @@ final static private String Null = "null";
 			throw new InvalidURLException(con, contype);
 			}
 		}
-	Debug.endCycleTime("...Content-Type");		
+	Debug.time("...Content-Type");		
 	}
 
 	static void checkContentLength(final int conlen, final String con) throws NoContentURLException {
@@ -470,7 +470,7 @@ final static private String Null = "null";
 			}
 			/*DON'T USE CONLEN VARIABLE FROM HEADER OR IT WILL NOT INDEX PAGE!!!!!*/
 		}
-	Debug.endCycleTime("...Content-Length");		
+	Debug.time("...Content-Length");		
 	}
 
 	static void checkContentEncoding(final String contenc, final String con) throws BadEncodingURLException {
@@ -481,7 +481,7 @@ final static private String Null = "null";
 			I don't know what to do with this one yet so I am going to comment it out
 			*/
 		}
-	Debug.endCycleTime("...Content-Encoding");			
+	Debug.time("...Content-Encoding");			
 	}
 
 	/*checkHeaders methods do not throw all uselessurl exceptions so -U option may not catch them all*/

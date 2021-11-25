@@ -82,13 +82,13 @@ private boolean connected = false;
 			};
 		P.GetLinkAction.get(content, action);
 		}
-	Debug.endCycleTime("Getting Links");
+	Debug.time("Getting Links");
 	return dlist;
 	}
 	
 	public Data<URL> getEmails() {
 	P.getEmails(content, elist);
-	Debug.endCycleTime("Getting Emails");
+	Debug.time("Getting Emails");
 	return elist;
 	}
 
@@ -102,13 +102,13 @@ private boolean connected = false;
 
 	public String getTitle() {
 	String title = P.getTitle(content);
-	Debug.endCycleTime("Getting Title");
+	Debug.time("Getting Title");
 	return title;
 	}
 	
 	public Data<String> getKeywords() {
 	P.getKeywords(content, klist);
-	Debug.endCycleTime("Getting Keywords");
+	Debug.time("Getting Keywords");
 	return klist;
 	}
 
@@ -119,7 +119,7 @@ private boolean connected = false;
 	//this will essentiallly handle all the prechecking needed before it gets content
 	public boolean isUseless() throws RedirectedURLException, InvalidURLException, 
 	       NotOKURLException, NoContentURLException, BadEncodingURLException, IOException {
-	Debug.endCycleTime("Checking Uselessness");
+	Debug.time("Checking Uselessness");
 	connection = P.getConnection(url, proxyserver);//this throws IOException
 	P.checkHeaders(header, toString());
 	return false; //if it made it this far then this is the default answer
@@ -127,7 +127,7 @@ private boolean connected = false;
 
 	public boolean isUselessByURLConnection() throws RedirectedURLException, InvalidURLException, 
 	       NotOKURLException, NoContentURLException, BadEncodingURLException, IOException {
-	Debug.endCycleTime("Checking Uselessness");
+	Debug.time("Checking Uselessness");
 	connection = P.getConnection(url, proxyserver);
 	P.checkHeaders(connection);
 	return false; //if it made it this far then this is the default answer

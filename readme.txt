@@ -23,6 +23,7 @@
 11. BUG! Figure out why Page.getKeyWords returns an empty string with blank spaces in it;
 12. BUG! Figure out why first website is added despite being in the excluded link file;
 13. Refine how include and exclude works since behaviors for either are not exact opposites;
+14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;

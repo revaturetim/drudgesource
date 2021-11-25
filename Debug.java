@@ -1,23 +1,30 @@
 package drudge;
 
 import java.io.*;
-import java.util.function.Predicate;
+import java.util.*;
+import java.util.function.*;
 import java.lang.reflect.*;
+import java.lang.annotation.*;
 
 final public class Debug {
-private static long clickbegin = 0;
-private static long clickend = 0;
+private static long clickbegin = 0L;
+private static long clickend = 0L;
+private static long stopend = 0L;
+private static long stopbegin = 0L;
 private static boolean on = true;
 private static boolean begstopwatch = false;
-private static long cycletimebeg = 0;
-private static long cycletimeend = 0;
+private static long timebegin = 0L;
 public static boolean cycletimeon = false;
-private static boolean begcycletime = false;
 final private static String sep = " | ";
 
-	public static void stop(String msg, Class klass, Object...values) {
+	public static void stop(String msg, BiConsumer<String, String> thing) {
 		if (on) {
-		String stop = (msg == null) ? "Stopped: " : msg.toString() + ": ";
+		GregorianCalendar cal = new GregorianCalendar();
+		String time = cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND);
+		stopend = System.currentTimeMillis();
+		//stopend = cal.getTime().getTime();
+		String stop = (msg == null) ? time + ":" : msg.toString() + ": ";
+			
 			try {
 			
 OUTER:				while (true) {
@@ -26,83 +33,23 @@ OUTER:				while (true) {
 				System.in.read(b);//this blocks until there is something to read
 				String action = new String(b).trim();
 INNER:					while (true) {
-						if (action.equals("continue")) {
+						if (action.equals("cont")) {
 						break OUTER;	
 						}
 						else if (action.equals("exit")) {
 						System.exit(0);
 						}
-						else if (action.equals("value")) {
-							for (Object value : values) {
-								if (value != null) {
-								String type = value.getClass().getName();
-								System.out.println(type + "\t" + value);
-								}
-								else {
-								System.out.println(null + "\t\t\t" + value);
-								}
-							}
+						else if (action.equals("time")) {
+						final long t = (stopbegin > 0) ? stopend - stopbegin : 0L;
+						System.out.printf(stop + "milliseconds:%04d\n", t);
 						break INNER;
 						}
-						else if (klass != null) {
-							if (action.equals("field")) {
-							Field[] fs = klass.getFields();
-								for (Field f : fs) {
-								System.out.print(f.toGenericString());
-								System.out.print("=");
-									try {
-									System.out.println(f.get(klass));
-									}
-									catch (Exception E) {
-									
-									}
-								}
-							}
-							else if (action.startsWith("set ")) {
-								String[] params = action.split(" ");
-								try {
-								Field f = klass.getField(params[1]);
-								f.set(klass, params[2]);
-								}
-								catch (Exception E) {
-								System.out.println(E.toString());
-								}
-							}
-							else if (action.equals("method")) {
-							Method[] ms = klass.getMethods();
-								for (Method m : ms) {
-								System.out.println(m.toGenericString());
-							 	}
-							}
-							else if (action.equals("class")) {
-							Class[] cs = klass.getClasses();
-								for (Class c : cs) {
-								System.out.println(c.toGenericString());
-								} 
-							}
-							else if (action.equals("constructor")) {
-							Constructor[] cons = klass.getConstructors();
-								for (Constructor con : cons) {
-								System.out.println(con.toGenericString());
-								}
-							}
-							else if (action.equals("package")) {
-							Package pack = klass.getPackage();
-							System.out.println(pack.getName());
-							}
-							else if (action.equals("enclose")) {
-							
-								if (klass.isLocalClass()) {
-								Method m = klass.getEnclosingMethod();
-								System.out.println(m.toGenericString());
-								}
-								else {
-								System.out.println(klass.getName() + " is not an local class");
-								}
-							}
+						else if (action.equals("help")) {
+						
 						break INNER;
 						}
 						else {
+						thing.accept(stop, action);
 						break INNER;//for some reason this has to break inner loop
 						}
 					}
@@ -111,23 +58,223 @@ INNER:					while (true) {
 			catch (IOException I) {
 			System.out.println("Stop method broke");
 			}
+		stopbegin = stopend;
+		
 		}
-	}
-
-	public static void stop(Class klass, Object...values) {
-	stop(null, klass, values);
 	}
 	
 	public static void stop(Class klass) {
-	stop(null, klass, new Object[0]);
+	
+		BiConsumer<String, String> thing = new BiConsumer<String, String>() {
+		
+			public void accept(String stop, String action) {
+				if (action.equals("field")) {
+				Field[] fs = klass.getFields();
+					for (Field f : fs) {
+					System.out.print(stop);
+					System.out.print(f.toString());
+					System.out.print("=");
+						try {
+						System.out.println(f.get(klass));
+						}
+						catch (IllegalAccessException E) {
+									
+						}
+						catch (IllegalArgumentException E) {
+									
+						}
+						catch (NullPointerException E) {
+									
+						}
+						catch (ExceptionInInitializerError E) {
+									
+						}
+					}
+				}
+				else if (action.startsWith("set ")) {
+				String[] params = action.split(" ");
+					try {
+					Field f = klass.getField(params[1]);
+					f.set(klass, params[2]);
+					}
+					catch (NoSuchFieldException N) {
+					
+					}
+					catch (IllegalAccessException E) {
+									
+					}
+					catch (IllegalArgumentException E) {
+									
+					}
+					catch (NullPointerException E) {
+									
+					}
+					catch (ExceptionInInitializerError E) {
+									
+					}
+				}
+				else if (action.startsWith("call ")) {
+				String[] params = action.split(" ");
+					try {
+					
+					Class[] cs = new Class[params.length - 2];
+						for (int i = 2; i < params.length; i++) {
+							try {
+							Class c = Class.forName(params[i]);
+							cs[i - 2] = c;
+							}
+							catch (ClassNotFoundException C) {
+							
+							}
+						
+						}
+					Method m = klass.getMethod(params[1], cs);
+					m.invoke(klass, new Object[0]);
+					
+					}
+					catch (NoSuchMethodException N) {
+					
+					}
+					catch (IllegalAccessException E) {
+									
+					}
+					catch (IllegalArgumentException E) {
+									
+					}
+					catch (NullPointerException E) {
+									
+					}
+					catch (ExceptionInInitializerError E) {
+									
+					}
+					catch (InvocationTargetException I) {
+					
+					}
+					
+				
+				
+				}
+				else if (action.equals("annotation")) {
+				Annotation[] as = klass.getAnnotations();
+					for (Annotation a : as) {
+					System.out.print(stop);
+					System.out.println(a.toString());
+					}
+				
+				}
+				else if (action.equals("method")) {
+				Method[] ms = klass.getMethods();
+					for (Method m : ms) {
+					System.out.print(stop);
+					System.out.println(m.toString());
+					}
+				}
+				else if (action.equals("interface")) {
+				Class[] cs = klass.getInterfaces();
+					for (Class c : cs) {
+					System.out.print(stop);
+					System.out.println(c.toString());
+					}
+				}
+				else if (action.equals("super")) {
+				Class c = klass.getSuperclass();
+				System.out.print(stop);
+				System.out.println(c.toString());	
+				}
+				else if (action.equals("signer")) {
+				Object[] signers = klass.getSigners();
+					if (signers != null) {
+						for (Object signer : signers) {
+						System.out.print(stop);
+						System.out.println(signer.toString());
+						}	
+					}
+					else {
+					System.out.print(stop);
+					System.out.println("No Signers");
+					}
+						
+				}
+				else if (action.equals("inner")) {
+				Class[] cs = klass.getClasses();
+					for (Class c : cs) {
+					System.out.print(stop);
+					System.out.println(c.toString());
+					} 
+				}
+				else if (action.equals("constructor")) {
+				Constructor[] cons = klass.getConstructors();
+					for (Constructor con : cons) {
+					System.out.print(stop);
+					System.out.println(con.toString());
+					}
+				}
+				else if (action.equals("package")) {
+				Package pack = klass.getPackage();
+				System.out.print(stop);
+				System.out.println(pack.toString());
+				}
+				else if (action.equals("enclose")) {
+							
+					if (klass.isLocalClass()) {
+					Method m = klass.getEnclosingMethod();
+					System.out.print(stop);
+					System.out.println(m.toString());
+					}
+					else {
+					System.out.print(stop);
+					System.out.println(klass.toString() + " is not an local class");
+					}
+				}
+			
+			}
+		
+		
+		
+		};
+		
+		
+	stop(null, thing);
+	}
+	
+	public static void stop(Class c, String m) {
+	
+	
 	}
 	
 	public static void stop(Object...values) {
-	stop(null, null, values);
+	
+		BiConsumer<String, String> thing = new BiConsumer<String, String>() {
+		
+			public void accept(String stop, String action) {
+				if (action.equals("value")) {
+					for (Object value : values) {
+					System.out.print(stop);
+						if (value != null) {
+						String type = value.getClass().getName();
+						System.out.println(type + "\t" + value);
+						}
+						else {
+						System.out.println(null + "\t\t\t" + value);
+						}
+					}
+				}
+			}
+		};
+	stop(null, thing);
 	}
 	
 	public static void stop() {
-	stop(null, null, new Object[0]);
+	
+		Consumer<String> thing = new Consumer<String>() {
+		
+			public void accept(String s) {
+			
+			}
+			
+		};
+		
+	stop(null, thing);
 	}
 
 	public static void print(Object...objs) {
@@ -235,66 +382,35 @@ INNER:					while (true) {
 	here("here");
 	}
 
-	public static void startWatch() {
-
-		if (on) {
-			if (begstopwatch == false) {
-			clickbegin = System.currentTimeMillis();
-			begstopwatch = true;
-			}
-			else {
-			throw new IllegalStateException("You did not implement stopwatch method");
-			}
-		}
-	}
-
 	public static void stopWatch() {
 		if (on) {
-			if (begstopwatch == true) {
+			if (begstopwatch) {
 			clickend = System.currentTimeMillis();
-			long time = clickend - clickbegin;
+			final long time = clickend - clickbegin;
 			System.out.printf("milliseconds:%04d\n", time);
 			begstopwatch = false;//this resets the stopwatch
 			}
 			else {
-			throw new IllegalStateException("You did not implement the startwatch method first!");
-			}
+			clickbegin = System.currentTimeMillis();
+			begstopwatch = true;
+			}	
 		}	
 	}
-	
-	//these are meant to be more permenent to see how long it takes to get through each part of the cycle
-	public static void begCycleTime() {
-		//don't even do anything unless cycletimeon varible is true
-		if (cycletimeon) {
-		cycletimebeg = System.currentTimeMillis();
-			if (begcycletime == true) {
-			throw new IllegalStateException("You did not implement endCycleTimeMethod!");
-			}
-			else {
-			begcycletime = true;
-			}
-		}
-	}
 
-	public static void endCycleTime(String loc) {
-	//don't even do anything unless cycletime variable is true
+	public static void time(final String loc) {
+	
 		if (cycletimeon) {
-		int maxlength = 20;
+		final int maxlength = 20;
 			if (loc == null) {
-			throw new IllegalArgumentException("Location was " + loc);
+			throw new IllegalArgumentException("Location parameter was not set");
 			}
 			if (loc.length() > maxlength) {
 			throw new IllegalArgumentException("Loaction size was greater than " + String.valueOf(maxlength));
 			}
-			if (begcycletime == false) {
-			throw new IllegalStateException("You did not implement begcycltime method");
-			}
-			else {
-			cycletimeend = System.currentTimeMillis();
-			long time = cycletimeend - cycletimebeg;
-			System.out.printf("Location:%-" + String.valueOf(maxlength) + "s\t milliseconds:%04d\n", loc, time);
-			cycletimebeg = cycletimeend;//this resets beg time for next time
-			}
+		final long current_time = System.currentTimeMillis();
+		final long time = (timebegin > 0) ? current_time - timebegin : 0;
+		System.out.printf("Location:%-" + String.valueOf(maxlength) + "s\t milliseconds:%04d\n", loc, time);
+		timebegin = current_time;//this resets beg time for next time	
 		}	
 	}
 }	

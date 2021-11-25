@@ -31,7 +31,7 @@ private Comparator<Page> compare = new TopComparator<Page>();
 		spinIssue("Found and Input/Output while getting source", p.getURL(), I);
 		Print.printRow(I, p);
 		}
-	Debug.endCycleTime("End Links");
+	Debug.time("End Links");
 	}
 
 }

@@ -5,7 +5,7 @@ import drudge.data.UselessMessages;
 
 enum Help {
 about("-about", "About this program."),
-a("-a", "About this program."),
+a("-a", about.msg),
 c("-c", "This will tell you about the different crawl methods available."),
 d("-d", "This wil let you store different amounts of data from the webpages."),
 e("-e", "This will let you collect emails from the webpages you crawl through."),
@@ -21,12 +21,12 @@ s("-s", "This will set from what cycle to continue from."),
 t("-t", "This will use the test option from a sample file called " + FileNames.samp + "."),
 x("-x", "This will let you pass in extra options for " + ThisProgram.name + "."),
 inc("-inc", "This will set " + ThisProgram.name + " to only include page from certain websites."),
-include("-include", "This will set " + ThisProgram.name + " to only include page from certain websites."),
+include("-include", inc.msg),
 exc("-exc", "This will set " + ThisProgram.name + " to exclude pages from certain websites."),
-exclude("-exlcude", "This will set " + ThisProgram.name + " to exclude pages from certain websites."),
+exclude("-exlcude", exc.msg),
 nok("-nok", "This will set " + ThisProgram.name + " to accept all webites for faster crawling."),
-samp("-samp", "This will use the test option from a sample file called " + FileNames.samp + "."),
-help("-help", "This will print out this help message");
+samp("-samp", t.msg),
+help("-help", h.msg);
 
 private String par;
 private String msg;

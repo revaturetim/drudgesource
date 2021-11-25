@@ -86,7 +86,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if ((a.equals("-help") || a.equals("-h")) && i == 0 && arg.length == 2) {
-			Help.print(arg[i + 1]);	
+			Help.print(arg[i + 1]);
 			break;	
 			}
 			else if (a.equals("-i") && arg.length == 1) {

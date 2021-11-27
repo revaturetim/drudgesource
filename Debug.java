@@ -7,6 +7,7 @@ import java.lang.reflect.*;
 import java.lang.annotation.*;
 
 final public class Debug {
+private static String prompt = null;
 private static long clickbegin = 0L;
 private static long clickend = 0L;
 private static long stopend = 0L;
@@ -19,11 +20,8 @@ final private static String sep = " | ";
 
 	public static void stop(String msg, BiConsumer<String, String> thing) {
 		if (on) {
-		GregorianCalendar cal = new GregorianCalendar();
-		String time = cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND);
 		stopend = System.currentTimeMillis();
-		//stopend = cal.getTime().getTime();
-		String stop = (msg == null) ? time + ":" : msg.toString() + ": ";
+		String stop = (msg == null) ? getPrompt() + ":" : msg.toString() + ":";
 			
 			try {
 			
@@ -58,8 +56,7 @@ INNER:					while (true) {
 			catch (IOException I) {
 			System.out.println("Stop method broke");
 			}
-		stopbegin = stopend;
-		
+		stopbegin = System.currentTimeMillis();
 		}
 	}
 	
@@ -277,9 +274,21 @@ INNER:					while (true) {
 	stop(null, thing);
 	}
 
-	public static void print(Object...objs) {
+	public static void print(Consumer<Object> con, Object...objs) {
 		if (on) {
-			for (Object obj : objs) {
+			for (int i = 0; i < objs.length; i++) {
+			String p = getPrompt();
+			System.out.print(p + ":");
+			con.accept(objs[i]);
+			}
+		}
+	}
+	
+	public static void print(Object...objs) {
+	
+		Consumer<Object> thing = new Consumer<Object>() {
+		
+			public void accept(Object obj) {
 				if (obj != null) {
 				Class<? extends Object> c = obj.getClass();
 				System.out.printf("%10s=%-10s" + sep, c.getName(), obj.toString());
@@ -288,12 +297,15 @@ INNER:					while (true) {
 				System.out.printf("%10s=%-10s" + sep, "Null", "Null");
 				}
 			}
-		}
+		};
+	print(thing, objs);
 	}
 	
 	public static void println(Object...objs) {
-		if (on) {
-			for (Object obj : objs) {
+	
+		Consumer<Object> thing = new Consumer<Object>() {
+		
+			public void accept(Object obj) {
 				if (obj != null) {
 				Class<? extends Object> c = obj.getClass();
 				System.out.printf("%10s=%-10s\n", c.getName(), obj.toString());
@@ -302,56 +314,41 @@ INNER:					while (true) {
 				System.out.printf("%10s=%-10s\n", "Null", "Null");
 				}
 			}
-		}
+		};
+	print(thing, objs);
 	}
 	
-	public static <T> void check(final String msg, final Predicate<T> P, final T...objs) throws IllegalArgumentException {
+	public static void check(final String msg, final BiPredicate<Object, Object> P, final Object...objs) {
 		if (on) {
-			for (T obj : objs) {
-				if (!P.test(obj)) {//failed test
-					if (msg.equals("")) {	
-					throw new IllegalArgumentException();
-					}
-					else {
-					throw new IllegalArgumentException(msg);
-					}
+			for (int i = 1; i < objs.length; i++) {
+				
+				if (objs[i] == null && objs[i - 1] == null) {
+				System.out.println(msg + ":" + objs[i].toString() + " was null");	
+				}
+				else if ((objs[i] != null && objs[i - 1] != null) && !P.test(objs[i - 1], objs[i])) {//failed test
+				System.out.println(msg + ":" + objs[i - 1].toString() + " not equal " + objs[i]);
 				}
 			}
 		}
 	}
 
-	public static <T> void check(Predicate<T> P, final T...objs) throws IllegalArgumentException {
-		check("", P, objs);
+	public static <T> void check(Predicate<T> P, final T...objs) {
+		check(getPrompt(), P, objs);
 	}
 	
-	public static void check(final String msg, final Object...objs) throws IllegalArgumentException {
+	public static void check(final String msg, final Object...objs) {
 	
-		if (on) {
-			for (int i = 1; i < objs.length; i++) {
-				if (objs[i] != null && objs[i - 1] != null) {
-					if (objs[i].equals(objs[i - 1]) == false) {
-						if (msg.equals("")) {	
-						throw new IllegalArgumentException();
-						}
-						else {
-						throw new IllegalArgumentException(msg);
-						}
-					}
-				}
-				else if (objs[i] == null && objs[i - 1] == null) {
-					if (msg.equals("")) {	
-					throw new NullPointerException();
-					}
-					else {
-					throw new NullPointerException(msg);
-					}
-				}
-			}
-		}	
+		BiPredicate<Object, Object> thing = new BiPredicate<Object, Object>() {
+		
+			public boolean test(Object a, Object b) {
+			return b.equals(a);	
+			}	
+		};
+	check(msg, thing, objs); 
 	}
 	
 	public static void check(final Object...objs) {
-		check("", objs);
+		check(getPrompt(), objs);
 	}
 	
 	public static void between(final String msg, final int a, final int b, final int e) throws IndexOutOfBoundsException {
@@ -371,11 +368,15 @@ INNER:					while (true) {
 	}
 
 	public static void here(Object...objs) {
-		if (on) {
-			for (Object obj : objs) {
+		
+		Consumer<Object> thing = new Consumer<Object>() {
+			
+			public void accept(Object obj) {
 			System.out.printf("%10s=%S\n", "Location", obj.toString());
 			}
-		}
+		};
+		
+	print(thing, objs);		
 	}
 		
 	public static void here() {
@@ -412,5 +413,16 @@ INNER:					while (true) {
 		System.out.printf("Location:%-" + String.valueOf(maxlength) + "s\t milliseconds:%04d\n", loc, time);
 		timebegin = current_time;//this resets beg time for next time	
 		}	
+	}
+	
+	private static String getPrompt() {
+		if (prompt == null) { 
+		GregorianCalendar cal = new GregorianCalendar();
+		String time = cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND);
+		return time;
+		}
+		else {
+		return prompt;
+		}
 	}
 }	

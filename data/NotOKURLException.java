@@ -20,14 +20,8 @@ private final static long serialVersionUID = 0;
 	}
 
 	public void printRow() {
-	//Page p = null;
-		if (page instanceof Page) {
-		Page.Header h = ((Page)page).header();
-		printRow("hello", UselessMessages.NOTOK.mes);
-		}
-		else {
-		printRow(message);
-		}
+	//Page.Header head = ((Page)page).header();
+	printRow("", "", "", "NOT 2XX", this.message);
 
 	}
 

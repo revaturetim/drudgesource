@@ -17,7 +17,7 @@ final private static String div = " : ";
 
 //this is for standard column headers and String.length() is used to determine uniorm column widths
 final private static String[] H = {
-	"  Cycle ", 
+	"Cycle   ", 
 	"Total", 
 	" Found", 
 	" HTTP Response ", 
@@ -63,36 +63,30 @@ final private static String[] H = {
 		if (UselessClass == UselessURLException.class || UselessClass == exc.getClass()) {
 		String mexc = exc.toString();
 		String url = obj.toString();
-		printRow(mexc, url);
+		printRow("", "", "", "", mexc, url);
 		}
 	}
 	
 	private static void printRow(PrintStream stream, final String...S) {
-
-		if (S.length <= H.length) {	
-		final int first = H.length - S.length;
+	
+		if (S.length == H.length) {	
 			for (int i = 0; i < H.length; i++) {
-			final int s = i - first;
-				if (i < first) {
-				stream.print(fill('?', H[i].length()));
-				stream.print(div);
-				}
-				else if (i < H.length - 1) {
-					if (S[s] == null) {
+				if (i < H.length - 1) {
+					if (S[i] == null) {
 					stream.print(fill('?', H[i].length()));
 					stream.print(div);
 					}
 					else {
-					stream.print(fixLength(S[s], H[i].length(), CENTER));
+					stream.print(fixLength(S[i], H[i].length(), CENTER));
 					stream.print(div);
 					}
 				}
 				else {
-				stream.println(format(S[s], H[i].length()));//this is the last column so it has to have the \n added to it
+				stream.println(format(S[i], H[i].length()));//this is the last column
 				}
 			}
 		}
-		else if (S.length > H.length) {
+		else if (S.length != H.length) {
 		throw new IllegalArgumentException("Column size number does not match in D.printRow(PrintStream, String...).  Fix it!");
 		}
 	}

@@ -35,18 +35,15 @@ private final static long serialVersionUID = 0;
 	}
 
 	public void printRow(String...m) {
-	String[] n = new String[m.length + 1];
-		for (int i = 0; i < m.length; i++) {
-		n[i] = m[i];
-		}
-	n[n.length - 1] = getUrl();
+	String[] n = {m[0], m[1], m[2], m[3], m[4], getUrl()};
+	
 		if (Print.UselessClass == UselessURLException.class || Print.UselessClass == this.getClass()) {
 		Print.printRow(n);
 		}
 	}
 	
 	public void printRow() {
-	printRow(this.message);
+	printRow("", "", "", "", this.message);
 	}
 
 }

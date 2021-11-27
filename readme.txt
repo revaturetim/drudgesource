@@ -30,6 +30,8 @@
 18. BUG! email file re-writes first one in test link;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
 20. Put in a link that invokes the remove method(s) in test page so we can test it;
+21. Have NotOKResponse show response coid in output;
+22. BUG! Exception messages are not printing out right;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
 

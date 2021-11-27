@@ -24,7 +24,9 @@ public static String XFACTOR = null;
 	Spider spider = null;
 	long MemoryStart = Runtime.getRuntime().freeMemory();
 	eraseFile(FileNames.error);
-	Debug.stop(Drudge.class);
+	//Debug.stop(Drudge.class);
+	//Debug.print(maxcyc, crawlmethod);
+	Debug.check(okays, getemails, norobots);	
 		//this is the main program loop
 LOOP:		for (int i = 0; i < arg.length; i++) {
 		String a = arg[i];
@@ -596,6 +598,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					D.printRow();
 					}
 					catch (Exception E) {
+					Debug.stop(E);
 					Print.printRow(E, lastarg);
 					}
 				}
@@ -671,7 +674,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			System.out.println("Option " + a + " was ignored by this program.");
 			}//end of lastarg of loop
 		}//end of loop
-		Debug.stop();
+		//Debug.stop();
 	}//end of program
 
 	static Page createFirstPage(String link) throws MalformedURLException, UnknownHostException {

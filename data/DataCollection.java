@@ -72,6 +72,7 @@ private boolean include = false;
 	public boolean add(T page) {
 	Debug.check(page, null);
 	boolean added = false;
+	
 		if (contains(page) == false) {
 		
 			if (size >= objs.length - 1) {

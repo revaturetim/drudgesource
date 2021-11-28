@@ -16,13 +16,10 @@
 1.  Make a todo list of things to do like adding new features OR cleaning up bugs in the program;
 2.  Elimnate unnescessary variables, methods, and classes in programs for efficiency;
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
-4.  Make a debugger method stop(class) that can give you feed back on variables just like a regular debugger;
 8.  See if writing page objects instead of text data to a file would be better;
 9.  Make more efficient P.getKeywords method;
-10. Experiment with DataFile storage to see if file storage is any different than array storage;
 11. BUG! Figure out why Page.getKeyWords returns an empty string with blank spaces in it;
 12. BUG! Figure out why first website is added despite being in the excluded link file;
-13. Refine how include and exclude works since behaviors for either are not exact opposites;
 14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
@@ -31,7 +28,6 @@
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
 20. Put in a link that invokes the remove method(s) in test page so we can test it;
 21. Have NotOKResponse show response coid in output;
-22. BUG! Exception messages are not printing out right;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
 

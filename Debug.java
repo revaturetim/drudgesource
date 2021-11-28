@@ -46,6 +46,10 @@ INNER:					while (true) {
 						
 						break INNER;
 						}
+						else if (action.equals("source")) {
+						
+						break INNER;
+						}
 						else {
 						thing.accept(stop, action);
 						break INNER;//for some reason this has to break inner loop

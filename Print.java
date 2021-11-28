@@ -63,7 +63,7 @@ final private static String[] H = {
 		if (UselessClass == UselessURLException.class || UselessClass == exc.getClass()) {
 		String mexc = exc.toString();
 		String url = obj.toString();
-		printRow("", "", "", "", mexc, url);
+		printRow(GSTREAM, "", "", "", "", mexc, url);
 		}
 	}
 	
@@ -212,8 +212,6 @@ final private static String[] H = {
 	System.out.println("URL:" + n.getUrl() + " is not a valid html file this program!");
 	}
 	
-	static void helpt() {
-	}
 	static void totalTime(long time) {
 	if (time < 60_000) {
 		double tsec = (double)time / 1000.0;

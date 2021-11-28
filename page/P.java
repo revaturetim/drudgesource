@@ -84,7 +84,11 @@ final static private String Null = "null";
 							}
 						}
 						catch (MalformedURLException M) {
-						//D.error(M);
+						Hashtable<String, Object> d = new Hashtable<String, Object>();	
+						d.put("Robot URL", roboturl);
+						d.put("Directory", dir);
+						d.put("Exception", M);		
+						D.error(d);
 						}
 					}
 				}
@@ -170,7 +174,7 @@ final static private String Null = "null";
 
 	static class GetLinkAction {
 		
-		private static void actWith(String link, LinkAction<String> action) {
+		private static void actWith(final String link, LinkAction<String> action) {
 
 			try {
 			/*Ths is to catch all subdirectories of a link*/
@@ -426,7 +430,7 @@ final static private String Null = "null";
 			throw new RedirectedURLException(page);
 			}
 			else {
-			throw new NotOKURLException(page);
+			throw new NotOKURLException(page, null, String.valueOf(response));
 			}
 		}
 	Debug.time("...Response-Code");		

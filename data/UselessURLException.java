@@ -11,18 +11,8 @@ protected String message = UselessMessages.USELESS.mes;
 //this has to be here in order to prevent dumb serialversionid warnings from showing up 
 private final static long serialVersionUID = 0;
 
-	//these here exist for the exclusive purpose of subclasses of this class
 	public UselessURLException(Object p) {
 	page = p;
-	}
-	
-	public UselessURLException(Object p, String m) {
-	this(p);
-	message = m;
-	}
-
-	public UselessURLException(Object p, Object o) {
-	this(p, o.toString());
 	}
 
 	//this is to clean up screan output when it throws and exception

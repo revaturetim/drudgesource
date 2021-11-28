@@ -430,7 +430,7 @@ final static private String Null = "null";
 			throw new RedirectedURLException(page);
 			}
 			else {
-			throw new NotOKURLException(page, null, String.valueOf(response));
+			throw new NotOKURLException(page, String.valueOf(response));
 			}
 		}
 	Debug.time("...Response-Code");		

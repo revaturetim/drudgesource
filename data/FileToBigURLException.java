@@ -8,17 +8,8 @@ public class FileToBigURLException extends UselessURLException {
 private final static long serialVersionUID = 0;
 
 	FileToBigURLException(Object p) {
-	super(p, UselessMessages.FILETOBIG.mes);
+	super(p);
+	message = UselessMessages.FILETOBIG.mes;
 	}
-	
-	FileToBigURLException(Object p, String m) {
-	super(p, m);
-	}
-
-	FileToBigURLException(Object p, Object o) {
-	super(p, o);
-	}
-
-
 
 }

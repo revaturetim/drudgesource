@@ -9,18 +9,11 @@ private final static long serialVersionUID = 0;
 private String responsemessage = "";
 
 	public NotOKURLException(Object p) {
-	super(p, UselessMessages.NOTOK.mes);
-	}
-	
-	public NotOKURLException(Object p, String m) {
-	super(p, m);
+	super(p);
+	message = UselessMessages.NOTOK.mes;
 	}
 
-	public NotOKURLException(Object p, Object o) {
-	super(p, o);
-	}
-
-	public NotOKURLException(Object p, Object o, String r) {
+	public NotOKURLException(Object p, String r) {
 	this(p);
 	responsemessage = r;
 	}

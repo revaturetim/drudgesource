@@ -8,14 +8,8 @@ public class DuplicateURLException extends UselessURLException {
 private final static long serialVersionUID = 0;
 
 	public DuplicateURLException(Object p) {
-	super(p, UselessMessages.DUPLICATE.mes);
-	}
-	
-	DuplicateURLException(Object p, String m) {
-	super(p, m);
+	super(p);
+	message = UselessMessages.DUPLICATE.mes;//this has to be assigned
 	}
 
-	DuplicateURLException(Object p, Object o) {
-	super(p, o);
-	}
 }

@@ -10,15 +10,12 @@ private final static long serialVersionUID = 0;
 private String redir = null;
 
 	public RedirectedURLException(Object p) {
-	super(p, UselessMessages.REDIRECTED.mes);
+	super(p);
+	message = UselessMessages.REDIRECTED.mes;
 	}
 
-	public RedirectedURLException(Object p, String m) {
-	super(p, m);
-	}
-
-	public RedirectedURLException(Object p, String m, String r) {
-	this(p, m);
+	public RedirectedURLException(Object p, String r) {
+	this(p);
 	redir = r;
 	}
 

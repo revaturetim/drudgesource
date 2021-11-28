@@ -6,17 +6,20 @@ import drudge.page.Page;
 
 public class InvalidURLException extends UselessURLException {
 private final static long serialVersionUID = 0;
+private String type;
 
 	public InvalidURLException(Object p) {
-	super(p, UselessMessages.NOTHTML.mes);
+	super(p);
+	message = UselessMessages.NOTHTML.mes;
 	}
 	
-	public InvalidURLException(Object p, String m) {
-	super(p, m);
+	public InvalidURLException(Object p, String t) {
+	this(p);
+	type = t;
 	}
-
-	public InvalidURLException(Object p, Object o) {
-	super(p, o);
+	
+	public String getType() {
+	return type;
 	}
 
 }

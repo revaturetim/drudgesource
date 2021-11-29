@@ -121,15 +121,8 @@ private boolean connected = false;
 	       NotOKURLException, NoContentURLException, BadEncodingURLException, IOException {
 	Debug.time("Checking Uselessness");
 	connection = P.getConnection(url, proxyserver);//this throws IOException
-	P.checkHeaders(header, toString());
-	return false; //if it made it this far then this is the default answer
-	}
-
-	public boolean isUselessByURLConnection() throws RedirectedURLException, InvalidURLException, 
-	       NotOKURLException, NoContentURLException, BadEncodingURLException, IOException {
-	Debug.time("Checking Uselessness");
-	connection = P.getConnection(url, proxyserver);
-	P.checkHeaders(connection);
+	//P.checkHeaders(connection);
+	P.checkHeaders(header);
 	return false; //if it made it this far then this is the default answer
 	}
 
@@ -211,6 +204,10 @@ private boolean connected = false;
 
 	//inner classes - Header - Source 
 	final public class Header {
+	
+		public String getLink() {
+		return url.toString();
+		}
 			
 		public String getRedirectLocation() {
 		final String loc = "Location";

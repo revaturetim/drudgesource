@@ -24,9 +24,7 @@ public static String XFACTOR = null;
 	Spider spider = null;
 	long MemoryStart = Runtime.getRuntime().freeMemory();
 	eraseFile(FileNames.error);
-	//Debug.stop(Drudge.class);
-	//Debug.print(maxcyc, crawlmethod);
-	Debug.check(okays, getemails, norobots);	
+	
 		//this is the main program loop
 LOOP:		for (int i = 0; i < arg.length; i++) {
 		String a = arg[i];

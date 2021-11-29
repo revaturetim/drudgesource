@@ -49,6 +49,7 @@ protected boolean norobots = false;
 		R.printRow();
 		Page.Header h = p.header();
 		final String redloc = h.getRedirectLocation();
+		
 			try {
 			Page rediruri = new Page(redloc);
 				try {
@@ -80,11 +81,13 @@ protected boolean norobots = false;
 		//these must be caught here so it can remove it once it is found in data object
 		catch (NotOKURLException N) {
 		spinIssue("Found a not-OK link while checking if it is a useless", p, N);
-		remove = true;	
-		N.printRow();
+		remove = true;
+		N.printRow("", "", "", p.header().getResponse(), N.toString(), p.toString());	
+		//N.printRow();
 		}
 		catch (InvalidURLException I) {
 		spinIssue("Found a InvalidURLException When getting Redirect Link", p, I);
+		remove = true;
 		I.printRow();
 		}
 		catch (NoRobotsURLException N) {

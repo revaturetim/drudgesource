@@ -515,7 +515,7 @@ final static private String Null = "null";
 	}
 
 
-	static void checkHeaders(final Page.Header h, final String u) throws
+	static void checkHeaders(final Page.Header h) throws
 	       	BadEncodingURLException, NoContentURLException,
 	       	RedirectedURLException, NotOKURLException, InvalidURLException {
 	
@@ -523,6 +523,7 @@ final static private String Null = "null";
 	final String contype = h.getContentType();
 	final String contenc = h.getContentEncoding();
 	final int conlen = h.getContentLength(); 
+	final String u = h.getLink();
 	
 	checkResponse(response, u);
 	checkContentType(contype, u);

@@ -19,15 +19,12 @@
 8.  See if writing page objects instead of text data to a file would be better;
 9.  Make more efficient P.getKeywords method;
 11. BUG! Figure out why Page.getKeyWords returns an empty string with blank spaces in it;
-12. BUG! Figure out why first website is added despite being in the excluded link file;
 14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
 18. BUG! email file re-writes first one in test link;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
-20. Put in a link that invokes the remove method(s) in test page so we can test it;
-21. Have NotOKResponse show response coid in output;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
 

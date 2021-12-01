@@ -420,19 +420,18 @@ final static private String Null = "null";
 	}
 
 	static void checkResponse(final int response, String page) throws NoContentURLException, RedirectedURLException, NotOKURLException {
-		if (response > 0) {	
-			if (response >= 200 && response < 300) {//does the most common first 
-				if (response == 204) {
-				throw new NoContentURLException(page);
-				}
-			}
-			else if (response >= 300 && response < 400) {
-			throw new RedirectedURLException(page);
-			}
-			else {
-			throw new NotOKURLException(page, String.valueOf(response));
+		if (response >= 200 && response < 300) {//does the most common first 
+			if (response == 204) {
+			throw new NoContentURLException(page);
 			}
 		}
+		else if (response >= 300 && response < 400) {
+		throw new RedirectedURLException(page);
+		}
+		else {
+		throw new NotOKURLException(page, String.valueOf(response));
+		}
+		
 	Debug.time("...Response-Code");		
 	}
 
@@ -455,7 +454,7 @@ final static private String Null = "null";
 			for (String value : values) {
 				String[] colon = value.split(";");
 				value = colon[0];
-				if ((value.equalsIgnoreCase("text/html") || value.equalsIgnoreCase("text/plain"))) {
+				if ((value.equalsIgnoreCase("text/html") | value.equalsIgnoreCase("text/plain"))) {
 				ishtml = true;
 				break;
 				}
@@ -468,12 +467,10 @@ final static private String Null = "null";
 	}
 
 	static void checkContentLength(final int conlen, final String con) throws NoContentURLException {
-		if (conlen != -1) {
-			if (conlen == 0) {
-			throw new NoContentURLException(con);
-			}
-			/*DON'T USE CONLEN VARIABLE FROM HEADER OR IT WILL NOT INDEX PAGE!!!!!*/
-		}
+	/*DON'T USE CONLEN VARIABLE FROM HEADER OR IT WILL NOT INDEX PAGE!!!!!*/
+		if (conlen == 0) {
+		throw new NoContentURLException(con);
+		}	
 	Debug.time("...Content-Length");		
 	}
 
@@ -515,7 +512,7 @@ final static private String Null = "null";
 	}
 
 
-	static void checkHeaders(final Page.Header h) throws
+	static void checkHeaders(final Page.Header h, final String u) throws
 	       	BadEncodingURLException, NoContentURLException,
 	       	RedirectedURLException, NotOKURLException, InvalidURLException {
 	
@@ -523,7 +520,6 @@ final static private String Null = "null";
 	final String contype = h.getContentType();
 	final String contenc = h.getContentEncoding();
 	final int conlen = h.getContentLength(); 
-	final String u = h.getLink();
 	
 	checkResponse(response, u);
 	checkContentType(contype, u);
@@ -531,6 +527,14 @@ final static private String Null = "null";
 	checkContentEncoding(contenc, u);
 	}
 
+	static void checkHeaders(final Page p) throws
+	       	BadEncodingURLException, NoContentURLException,
+	       	RedirectedURLException, NotOKURLException, InvalidURLException {
+	final Page.Header h = p.header();
+	final String u = p.toString();
+	checkHeaders(h, u);
+	}
+	
 	static Page.Source getSource(Page.Source source, URLConnection con) throws IOException {
 	final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()), source.length());//throws ioexcpetion above 
 	boolean errorwrite = false;

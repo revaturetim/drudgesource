@@ -122,7 +122,7 @@ private boolean connected = false;
 	Debug.time("Checking Uselessness");
 	connection = P.getConnection(url, proxyserver);//this throws IOException
 	//P.checkHeaders(connection);
-	P.checkHeaders(header);
+	P.checkHeaders(header, toString());
 	return false; //if it made it this far then this is the default answer
 	}
 
@@ -205,10 +205,6 @@ private boolean connected = false;
 	//inner classes - Header - Source 
 	final public class Header {
 	
-		public String getLink() {
-		return url.toString();
-		}
-			
 		public String getRedirectLocation() {
 		final String loc = "Location";
 		return get(loc);

@@ -54,15 +54,16 @@ final static private String Null = "null";
 		}
 	}
 
-	static void checkRobot(final URL roboturl, final URL u) throws NoRobotsURLException, IOException {
-	final HttpURLConnection http = (HttpURLConnection)roboturl.openConnection();
-	final LineNumberReader reader = new LineNumberReader(new BufferedReader(new InputStreamReader(http.getInputStream())));
+	//I am assuming that this works.  I have no way to really test it thoroughly. 
+	static void checkRobot(final URLConnection rcon) throws NoRobotsURLException, IOException {
+	final LineNumberReader reader = new LineNumberReader(new BufferedReader(new InputStreamReader(rcon.getInputStream())));
 	final String useragent = "User-agent:";
 	final String disallow = "Disallow:";
 	final String comment = "#";
 	String user = null;
+	
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-			if (http.getResponseCode() != HttpURLConnection.HTTP_OK) {
+			if (((HttpURLConnection)rcon).getResponseCode() != HttpURLConnection.HTTP_OK) {
 			break;
 			}
 			if (line.startsWith(comment)) {
@@ -78,14 +79,14 @@ final static private String Null = "null";
 					if (user.equals("*") || user.equals(ThisProgram.useragent)) {
 					String dir = spaces[1];
 						try {
-						URL c = new URL(roboturl, dir);//this thows exception
-							if (u.equals(c)) {
-							throw new NoRobotsURLException(u);
+						URL c = new URL(rcon.getURL(), dir);//this thows exception
+							if (rcon.getURL().sameFile(c)) {
+							throw new NoRobotsURLException(rcon.getURL());
 							}
 						}
 						catch (MalformedURLException M) {
 						Hashtable<String, Object> d = new Hashtable<String, Object>();	
-						d.put("Robot URL", roboturl);
+						d.put("Robot URL", rcon.getURL());
 						d.put("Directory", dir);
 						d.put("Exception", M);		
 						D.error(d);
@@ -405,7 +406,7 @@ final static private String Null = "null";
 	connection.setConnectTimeout(20*1000);
 	connection.setReadTimeout(500);
 	connection.addRequestProperty("GET", url.toString());
-	//connection.addRequestProperty("User-Agent", ThisProgram.useragent);
+	connection.addRequestProperty("User-Agent", ThisProgram.useragent);
       	connection.addRequestProperty("Accept", "text/plain, text/html");
 	connection.addRequestProperty("Accept-Encoding", "identity");
 	connection.addRequestProperty("Accept-Charset", "ISO-8859-1, UTF-8");

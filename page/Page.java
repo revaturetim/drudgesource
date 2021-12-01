@@ -19,8 +19,9 @@ final static private int pagesize = 35_000;
 final private Source content = new Source(pagesize);
 final private Header header = new Header();
 private URL url = null;  
+private URLConnection connection = null;
 private URL roboturl = null;
-private URLConnection connection = null;	
+private URLConnection robotconnection = null;	
 final private Data<Page> dlist = new DataList<Page>();
 final private Data<URL> elist = new DataList<URL>();
 final private Data<String> klist = new DataList<String>();
@@ -122,7 +123,8 @@ private boolean connected = false;
 	Debug.time("Checking Uselessness");
 	connection = P.getConnection(url, proxyserver);//this throws IOException
 	//P.checkHeaders(connection);
-	P.checkHeaders(header, toString());
+	//P.checkHeaders(header, toString());
+	P.checkHeaders(this);
 	return false; //if it made it this far then this is the default answer
 	}
 
@@ -190,11 +192,13 @@ private boolean connected = false;
 
 	public boolean isRobotAllowed() throws NoRobotsURLException {
 		try {
-			/*this should stop it from getting new roboturl for each new link it finds*/
 			if (roboturl == null) {
 			roboturl = new URL(url, "/robots.txt");
 			}
-		P.checkRobot(roboturl, url);//this throws NoRobotsURLException 	
+			if (robotconnection == null) {
+			robotconnection = roboturl.openConnection();
+			}
+		P.checkRobot(robotconnection);//this throws NoRobotsURLException 	
 		}
 		catch (IOException I) {
 		D.error(I);

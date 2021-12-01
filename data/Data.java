@@ -150,13 +150,13 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 
 	default void writeEntry(Page p, Writer w) throws IOException {
 		for (int r = 0; r < level(); r++) {
-			if (r == 0) {
+			if (r < 1) {
 			w.append(p.toString() + CountFile.sep);
 			}
-			else if (r == 1) {
+			if (r < 2) {
 			w.append(p.getTitle() + CountFile.sep);
 			}
-			else if (r == 2) {
+			if (r < 3) {
 			w.append(p.getKeywords().rawString());
 			}
 		w.append("\n");

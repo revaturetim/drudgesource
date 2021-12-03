@@ -11,6 +11,7 @@ public class DataBase<T> implements Data<T> {
 private int datalevel = 0;
 private boolean exclude = false;
 private boolean include = false;
+private boolean robotallowed = true;
 private String dburl;
 private final String table = "drudge";
 /*data column headers will be url, title, keywords*/
@@ -201,6 +202,15 @@ insert into drudge values (link, title, keywords);
 	public boolean included() {
 	return include;
 	}
+	
+	public boolean robotAllowed() {
+	return robotallowed;
+	}
+	
+	public void setRobotAllowed(boolean b) {
+	robotallowed = b;
+	}
+
 	
 
 }

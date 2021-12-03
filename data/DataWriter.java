@@ -15,6 +15,7 @@ protected String source;
 private int datalevel = 1;
 private boolean include = false;
 private boolean exclude = false;
+private boolean robotallowed = true;
 
 	//this has to be filled with something in order for subclass works.
 	abstract <R extends Reader> R createReader();
@@ -109,6 +110,14 @@ private boolean exclude = false;
 	
 	public boolean included() {
 	return include;
+	}
+	
+	public boolean robotAllowed() {
+	return robotallowed;
+	}
+	
+	public void setRobotAllowed(boolean b) {
+	robotallowed = b;
 	}
 
 	

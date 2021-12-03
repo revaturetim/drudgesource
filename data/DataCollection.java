@@ -17,6 +17,7 @@ private Object[] objs = new Object[10];
 private int datalevel = 1;
 private boolean exclude = false;
 private boolean include = false;
+private boolean robotallowed = true;
 
 	public DataCollection() {
 
@@ -163,5 +164,14 @@ private boolean include = false;
 	public boolean included() {
 	return include;
 	}
+	
+	public boolean robotAllowed() {
+	return robotallowed;
+	}
+	
+	public void setRobotAllowed(boolean b) {
+	robotallowed = b;
+	}
+
 	
 }

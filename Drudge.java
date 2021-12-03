@@ -20,7 +20,7 @@ public static String XFACTOR = null;
 	int begcyc = 0;//default starting number for program
 	boolean getemails = false;
 	boolean okays = true;
-	boolean norobots = false;
+	boolean robotsallowed = true;
 	Spider spider = null;
 	long MemoryStart = Runtime.getRuntime().freeMemory();
 	eraseFile(FileNames.error);
@@ -199,7 +199,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		
 			}
 			else if (a.equals("-r")) {
-			norobots = true;
+			robotsallowed = false;
+			DataObjects.norobot.setRobotAllowed(robotsallowed);
 			}
 			else if (a.startsWith("-x=")) {
 			String[] b = a.split("=", 2);
@@ -294,23 +295,21 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals("-HELP") && arg.length == 1) {
-			//Print.HELP();
-			Help.print(a);
-			break;
-			}
 			else if (a.equals("-I") && arg.length == 2 && i == 0) {
-				try { 
-				Page p = createFirstPage(arg[i + 1]); 
+				try {
+				Page p = createFirstPage(arg[i + 1]);	
 					try {
-					p.isValid();
-					System.out.println(p.toString() + " is a valid html file for " + ThisProgram.name);
-					}
-					catch (URISyntaxException U) {
-					Print.error(U, arg[i + 1]);
-					}
-					catch (InvalidURLException N) {
-					Print.error(N, arg[i + 1]);
+					fillPageFromFile(include.source(), include);
+						try {
+						p.isIncluded();
+						System.out.println(p.toString() + " is in the " + FileNames.include + " file.");	
+						}
+						catch (ExcludedURLException E) {
+						Print.error(E, p);
+						}
+					}	
+					catch (IOException I) {
+					Print.error(I);
 					}	
 				}
 				catch (MalformedURLException M) {
@@ -319,6 +318,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
 				}
+			break;
+			}
+			else if (a.equals("-HELP") && arg.length == 1) {
+			//Print.HELP();
+			Help.print(a);
 			break;
 			}
 			else if (a.equals("-K") && arg.length == 2 && i == 0) {
@@ -421,13 +425,20 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {
 				String r = "/robots.txt";
 				URL u = new URL(arg[i + 1]);
-				u = new URL(u, r);
+				URL roboturl = new URL(u, r);
 				Page p = new Page(u);
 					try {
 					p.isUseless();
 						try {
 						p.isValid();
-						System.out.println(p.getSource());
+							try {
+							p.isRobotAllowed();
+							System.out.println(arg[i + 1] + 
+							" is NOT disallowed by sites robot.txt file."); 
+							}
+							catch (NoRobotsURLException N) {
+							Print.error(N, arg[i + 1]);
+							}
 						}
 						catch (URISyntaxException U) {
 						Print.error(U, arg[i + 1]);
@@ -534,6 +545,53 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
+			else if (a.equals("-V") && arg.length == 2 && i == 0) {
+				try { 
+				Page p = createFirstPage(arg[i + 1]); 
+					try {
+					p.isValid();
+					System.out.println(p.toString() + " is a valid html file for " + ThisProgram.name);
+					}
+					catch (URISyntaxException U) {
+					Print.error(U, arg[i + 1]);
+					}
+					catch (InvalidURLException N) {
+					Print.error(N, arg[i + 1]);
+					}	
+				}
+				catch (MalformedURLException M) {
+				Print.error(M, arg[i + 1]);
+				}
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
+				}
+			break;
+			}
+			else if (a.equals("-X") && arg.length == 2 && i == 0) {
+				try {
+				Page p = createFirstPage(arg[i + 1]);	
+					try {
+					fillPageFromFile(exclude.source(), exclude);
+						try {
+						p.isExcluded();
+						System.out.println(p.toString() + " is NOT in the " + FileNames.exclude + " file.");	
+						}
+						catch (ExcludedURLException E) {
+						Print.error(E, p);
+						}
+					}	
+					catch (IOException I) {
+					Print.error(I);
+					}	
+				}
+				catch (MalformedURLException M) {
+				Print.error(M, arg[i + 1]);
+				}
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
+				}
+			break;
+			}
 			/*!this is the last parameter in the program!*/
 			else if (i == arg.length - 1) {
 			Print.printColumnHeaders();//this should be called first to show errors correctly in output columns
@@ -603,8 +661,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			spider = createSpider(crawlmethod);
 			spider.setCheckOK(okays);
-			spider.setRobotsAllowed(norobots);
-			
+			spider.setRobotsAllowed(robotsallowed);
 				if (getemails) {
 					try {	
 					dada_emails.begin();

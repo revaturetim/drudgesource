@@ -2,7 +2,6 @@ package drudge.global;
 
 
 public interface FileNames {
-
 final static public String out = "out";
 final static public String in = "in";
 final static public String error = "error";

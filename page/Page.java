@@ -9,6 +9,7 @@ import java.lang.ref.*;
 import drudge.*;
 import drudge.spider.*;
 import drudge.data.*;
+import drudge.global.DataObjects;
 
 /*this is the skeletal class of all page objects*/
 final public class Page {
@@ -178,30 +179,35 @@ private boolean connected = false;
 	public boolean didConnect() {
 	return connected;
 	}
-
-	public boolean isExcluded(boolean exc) throws ExcludedURLException {
-	final String host1 = getURL().getHost();
-		for (Page elink : Drudge.exclude) {
-		final String host2 = elink.getURL().getHost();
-			if (host1.equals(host2) == exc/*This determines the include/exlude behavior*/) {
-			throw new ExcludedURLException(this);
+	
+	public boolean sameHost(Page p) {
+	return P.sameHost(this, p);
+	}
+	
+	public boolean isIncluded() throws ExcludedURLException {
+	boolean included = false;
+		for (Page p : DataObjects.include) {		
+		included = this.sameHost(p);
+			if (included) {
+			break;
 			}
+		}
+		if (included == false) {
+		throw new ExcludedURLException(this.url);
+		}	
+	return true;
+	}
+	
+	public boolean isExcluded() throws ExcludedURLException {
+		if (DataObjects.exclude.contains(this)) {
+		throw new ExcludedURLException(this.url);
 		}
 	return false;
 	}
 
 	public boolean isRobotAllowed() throws NoRobotsURLException {
-		try {
-			if (roboturl == null) {
-			roboturl = new URL(url, "/robots.txt");
-			}
-			if (robotconnection == null) {
-			robotconnection = roboturl.openConnection();
-			}
-		P.checkRobot(robotconnection);//this throws NoRobotsURLException 	
-		}
-		catch (IOException I) {
-		D.error(I);
+		if (DataObjects.norobot.contains(this.url)) {
+		throw new NoRobotsURLException(this.url);
 		}
 	return true;
 	}

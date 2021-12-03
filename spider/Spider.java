@@ -31,7 +31,26 @@ protected boolean norobots = false;
 		}
 	Debug.time("End Links");
 	}
-
+	
+	public void checkRobotFile(Page p) {
+		/*try {
+			if (roboturl == null) {
+			roboturl = new URL(url, "/robots.txt");
+			}
+			if (robotconnection == null) {
+			robotconnection = roboturl.openConnection();
+			}
+		P.checkRobot(robotconnection);//this throws NoRobotsURLException 	
+		}
+		catch (IOException I) {
+		D.error(I);
+		}*/
+		try {
+		p.isRobotAllowed();
+		}
+		catch (NoRobotsURLException E) {E.printRow();}
+	}
+	
 	public boolean crawl(Page p) {
 	boolean remove = false;
 		try {
@@ -40,7 +59,7 @@ protected boolean norobots = false;
 			Debug.time("Checing is UseLess");
 			}
 			if (norobots) {
-			p.isRobotAllowed();//this throws norobotsallowedexception	
+			//p.isRobotAllowed();//this throws norobotsallowedexception	
 			Debug.time("Checking Robot Allowed");
 			}
 		links(p);
@@ -72,6 +91,10 @@ protected boolean norobots = false;
 				spinIssue("Found a ExcludedURLException When getting Redirect Link", redloc, E);
 				E.printRow();
 				}
+				catch (NoRobotsURLException N) {
+				spinIssue("Found a NoRobotsURLException When getting Redirect Link", redloc, N);
+				N.printRow();
+				}
 			}	
 			catch (MalformedURLException M) {
 			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, M); 
@@ -89,11 +112,6 @@ protected boolean norobots = false;
 		spinIssue("Found a InvalidURLException When getting Redirect Link", p, I);
 		remove = true;
 		I.printRow();
-		}
-		catch (NoRobotsURLException N) {
-		spinIssue("No robots allowed for this link", p, N);
-		remove = true;
-		N.printRow();
 		}
 		catch (NoContentURLException N) {
 		spinIssue("Found a no content link while checking if it is a useless", p, N);
@@ -115,7 +133,7 @@ protected boolean norobots = false;
 	}
 
 	public void setRobotsAllowed(boolean b) {
-	norobots = b;
+	norobots = !b;
 	}
 
 	//I thought that calling issue was humorous like you have a issues

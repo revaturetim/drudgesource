@@ -77,6 +77,10 @@ protected boolean norobots = false;
 				spinIssue("Found an ExcludedUrlException When getting Redirect Link", redloc, E);
 				E.printRow();
 				}
+				catch (NoRobotsURLException N) {
+				spinIssue("Found a NoRobotsURLException When getting Redirect Link", redloc, N);
+				N.printRow();
+				}
 			}
 			catch (MalformedURLException M) {
 			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, M); 

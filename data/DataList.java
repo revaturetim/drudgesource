@@ -13,6 +13,7 @@ private String source = null;
 private int datalevel = 0;
 private boolean exclude = false;
 private boolean include = false;
+private boolean robotallowed = true;
 private final static long serialVersionUID = 0;
 
 	public DataList() {
@@ -94,6 +95,15 @@ private final static long serialVersionUID = 0;
 	public boolean included() {
 	return include;
 	}
+	
+	public boolean robotAllowed() {
+	return robotallowed;
+	}
+	
+	public void setRobotAllowed(boolean b) {
+	robotallowed = b;
+	}
+
 
 
 }

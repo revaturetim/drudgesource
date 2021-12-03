@@ -20,7 +20,7 @@ final public static Data<Page> dada = (Data<Page>)new DataCollection<Page>(FileN
 final public static Data<URL> dada_emails = (Data<URL>)new DataEmailCollection<URL>(FileNames.emails);
 final public static Data<Page> exclude = new DataList<Page>(FileNames.exclude);
 final public static Data<Page> include = new DataList<Page>(FileNames.include);
-
+final public static Data<URL> norobot = new DataList<URL>(null);
 final public static Data<String> donotusewords = (Data<String>)new DataList<String>(null);
 
 

@@ -24,6 +24,8 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	public void setExcluded(boolean b);
 	public boolean included();
 	public void setIncluded(boolean b);
+	public boolean robotAllowed();
+	public void setRobotAllowed(boolean b);
 	//public boolean check();
 	//public boolean checkError();
 	public void begin() throws Exception;
@@ -50,18 +52,18 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	}
 	
 	default public void put(T link) throws 
-	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
-	((Page)link).isValid();
-		if (excluded() == true && DataObjects.exclude.contains(link)) throw new ExcludedURLException(link);
+	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException, NoRobotsURLException {
+	final Page page = (Page)link;
+	page.isValid();
+		if (excluded() == true) {
+		page.isExcluded();//throws ExcludedURLException
+		}
 		if (included() == true) {
-			for (Page p : DataObjects.include) {
-			final String host1 = p.getURL().getHost();
-			final String host2 = ((Page)link).getURL().getHost();
-				if (host1.equals(host2) == false) {
-				throw new ExcludedURLException(link);
-				}
-			}		
+		page.isIncluded();//throws ExcludedURLException
 		} 
+		if (robotAllowed() == false) {
+		page.isRobotAllowed();//throws NoRobotsURLException
+		}
 		if (add(link) == false) throw new DuplicateURLException(link);	
 	}
 
@@ -88,6 +90,10 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			scs = false;
 			E.printRow();
 			}
+			catch (NoRobotsURLException N) {
+			scs = false;
+			N.printRow();
+			}
 		}
 	return scs;
 	}
@@ -113,6 +119,10 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			catch (ExcludedURLException E) {
 			scs = false;
 			E.printRow();
+			}
+			catch (NoRobotsURLException N) {
+			scs = false;
+			N.printRow();
 			}
 		}
 	
@@ -153,14 +163,14 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			if (r < 1) {
 			w.append(p.toString() + CountFile.sep);
 			}
-			if (r < 2) {
+			else if (r < 2) {
 			w.append(p.getTitle() + CountFile.sep);
 			}
-			if (r < 3) {
+			else if (r < 3) {
 			w.append(p.getKeywords().rawString());
 			}
-		w.append("\n");
 		}
+	w.append("\n");
 	}
 	
 	default void truncate() {

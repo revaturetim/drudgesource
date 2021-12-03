@@ -80,9 +80,11 @@ final static private String Null = "null";
 					String dir = spaces[1];
 						try {
 						URL c = new URL(rcon.getURL(), dir);//this thows exception
-							if (rcon.getURL().sameFile(c)) {
+							/*if (rcon.getURL().sameFile(c)) {
 							throw new NoRobotsURLException(rcon.getURL());
-							}
+							}*/
+						DataObjects.norobot.add(c);
+						Debug.println(c);
 						}
 						catch (MalformedURLException M) {
 						Hashtable<String, Object> d = new Hashtable<String, Object>();	
@@ -161,6 +163,13 @@ final static private String Null = "null";
 			Hashtable<String, Object> d = new Hashtable<String, Object>();	
 			d.put("email", address);
 			d.put("Exception", I);
+			d.put("Location", "P.getEmails(CharSequence)");		
+			D.error(d);
+			}
+			catch (NoRobotsURLException N) {
+			Hashtable<String, Object> d = new Hashtable<String, Object>();	
+			d.put("email", address);
+			d.put("Exception", N);
 			d.put("Location", "P.getEmails(CharSequence)");		
 			D.error(d);
 			}
@@ -614,26 +623,25 @@ final static private String Null = "null";
 		D.error(E);
 		E.printRow();
 		}
+		catch (NoRobotsURLException N) {
+		D.error(N);
+		N.printRow();
+		}
 		catch (URISyntaxException U) {
-		Hashtable<String, Object> t = new Hashtable<String, Object>();
-		t.put(U.getClass().toString(), U);
-		t.put(msg, url);
-		D.error(t);
+		D.error(U);
 		Print.printRow(U, url);
 		}
-		catch (InvalidURLException N) {
-		Hashtable<String, Object> t = new Hashtable<String, Object>();
-		t.put(N.getClass().toString(), N);
-		t.put(msg, url);
-		D.error(t);
-		N.printRow();	
+		catch (InvalidURLException I) {
+		D.error(I);
+		I.printRow();	
 		}
 		
 	return data;
 	}
 
 	static Data<Page> add(Page page, Data<Page> data) throws 
-	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
+	DuplicateURLException, ExcludedURLException, InvalidURLException, 
+	NoRobotsURLException, URISyntaxException {
 	Debug.check(page, null);
 	Debug.check(data, null);
 	data.put(page);//this throws duplicateurlexception
@@ -659,6 +667,9 @@ final static private String Null = "null";
 			catch (InvalidURLException I) {
 			I.printRow();
 			}
+			catch (NoRobotsURLException N) {
+			N.printRow();
+			}
 		}
 	return data;
 	}
@@ -682,8 +693,17 @@ final static private String Null = "null";
 			catch (InvalidURLException I) {
 			I.printRow();
 			}
+			catch (NoRobotsURLException N) {
+			N.printRow();
+			}
 		}
 	return data;
+	}
+	
+	public static boolean sameHost(Page a, Page b) {
+	final String hosta = a.getURL().getHost();
+	final String hostb = b.getURL().getHost();
+	return hosta.equals(hostb);
 	}
 	
 	static Page createPage(String url) {

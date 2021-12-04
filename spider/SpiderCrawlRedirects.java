@@ -62,24 +62,20 @@ protected boolean norobots = false;
 				crawl(rediruri);//calls itself
 				}
 				catch (URISyntaxException U) {
-				spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
+				//spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
 				Print.printRow(U, redloc);
 				}
 				catch (InvalidURLException I) {
-				spinIssue("Found a InvalidUrlException When getting Redirect Link", redloc, I);
+				//spinIssue("Found a InvalidUrlException When getting Redirect Link", redloc, I);
 				I.printRow();
 				}
 				catch (DuplicateURLException Du) {
-				spinIssue("Found a DuplicateUrlException When getting Redirect Link", redloc, Du);
+				//spinIssue("Found a DuplicateUrlException When getting Redirect Link", redloc, Du);
 				Du.printRow();
 				}
 				catch (ExcludedURLException E) {
-				spinIssue("Found an ExcludedUrlException When getting Redirect Link", redloc, E);
+				//spinIssue("Found an ExcludedUrlException When getting Redirect Link", redloc, E);
 				E.printRow();
-				}
-				catch (NoRobotsURLException N) {
-				spinIssue("Found a NoRobotsURLException When getting Redirect Link", redloc, N);
-				N.printRow();
 				}
 			}
 			catch (MalformedURLException M) {

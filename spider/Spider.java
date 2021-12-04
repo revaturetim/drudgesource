@@ -40,7 +40,6 @@ protected boolean norobots = false;
 			Debug.time("Checing is UseLess");
 			}
 			if (norobots) {
-			p.checkRobotFile();
 			p.isRobotAllowed();//this throws norobotsallowedexception	
 			Debug.time("Checking Robot Allowed");
 			}
@@ -72,10 +71,6 @@ protected boolean norobots = false;
 				catch (ExcludedURLException E) {
 				//spinIssue("Found a ExcludedURLException When getting Redirect Link", redloc, E);
 				E.printRow();
-				}
-				catch (NoRobotsURLException N) {
-				//spinIssue("Found a NoRobotsURLException When getting Redirect Link", redloc, N);
-				N.printRow();
 				}
 			}	
 			catch (MalformedURLException M) {
@@ -118,7 +113,7 @@ protected boolean norobots = false;
 	}
 
 	public void setRobotsAllowed(boolean b) {
-	norobots = !b;
+	norobots = !b;//since most variables that set this are norobotsallowed vs robots allowed the values must be opposite
 	}
 
 	//I thought that calling issue was humorous like you have a issues

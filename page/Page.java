@@ -27,7 +27,7 @@ final private Data<String> klist = new DataList<String>();
 private boolean connected = false;
 
 	public Page(URL u) {
-	Debug.check(P.nopag, u, null);
+	u.toString();//this checks if u is null and if it is it will throw a nullpointer exception
 	this.url = u;
 	}
 	
@@ -157,9 +157,15 @@ private boolean connected = false;
 	return url;
 	}
 
-	public URL getRobotURL() throws IOException {
-	URL roboturl = new URL(url, "/robots.txt");
-	return roboturl;			
+	public URL getRobotURL() {
+		try {
+		URL roboturl = new URL(url, "/robots.txt");
+		return roboturl;
+		}
+		catch (IOException I) {
+		D.error(I);
+		return null;
+		}			
 	}
 	
 	public URLConnection openConnection() throws IOException {
@@ -187,12 +193,6 @@ private boolean connected = false;
 	return P.sameHost(this, p);
 	}
 	
-	public void checkRobotFile() throws IOException {
-	URL r = getRobotURL();
-	URLConnection c = r.openConnection(proxyserver);
-	P.checkRobot(c);
-	}
-	
 	public boolean isIncluded() throws ExcludedURLException {
 	boolean included = false;
 		for (Page p : DataObjects.include) {		
@@ -215,9 +215,27 @@ private boolean connected = false;
 	}
 
 	public boolean isRobotAllowed() throws NoRobotsURLException {
-		if (DataObjects.norobot.contains(this.url)) {
-		throw new NoRobotsURLException(this.url);
+	final URL roboturl = getRobotURL();
+	Data<URL> dr = DataObjects.norobothash.get(roboturl);//this could throw a null pointer exception
+		if (dr != null) {
+			if (dr.contains(this.url)) {
+			throw new NoRobotsURLException(this.url);
+			}
 		}
+		else {
+			try {
+			URLConnection c = roboturl.openConnection(proxyserver);
+			dr = new DataList<URL>();
+			P.readRobotFile(c, dr);
+			DataObjects.norobothash.put(roboturl, dr);
+				if (dr.contains(this.url)) {
+				throw new NoRobotsURLException(this.url);
+				}
+			}
+			catch (IOException I) {
+			D.error(I);
+			}
+		}	
 	return true;
 	}
 

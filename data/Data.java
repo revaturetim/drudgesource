@@ -52,7 +52,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	}
 	
 	default public void put(T link) throws 
-	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException, NoRobotsURLException {
+	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
 	final Page page = (Page)link;
 	page.isValid();//throws invalidurlexception, urisyntaxexception
 		if (excluded() == true) {
@@ -61,10 +61,9 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 		if (included() == true) {
 		page.isIncluded();//throws ExcludedURLException
 		} 
-		if (robotAllowed() == false) {
-		page.isRobotAllowed();//throws NoRobotsURLException
-		}
-		if (add(link) == false) throw new DuplicateURLException(link);	
+		if (add(link) == false) {
+		throw new DuplicateURLException(link);//throws DuplicateURLException
+		}	
 	}
 
 	default public boolean put(Data<T> d) {
@@ -89,10 +88,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			catch (ExcludedURLException E) {
 			scs = false;
 			E.printRow();
-			}
-			catch (NoRobotsURLException N) {
-			scs = false;
-			N.printRow();
 			}
 		}
 	return scs;
@@ -119,10 +114,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			catch (ExcludedURLException E) {
 			scs = false;
 			E.printRow();
-			}
-			catch (NoRobotsURLException N) {
-			scs = false;
-			N.printRow();
 			}
 		}
 	

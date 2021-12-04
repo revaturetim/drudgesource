@@ -200,7 +200,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			}
 			else if (a.equals("-r")) {
 			robotsallowed = false;
-			DataObjects.norobot.setRobotAllowed(robotsallowed);
 			}
 			else if (a.startsWith("-x=")) {
 			String[] b = a.split("=", 2);
@@ -426,7 +425,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Page p = new Page(arg[i + 1]);
 					
 					try {
-					p.checkRobotFile();
 					p.isRobotAllowed();
 					System.out.println(arg[i + 1] + 
 					" is NOT disallowed by sites robot.txt file."); 
@@ -434,9 +432,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (NoRobotsURLException N) {
 					Print.error(N, arg[i + 1]);
 					}
-					catch (IOException I) {
-					Print.error(I, arg[i + 1]);
-					}		
+			
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -715,7 +711,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			System.out.println("Option " + a + " was ignored by this program.");
 			}//end of lastarg of loop
 		}//end of loop
-		//Debug.stop();
 	}//end of program
 
 	static Page createFirstPage(String link) throws MalformedURLException, UnknownHostException {

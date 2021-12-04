@@ -55,7 +55,7 @@ final static private String Null = "null";
 	}
 
 	//I am assuming that this works.  I have no way to really test it thoroughly. 
-	static void checkRobot(final URLConnection rcon) throws IOException {
+	static void readRobotFile(final URLConnection rcon, Data<URL> norob) throws IOException {
 	final LineNumberReader reader = new LineNumberReader(new BufferedReader(new InputStreamReader(rcon.getInputStream())));
 	final String useragent = "User-agent:";
 	final String disallow = "Disallow:";
@@ -80,7 +80,7 @@ final static private String Null = "null";
 					String dir = spaces[1];
 						try {
 						URL c = new URL(rcon.getURL(), dir);//this thows exception
-						DataObjects.norobot.add(c);
+						norob.add(c);
 						//Debug.println(c);
 						}
 						catch (MalformedURLException M) {
@@ -160,13 +160,6 @@ final static private String Null = "null";
 			Hashtable<String, Object> d = new Hashtable<String, Object>();	
 			d.put("email", address);
 			d.put("Exception", I);
-			d.put("Location", "P.getEmails(CharSequence)");		
-			D.error(d);
-			}
-			catch (NoRobotsURLException N) {
-			Hashtable<String, Object> d = new Hashtable<String, Object>();	
-			d.put("email", address);
-			d.put("Exception", N);
 			d.put("Location", "P.getEmails(CharSequence)");		
 			D.error(d);
 			}
@@ -620,10 +613,6 @@ final static private String Null = "null";
 		D.error(E);
 		E.printRow();
 		}
-		catch (NoRobotsURLException N) {
-		D.error(N);
-		N.printRow();
-		}
 		catch (URISyntaxException U) {
 		D.error(U);
 		Print.printRow(U, url);
@@ -664,9 +653,6 @@ final static private String Null = "null";
 			catch (InvalidURLException I) {
 			I.printRow();
 			}
-			catch (NoRobotsURLException N) {
-			N.printRow();
-			}
 		}
 	return data;
 	}
@@ -689,9 +675,6 @@ final static private String Null = "null";
 			}
 			catch (InvalidURLException I) {
 			I.printRow();
-			}
-			catch (NoRobotsURLException N) {
-			N.printRow();
 			}
 		}
 	return data;

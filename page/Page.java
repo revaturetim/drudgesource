@@ -21,8 +21,6 @@ final private Source content = new Source(pagesize);
 final private Header header = new Header();
 private URL url = null;  
 private URLConnection connection = null;
-private URL roboturl = null;
-private URLConnection robotconnection = null;	
 final private Data<Page> dlist = new DataList<Page>();
 final private Data<URL> elist = new DataList<URL>();
 final private Data<String> klist = new DataList<String>();
@@ -159,6 +157,11 @@ private boolean connected = false;
 	return url;
 	}
 
+	public URL getRobotURL() throws IOException {
+	URL roboturl = new URL(url, "/robots.txt");
+	return roboturl;			
+	}
+	
 	public URLConnection openConnection() throws IOException {
 	connection = P.getConnection(url, proxyserver);
 	return connection;
@@ -182,6 +185,12 @@ private boolean connected = false;
 	
 	public boolean sameHost(Page p) {
 	return P.sameHost(this, p);
+	}
+	
+	public void checkRobotFile() throws IOException {
+	URL r = getRobotURL();
+	URLConnection c = r.openConnection(proxyserver);
+	P.checkRobot(c);
 	}
 	
 	public boolean isIncluded() throws ExcludedURLException {

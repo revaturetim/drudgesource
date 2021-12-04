@@ -54,7 +54,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	default public void put(T link) throws 
 	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException, NoRobotsURLException {
 	final Page page = (Page)link;
-	page.isValid();
+	page.isValid();//throws invalidurlexception, urisyntaxexception
 		if (excluded() == true) {
 		page.isExcluded();//throws ExcludedURLException
 		}

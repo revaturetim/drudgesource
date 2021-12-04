@@ -55,7 +55,7 @@ final static private String Null = "null";
 	}
 
 	//I am assuming that this works.  I have no way to really test it thoroughly. 
-	static void checkRobot(final URLConnection rcon) throws NoRobotsURLException, IOException {
+	static void checkRobot(final URLConnection rcon) throws IOException {
 	final LineNumberReader reader = new LineNumberReader(new BufferedReader(new InputStreamReader(rcon.getInputStream())));
 	final String useragent = "User-agent:";
 	final String disallow = "Disallow:";
@@ -76,15 +76,12 @@ final static private String Null = "null";
 				user = spaces[1];//this could throw an exception 
 				}
 				else if (action.equals(disallow)) {
-					if (user.equals("*") || user.equals(ThisProgram.useragent)) {
+					if (user.equals("*") | user.equals(ThisProgram.useragent)) {
 					String dir = spaces[1];
 						try {
 						URL c = new URL(rcon.getURL(), dir);//this thows exception
-							/*if (rcon.getURL().sameFile(c)) {
-							throw new NoRobotsURLException(rcon.getURL());
-							}*/
 						DataObjects.norobot.add(c);
-						Debug.println(c);
+						//Debug.println(c);
 						}
 						catch (MalformedURLException M) {
 						Hashtable<String, Object> d = new Hashtable<String, Object>();	

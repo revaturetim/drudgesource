@@ -32,25 +32,6 @@ protected boolean norobots = false;
 	Debug.time("End Links");
 	}
 	
-	public void checkRobotFile(Page p) {
-		/*try {
-			if (roboturl == null) {
-			roboturl = new URL(url, "/robots.txt");
-			}
-			if (robotconnection == null) {
-			robotconnection = roboturl.openConnection();
-			}
-		P.checkRobot(robotconnection);//this throws NoRobotsURLException 	
-		}
-		catch (IOException I) {
-		D.error(I);
-		}*/
-		try {
-		p.isRobotAllowed();
-		}
-		catch (NoRobotsURLException E) {E.printRow();}
-	}
-	
 	public boolean crawl(Page p) {
 	boolean remove = false;
 		try {
@@ -59,7 +40,8 @@ protected boolean norobots = false;
 			Debug.time("Checing is UseLess");
 			}
 			if (norobots) {
-			//p.isRobotAllowed();//this throws norobotsallowedexception	
+			p.checkRobotFile();
+			p.isRobotAllowed();//this throws norobotsallowedexception	
 			Debug.time("Checking Robot Allowed");
 			}
 		links(p);
@@ -76,23 +58,23 @@ protected boolean norobots = false;
 				Debug.time("Redirected");
 				}
 				catch (URISyntaxException U) {
-				spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
+				//spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
 				Print.printRow(U, redloc);
 				}
 				catch (InvalidURLException I) {
-				spinIssue("Found a InvalidURLException When getting Redirect Link", redloc, I);
+				//spinIssue("Found a InvalidURLException When getting Redirect Link", redloc, I);
 				I.printRow();
 				}
 				catch (DuplicateURLException Du) {
-				spinIssue("Found a DuplicateURLException When getting Redirect Link", redloc, Du);
+				//spinIssue("Found a DuplicateURLException When getting Redirect Link", redloc, Du);
 				Du.printRow();
 				}
 				catch (ExcludedURLException E) {
-				spinIssue("Found a ExcludedURLException When getting Redirect Link", redloc, E);
+				//spinIssue("Found a ExcludedURLException When getting Redirect Link", redloc, E);
 				E.printRow();
 				}
 				catch (NoRobotsURLException N) {
-				spinIssue("Found a NoRobotsURLException When getting Redirect Link", redloc, N);
+				//spinIssue("Found a NoRobotsURLException When getting Redirect Link", redloc, N);
 				N.printRow();
 				}
 			}	
@@ -106,12 +88,15 @@ protected boolean norobots = false;
 		spinIssue("Found a not-OK link while checking if it is a useless", p, N);
 		remove = true;
 		N.printRow("", "", "", p.header().getResponse(), N.toString(), p.toString());	
-		//N.printRow();
 		}
 		catch (InvalidURLException I) {
-		spinIssue("Found a InvalidURLException When getting Redirect Link", p, I);
+		spinIssue("Found a InvalidURLException while checking if it is a useless", p, I);
 		remove = true;
 		I.printRow();
+		}
+		catch (NoRobotsURLException N) {
+		spinIssue("Found a NoRobotURLException while checking if it is a useless", p, N);
+		N.printRow();
 		}
 		catch (NoContentURLException N) {
 		spinIssue("Found a no content link while checking if it is a useless", p, N);
@@ -138,7 +123,6 @@ protected boolean norobots = false;
 
 	//I thought that calling issue was humorous like you have a issues
 	protected void spinIssue(String i, Object o, Exception e) {
-	Debug.check("You are attemping to pass a null value into Spider.spinIssue", i, null, o, null, e, null);
 	HashMap<String, Object> h = new HashMap<String, Object>();
 	h.put(i + " Issue", o);
 	h.put("Exception", e);

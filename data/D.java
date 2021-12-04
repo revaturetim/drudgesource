@@ -26,6 +26,7 @@ final public class D implements FileNames {
 
 			for (String k : M.keySet()) {
 			Object v = M.get(k);
+				if (v == null) v = "NULL VALUE";
 			err.append("[");
 			err.append(k);
 			err.append("]-[");

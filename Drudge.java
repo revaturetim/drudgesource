@@ -421,38 +421,22 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals("-R") && arg.length == 2 && i == 0) {
+			else if (a.equals("-R") && arg.length == 2 && i == 0) {//this doesn not work yet!
 				try {
-				String r = "/robots.txt";
-				URL u = new URL(arg[i + 1]);
-				URL roboturl = new URL(u, r);
-				Page p = new Page(u);
+				Page p = new Page(arg[i + 1]);
+					
 					try {
-					p.isUseless();
-						try {
-						p.isValid();
-							try {
-							p.isRobotAllowed();
-							System.out.println(arg[i + 1] + 
-							" is NOT disallowed by sites robot.txt file."); 
-							}
-							catch (NoRobotsURLException N) {
-							Print.error(N, arg[i + 1]);
-							}
-						}
-						catch (URISyntaxException U) {
-						Print.error(U, arg[i + 1]);
-						}
-						catch (InvalidURLException N) {
-						Print.error(N, arg[i + 1]);
-						}
+					p.checkRobotFile();
+					p.isRobotAllowed();
+					System.out.println(arg[i + 1] + 
+					" is NOT disallowed by sites robot.txt file."); 
+					}
+					catch (NoRobotsURLException N) {
+					Print.error(N, arg[i + 1]);
 					}
 					catch (IOException I) {
-					Print.error(I, p);
-					}
-					catch (UselessURLException U) {
-					Print.error(U, p);
-					}	
+					Print.error(I, arg[i + 1]);
+					}		
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -650,11 +634,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (ExcludedURLException E) {
 					E.printRow();
 					}
+					catch (NoRobotsURLException N) {
+					N.printRow();
+					}
 					catch (DuplicateURLException D) {
 					D.printRow();
 					}
 					catch (Exception E) {
-					Debug.stop(E);
 					Print.printRow(E, lastarg);
 					}
 				}

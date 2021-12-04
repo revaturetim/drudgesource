@@ -228,13 +228,8 @@ INNER:					while (true) {
 					}
 				}
 			
-			}
-		
-		
-		
-		};
-		
-		
+			}	
+		};	
 	stop(null, thing);
 	}
 	
@@ -327,7 +322,7 @@ INNER:					while (true) {
 			for (int i = 1; i < objs.length; i++) {
 				
 				if (objs[i] == null && objs[i - 1] == null) {
-				System.out.println(msg + ":" + objs[i].toString() + " was null");	
+				System.out.println(msg + ":null object detected!");	
 				}
 				else if ((objs[i] != null && objs[i - 1] != null) && !P.test(objs[i - 1], objs[i])) {//failed test
 				System.out.println(msg + ":" + objs[i - 1].toString() + " not equal " + objs[i]);

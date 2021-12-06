@@ -114,4 +114,28 @@ final public class D implements FileNames {
 		}
 	return page;
 	}
+	
+	static public <T> String rawString(Data<T> data) {
+	StringBuilder builder = new StringBuilder();
+		for (T t : data) {
+		builder.append(t.toString());
+		builder.append(" ");
+		}
+	return builder.toString();
+	}
+	
+	static public void writeEntry(Page page, Writer writer, int level) throws IOException {
+		for (int r = 0; r < level; r++) {
+			if (r < 1) {
+			writer.append(page.toString() + CountFile.sep);
+			}
+			else if (r < 2) {
+			writer.append(page.getTitle() + CountFile.sep);
+			}				
+			else if (r < 3) {
+			writer.append(rawString(page.getKeywords()));
+			}
+		}
+	writer.append("\n");
+	}
 }

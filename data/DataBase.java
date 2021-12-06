@@ -92,7 +92,7 @@ insert into drudge values (link, title, keywords);
 	return page; 
 	}
 
-	public T delete(int i) {
+	public T remove(int i) {
 	T page = null;	
 	final String query = "SELECT * FROM " + table;
 		try {
@@ -118,7 +118,7 @@ insert into drudge values (link, title, keywords);
 		pagetitle = p.getTitle().trim();//for some odd reason this needs .trim in there to make it work
 		}
 		if (level() > 2) {
-		pagekeywords = p.getKeywords().rawString().trim();
+		pagekeywords = D.rawString(p.getKeywords()).trim();
 		}
 
 	
@@ -166,13 +166,27 @@ insert into drudge values (link, title, keywords);
 	ResultSet result = state.executeQuery(query);
 	return result;
 	}
-
+	
+	public void truncate() {
+	final String query = "DELETE FROM " + table;
+		try {
+		ResultSet result = query(query);
+		}
+		catch (SQLException S) {
+		D.error(S);
+		}
+	}
+	
 	public boolean check() {
 	return true;
 	}
 	
 	public boolean checkError() {
 	return true;
+	}
+	
+	public void setSource(String s) {
+	dburl = s;
 	}
 	
 	public String source() {
@@ -183,7 +197,7 @@ insert into drudge values (link, title, keywords);
 
 	}
 
-	public void finish() {
+	public void end() {
 
 	}
 	

@@ -52,10 +52,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				dada.setLevel(pagedata);
 					if (pagedata == 3) {
 						try {
-						fillStringFromFile(FileNames.words, donotusewords);
+						donotusewords.begin();
 						}
 						catch (IOException I) {
 						Print.error(I);
+						}
+						catch (Exception E) {
+						Print.error(E);
 						}
 					}
 				}
@@ -75,10 +78,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				file = b[1];
 				}
 				try {
-				fillPageFromFile(file, exclude);
+				exclude.setSource(file);
+				exclude.begin();
 				}
 				catch (IOException I) {
 				Print.error(I);
+				}
+				catch (Exception E) {
+				Print.error(E);
 				}	
 			}
 			else if ((a.equals("-help") || a.equals("-h")) && arg.length == 1) {
@@ -128,10 +135,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				file = b[1];
 				}
 				try {
-				fillPageFromFile(file, include);
+				include.setSource(file);
+				include.begin();
 				}	
 				catch (IOException I) {
 				Print.error(I);
+				}
+				catch (Exception E) {
+				Print.error(E);
 				}
 				
 			}
@@ -249,8 +260,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			continue;
 			}
 			else if (a.equals("-E") && arg.length == 1) {
-			boolean error = dada.checkError();
-			boolean email_error = dada_emails.checkError();
+				for (Data<?> d : all_dadas) {
+				d.checkError();
+				}
 			System.out.println("Have a nice day :)");
 			break;
 			}
@@ -298,7 +310,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);	
 					try {
-					fillPageFromFile(include.source(), include);
+					include.begin();
 						try {
 						p.isIncluded();
 						System.out.println(p.toString() + " is in the " + FileNames.include + " file.");	
@@ -309,6 +321,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}	
 					catch (IOException I) {
 					Print.error(I);
+					}
+					catch (Exception E) {
+					Print.error(E);
 					}	
 				}
 				catch (MalformedURLException M) {
@@ -547,11 +562,30 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
+			else if (a.equals("-W") && arg.length == 2 && i == 0) {
+				
+				try {
+				donotusewords.begin();
+					if (donotusewords.contains(arg[i + 1])) {
+					System.out.println(arg[i + 1] + " is in the " + FileNames.words + " file.");
+					}
+					else {
+					System.out.println(arg[i + 1] + " is NOT in the " + FileNames.words + " file.");
+					}		
+				}	
+				catch (IOException I) {
+				Print.error(I);
+				}
+				catch (Exception E) {
+				Print.error(E);
+				}			
+			break;
+			}
 			else if (a.equals("-X") && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);	
 					try {
-					fillPageFromFile(exclude.source(), exclude);
+					exclude.begin();
 						try {
 						p.isExcluded();
 						System.out.println(p.toString() + " is NOT in the " + FileNames.exclude + " file.");	
@@ -562,6 +596,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}	
 					catch (IOException I) {
 					Print.error(I);
+					}
+					catch (Exception E) {
+					Print.error(E);
 					}	
 				}
 				catch (MalformedURLException M) {
@@ -658,7 +695,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				for (Page p = dada.get(begcyc); p != null; p = dada.get(begcyc)) {
 				boolean remove = spider.crawl(p);
 					if (remove == true) {
-					dada.delete(begcyc);
+					dada.remove(begcyc);
 					continue;//this skips all of the rest of the loop and restarts it
 					}
 					if (getemails) {
@@ -673,14 +710,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			Debug.time("Spider Crawl");
 				try {
-				dada.finish();
+				dada.end();
 				}
 				catch (Exception E) {
 				Print.error(E);
 				}
 				if (getemails) {
 					try {
-					dada_emails.finish();
+					dada_emails.end();
 					}
 					catch (Exception E) {
 					Print.error(E);
@@ -842,37 +879,5 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		erased = efile.delete();
 		}
 	return erased;
-	}
-	
-	static void  fillPageFromFile(String file, Data<Page> data) throws IOException {
-	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
-	
-		while (true) {
-		String line = reader.readLine();
-			if (line == null) break;
-			else {
-				try {
-				Page page = new Page(line);
-				data.add(page);//use raw add so that you don't undo another spider's data 
-				}
-				catch (MalformedURLException M) {
-				Print.error(M);
-				}
-			}
-		}
-	
-	}
-	
-	static void fillStringFromFile(String file, Data<String> data) throws IOException {
-	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
-	
-		while (true) {
-		String line = reader.readLine();
-			if (line == null) break;
-			else data.add(line);
-		}
-	
-	}
-
-	
+	}	
 }

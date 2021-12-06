@@ -10,7 +10,7 @@ final static public String gout = "gout";
 final static public String samp = "drudge/sample.html";
 final static public String links = "links";
 final static public String emails = "emails";
-final static public String exclude = "excludedlinks";
-final static public String include = "includedlinks";
+final static public String exclude = "exclude";
+final static public String include = "include";
 final static public String words = "words";
 }

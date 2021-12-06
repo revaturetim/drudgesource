@@ -14,9 +14,10 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 
 	/*These are important methods because they interface with the rest of the program*/
 	public boolean add(T obj);//this is just to raw add an item into it without checking exceptions
-	//public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException;
-	public T delete(int cycle);
+	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException;
+	public T remove(int cycle);
 	public T get(int cycle);
+	public void setSource(String s);
 	public String source();
 	public void setLevel(int l);
 	public int level();
@@ -26,11 +27,12 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	public void setIncluded(boolean b);
 	public boolean robotAllowed();
 	public void setRobotAllowed(boolean b);
-	//public boolean check();
-	//public boolean checkError();
+	public boolean check();
+	public boolean checkError();
 	public void begin() throws Exception;
-	public void finish() throws Exception;
-
+	public void end() throws Exception;
+	public void truncate();
+	
 	default public int size() {
 	int size = 0;
 		for (T p : this) {
@@ -49,21 +51,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			}
 		}
 	return has;
-	}
-	
-	default public void put(T link) throws 
-	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
-	final Page page = (Page)link;
-	page.isValid();//throws invalidurlexception, urisyntaxexception
-		if (excluded() == true) {
-		page.isExcluded();//throws ExcludedURLException
-		}
-		if (included() == true) {
-		page.isIncluded();//throws ExcludedURLException
-		} 
-		if (add(link) == false) {
-		throw new DuplicateURLException(link);//throws DuplicateURLException
-		}	
 	}
 
 	default public boolean put(Data<T> d) {
@@ -134,151 +121,12 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			}
 			
 			public void remove() {
-			delete(i);
+			//remove(i);
 			}
 		};	
 	return it;
 	}
-		
-	default String rawString() {
-	StringBuilder builder = new StringBuilder();
-		for (T t : this) {
-		builder.append(t.toString());
-		builder.append(" ");
-		}
-	return builder.toString();
-	}
 
-	default void writeEntry(Page p, Writer w) throws IOException {
-		for (int r = 0; r < level(); r++) {
-			if (r < 1) {
-			w.append(p.toString() + CountFile.sep);
-			}
-			else if (r < 2) {
-			w.append(p.getTitle() + CountFile.sep);
-			}
-			else if (r < 3) {
-			w.append(p.getKeywords().rawString());
-			}
-		}
-	w.append("\n");
-	}
 	
-	default void truncate() {
-	File linkfile = new File(source());
-		try {
-		linkfile.delete();
-		linkfile.createNewFile();
-		}
-		catch (IOException I) {
-		D.error(I);
-		}
-	}
-	
-	/*this is an internal check to check the data within the data object itself not its source*/
-	default public boolean check() /*throws UselessURLException, IOException, URISyntaxException*/ {
-	Iterator<T> pages = this.iterator();
-
-		for (int linecount = 1; pages.hasNext(); linecount++) {
-		T page = pages.next();
-			try {
-			String link = pages.toString();
-			Page p = new Page(link);//this throws InvalidURLException, malformedurlexception, URISyntaxException
-			URL u = p.getURL();
-				if (u.getAuthority() == null) {
-			
-				}
-				Iterator<T> pages2 = this.iterator();
-				for (int linecount2 = 1; pages2.hasNext(); linecount2++) {
-				T page2 = pages2.next();
-				String link2 = page2.toString();
-					if (link.equals(link2) && linecount != linecount2) {
-					String msg =  "[" 
-					+ link + "] Duplicate entry found at " 
-					+ String.valueOf(linecount) + " and " 
-					+ 			String.valueOf(linecount2);
-					}
-				}
-			}
-			catch (Exception E) {
-			
-			}
-		}
-	return true;
-	}
-	
-	default public boolean checkError() {
-	boolean duplicate = false;
-	boolean linkerror = false;
-	int linecount = 0;
-		try { 
-		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
-		int firstcolumnlength = 0;
-			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-			linecount = reader.getLineNumber();
-			String[] columns = line.split(CountFile.sep);
-			/*This will see if the total number of columns for each line is the same as the previous one*/
-				if (linecount == 1) {
-				firstcolumnlength = columns.length;
-				}
-				if (columns.length != firstcolumnlength) {
-				System.out.println("There is a column length error at line " + String.valueOf(linecount));
-				}
-			/*this will check for decoding errors*/
-				for (String col : columns) {
-					if (col.contains("%")) {
-					System.out.println("Possible encoding error at line " + String.valueOf(linecount));
-					}
-				}
-			/*This will check for duplicates in the data*/
-			String link = columns[0];
-				try {
-				Page p = new Page(link);//this throws malformedurlexception
-				p.isValid();//this throws InvalidURLException, URISyntaxException
-				URL u = p.getURL();
-					if (u.getAuthority() == null) {
-					throw new MalformedURLException("No Host");
-					}
-				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));
-					for (String line2 = reader2.readLine(); line2 != null; line2 = reader2.readLine()) {
-					int linecount2 = reader2.getLineNumber();
-						if (linecount2 < linecount) {
-						String[] columns2 = line2.split(CountFile.sep);
-						String link2 = columns2[0];
-							if (link.equals(link2)) {
-							duplicate = true;
-							System.out.print(link + " is a duplicate entry found at ");
-					       	System.out.println(String.valueOf(linecount) 
-					       	+ " and " 
-					       	+ String.valueOf(linecount2));
-							}
-						}
-					}
-				}
-				catch (InvalidURLException N) {
-				linkerror = true;
-				System.out.print("Line " + String.valueOf(linecount) + " has a link that isn't an html file: ");
-				System.out.println(link);
-				}
-				catch (URISyntaxException U) {
-				linkerror = true;
-				System.out.print("Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
-				}
-				catch (MalformedURLException M) {
-				linkerror = true;
-				System.out.print("Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
-				}
-			}
-		System.out.println("The number of lines in " + source() +  " is "  + linecount);
-		}
-		catch (IOException I) {
-		System.out.println(I);
-		}
-	return (duplicate || linkerror);
-	}
-	
-
 
 }

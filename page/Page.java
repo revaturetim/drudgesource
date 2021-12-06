@@ -22,7 +22,7 @@ final private Header header = new Header();
 private URL url = null;  
 private URLConnection connection = null;
 final private Data<Page> dlist = new DataList<Page>();
-final private Data<URL> elist = new DataList<URL>();
+final private Data<URL> elist = new DataListEmail<URL>();
 final private Data<String> klist = new DataList<String>();
 private boolean connected = false;
 

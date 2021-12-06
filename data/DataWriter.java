@@ -22,7 +22,6 @@ private boolean robotallowed = true;
 	abstract <W extends Writer> W createWriter();
 	abstract public boolean add(T obj);
 	
-	
 
 	public T get(final int n) {
 	T entry = null;
@@ -45,7 +44,7 @@ private boolean robotallowed = true;
 	}
 
 
-	public T delete(final int l) {
+	public T remove(final int l) {
 	T p = null;
 	StringBuffer buff = new StringBuffer();
 		try {
@@ -76,6 +75,26 @@ private boolean robotallowed = true;
 	return p;
 	}
 	
+	public void put(T obj) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
+	
+	}
+	
+	public void truncate() {
+	
+	}
+	
+	public boolean check() {
+	return false;
+	}
+	
+	public boolean checkError() {
+	return false;
+	}
+	
+	public void setSource(String s) {
+	source = s;
+	}
+	
 	public String source() {
 	return source;
 	}
@@ -92,7 +111,7 @@ private boolean robotallowed = true;
 
 	}
 
-	public void finish() {
+	public void end() {
 
 	}
 	

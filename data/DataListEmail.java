@@ -4,9 +4,13 @@ import java.io.*;
 import java.net.*;
 import drudge.Debug;
 
-public class DataEmailCollection<T extends URL> extends DataCollection<T> {
+public class DataListEmail<T extends URL> extends DataList<T> {
 
-	public DataEmailCollection(String s) {
+	public DataListEmail() {
+	super();
+	}
+	
+	public DataListEmail(String s) {
 	super(s);
 	}
 
@@ -25,7 +29,7 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 		}
 	}
 	
-	public void finish() throws IOException {
+	public void end() throws IOException {
 	BufferedWriter email_writer = new BufferedWriter(new FileWriter(source(), false));
 		for (T t : this) {
 		Debug.check(t, null);
@@ -44,7 +48,7 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 	return 1;
 	}
 	
-	public void put(T email) throws DuplicateURLException, ExcludedURLException {
+	public void put(T email) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
 		if (add(email) == false) throw new DuplicateURLException(email);	
 	}
 	
@@ -56,7 +60,12 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 	return false;
 	}
 	
+	public boolean check() {
+	return false;
+	}
+	
 	public boolean checkError() {
+	System.out.println("Checking " + source() + " file for errors.");
 	boolean duplicate = false;
 	boolean linkerror = false;
 	int linecount = 0;
@@ -71,12 +80,12 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 				firstcolumnlength = columns.length;
 				}
 				if (columns.length != firstcolumnlength) {
-				System.out.println("There is a column length error at line " + String.valueOf(linecount));
+				System.out.println("...There is a column length error at line " + String.valueOf(linecount));
 				}
 			/*this will check for decoding errors*/
 				for (String col : columns) {
 					if (col.contains("%")) {
-					System.out.println("Possible encoding error at line " + String.valueOf(linecount));
+					System.out.println("...Possible encoding error at line " + String.valueOf(linecount));
 					}
 				}
 			/*This will check for duplicates in the data*/
@@ -91,7 +100,7 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 						String email2 = columns2[0];
 							if (email.equals(email2)) {
 							duplicate = true;
-							System.out.print(email + " is a duplicate entry found at ");
+							System.out.print("..." + email + " is a duplicate entry found at ");
 					       	System.out.println(String.valueOf(linecount) 
 					       	+ " and " 
 					       	+ String.valueOf(linecount2));
@@ -101,11 +110,11 @@ public class DataEmailCollection<T extends URL> extends DataCollection<T> {
 				}
 				catch (MalformedURLException M) {
 				linkerror = true;
-				System.out.print("Line " + String.valueOf(linecount) + " has a email that isn't quite right: ");
+				System.out.print("...Line " + String.valueOf(linecount) + " has a email that isn't quite right: ");
 				System.out.println(email);
 				}
 			}
-		System.out.println("The number of lines in " + source() +  " is "  + linecount);
+		System.out.println("...The number of lines in " + source() +  " is "  + linecount);
 		}
 		catch (IOException I) {
 		System.out.println(I);

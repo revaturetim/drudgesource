@@ -44,7 +44,7 @@ public class DataFileWriter<T> extends DataWriter<T> {
 		Page tp = (Page)page;
 		PrintWriter PRINTER = createWriter();
 			try {
-			writeEntry(tp, PRINTER);
+			D.writeEntry(tp, PRINTER, level());
 			PRINTER.close();
 			added = true;
 			}

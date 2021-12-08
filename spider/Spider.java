@@ -12,6 +12,7 @@ import java.util.*;
 public class Spider {
 protected boolean checkok = true;
 protected boolean norobots = false;
+protected long delay = 0L;
 
 	//a convenience method for handling links and it makes other spiders do different things
 	protected void links(Page p) {
@@ -32,8 +33,19 @@ protected boolean norobots = false;
 	Debug.time("End Links");
 	}
 	
+	//you can override this to create different delaying methods if you choose to do so
+	protected void delay() {
+		try {
+		Thread.sleep(delay);
+		}
+		catch (InterruptedException I) {
+		D.error(I);
+		}
+	}
+	
 	public boolean crawl(Page p) {
 	boolean remove = false;
+	delay();//this will be universal for all crawlers since delay=0 is the same as no delay
 		try {
 			if (checkok) {
 			p.isUseless();//this throws uselessurlexception(s)
@@ -116,6 +128,10 @@ protected boolean norobots = false;
 	norobots = !b;//since most variables that set this are norobotsallowed vs robots allowed the values must be opposite
 	}
 
+	public void setDelay(long l) {
+	delay = l;
+	}
+	
 	//I thought that calling issue was humorous like you have a issues
 	protected void spinIssue(String i, Object o, Exception e) {
 	HashMap<String, Object> h = new HashMap<String, Object>();

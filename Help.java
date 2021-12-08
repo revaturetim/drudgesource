@@ -19,6 +19,7 @@ p("-p", "This will let you set a proxy server to use while crawling."),
 r("-r", "This will set " + ThisProgram.name + " to respect a robots.txt policy if the website has one."),
 s("-s", "This will set from what cycle to continue from."),
 t("-t", "This will use the test option from a sample file called " + FileNames.samp + "."),
+w("-w", "This will slow your crawler down so you don't overload a website."), 
 x("-x", "This will let you pass in extra options for " + ThisProgram.name + "."),
 inc("-inc", "This will set " + ThisProgram.name + " to only include page from certain websites."),
 include("-include", inc.msg),
@@ -170,6 +171,10 @@ static final private String HELP = "-HELP";
 		System.out.println("This option will greatly speed up crawling but it may not get quality websites since it accepts useless urls.");
 		System.out.println("Having this option on will capture redirects which can lead to better quality results.");
 		System.out.println("It is suggested that this be turned off and only turned on for faster crawling.");
+		}
+		else if (key.equals(w.par)) {
+		System.out.println("This will slow your crawler down between page crawls");
+		System.out.println("Example: -w=889 will be 889 milliseconds between crawls.");
 		}
 
 	}

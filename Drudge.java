@@ -14,15 +14,16 @@ public class Drudge implements DataObjects {
 public static String XFACTOR = null;
 
 	public static void main(final String[] arg) {
-	//these are for method wide variables other helper metheds will use
-	int maxcyc = 1;
-	int crawlmethod = 1;
-	int begcyc = 0;//default starting number for program
-	boolean getemails = false;
-	boolean okays = true;
-	boolean robotsallowed = true;
-	Spider spider = null;
 	long MemoryStart = Runtime.getRuntime().freeMemory();
+	//these are for method wide variables other helper metheds will use
+	int maxcyc = 1;//default value
+	int crawlmethod = 1;//default value
+	int begcyc = 0;//default starting number for program
+	boolean getemails = false;//default value
+	boolean okays = true;//default value
+	boolean robotsallowed = true;//default value
+	long delay = 0;//default value
+	Spider spider = null;
 	eraseFile(FileNames.error);
 	
 		//this is the main program loop
@@ -211,6 +212,17 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			}
 			else if (a.equals("-r")) {
 			robotsallowed = false;
+			}
+			else if (a.startsWith("-w=")) {
+			String[] b = a.split("=", 2);
+				try {
+				delay = Long.parseLong(b[1]);
+				}
+				catch (NumberFormatException N) {
+				Print.error(N);
+				break;
+				}
+			
 			}
 			else if (a.startsWith("-x=")) {
 			String[] b = a.split("=", 2);
@@ -681,6 +693,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			spider = createSpider(crawlmethod);
 			spider.setCheckOK(okays);
 			spider.setRobotsAllowed(robotsallowed);
+			spider.setDelay(delay);
+			
 				if (getemails) {
 					try {	
 					dada_emails.begin();

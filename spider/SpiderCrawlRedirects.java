@@ -33,6 +33,7 @@ protected boolean norobots = false;
 
 	public boolean crawl(Page p) {
 	boolean remove = false;
+	delay();//this will be universal for all crawlers since delay=0 is the same as no delay
 		try {
 			if (checkok) {
 			p.isUseless();//this throws uselessurlexception(s)

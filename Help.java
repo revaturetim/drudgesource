@@ -119,6 +119,7 @@ static final private String HELP = "-HELP";
 		System.out.println("Method 2 is meant to be a website overload tool and not to be used by nice people.");
 		System.out.println("Method 5 randomizes the order of the links so that it doesn't spiders them in the order that they are found.");
 		System.out.println("Method 6 searches links that are not a not from the same domain first.");
+		System.out.println("Method 7 crawls redirected links as they are found");
 		System.out.println("Method 8 sorts data in purley alpha-numeric order and is faster than other methods");
 		}
 		else if (key.equals(n.par)) {

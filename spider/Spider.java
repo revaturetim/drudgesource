@@ -15,7 +15,7 @@ protected boolean norobots = false;
 protected long delay = 0L;
 
 	//a convenience method for handling links and it makes other spiders do different things
-	protected void links(Page p) {
+	protected void links(final Page p) {
 		
 		try {
 		p.getSource();
@@ -43,6 +43,38 @@ protected long delay = 0L;
 		}
 	}
 	
+	protected void redirect(final Page p) {
+	final Page.Header h = p.header();
+	final String redloc = h.getRedirectLocation();
+		try {
+		Page rediruri = new Page(redloc);
+			try {
+			DataObjects.dada.put(rediruri);
+			Debug.time("Redirected");
+			}
+			catch (URISyntaxException U) {
+			//spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
+			Print.printRow(U, redloc);
+			}
+			catch (InvalidURLException I) {
+			//spinIssue("Found a InvalidURLException When getting Redirect Link", redloc, I);
+			I.printRow();
+			}
+			catch (DuplicateURLException Du) {
+			//spinIssue("Found a DuplicateURLException When getting Redirect Link", redloc, Du);
+			Du.printRow();
+			}
+			catch (ExcludedURLException E) {
+			//spinIssue("Found a ExcludedURLException When getting Redirect Link", redloc, E);
+			E.printRow();
+			}
+		}	
+		catch (MalformedURLException M) {
+		spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, M); 
+		Print.printRow(M, redloc);
+		}
+	}
+	
 	public boolean crawl(Page p) {
 	boolean remove = false;
 	delay();//this will be universal for all crawlers since delay=0 is the same as no delay
@@ -59,36 +91,7 @@ protected long delay = 0L;
 		}
 		catch (RedirectedURLException R) {
 		R.printRow();
-		Page.Header h = p.header();
-		final String redloc = h.getRedirectLocation();
-		
-			try {
-			Page rediruri = new Page(redloc);
-				try {
-				DataObjects.dada.put(rediruri);
-				Debug.time("Redirected");
-				}
-				catch (URISyntaxException U) {
-				//spinIssue("Found a urlsyntaxexception When Getting Redirect Link", redloc, U); 
-				Print.printRow(U, redloc);
-				}
-				catch (InvalidURLException I) {
-				//spinIssue("Found a InvalidURLException When getting Redirect Link", redloc, I);
-				I.printRow();
-				}
-				catch (DuplicateURLException Du) {
-				//spinIssue("Found a DuplicateURLException When getting Redirect Link", redloc, Du);
-				Du.printRow();
-				}
-				catch (ExcludedURLException E) {
-				//spinIssue("Found a ExcludedURLException When getting Redirect Link", redloc, E);
-				E.printRow();
-				}
-			}	
-			catch (MalformedURLException M) {
-			spinIssue("Found a malformedurlexception When Getting Redirect Link", redloc, M); 
-			Print.printRow(M, redloc);
-			}
+		redirect(p);
 		}
 		//these must be caught here so it can remove it once it is found in data object
 		catch (NotOKURLException N) {

@@ -22,14 +22,13 @@ private int max = 1;
 	}
 	
 	public void setCheckOK(boolean b) {
-	checkok = false;
 	//garantees that it will never check for oks
 	}
 	
 	public void setRobotsAllowed(boolean b) {
-	norobots = false;
 	//garantees that it will never respect robot.txt policy
 	}
+	
 	public void setMax(int m) {
 	max = m;
 	}

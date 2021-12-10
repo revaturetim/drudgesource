@@ -18,7 +18,7 @@ public class TopComparator<T extends Page> implements Comparator<T> {
 		rvalue = 1;
 		}
 		else {
-		return 0;
+		rvalue = 0;
 		}
 	return rvalue;
 	}

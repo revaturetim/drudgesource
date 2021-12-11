@@ -7,12 +7,7 @@ import drudge.page.*;
 import drudge.*;
 
 /*This uses MySQL as its query language*/
-public class DataBase<T> implements Data<T> {
-private int datalevel = 0;
-private boolean exclude = false;
-private boolean include = false;
-private boolean robotallowed = true;
-private String dburl;
+public class DataBase<T> extends AbstractData<T> {
 private final String table = "drudge";
 /*data column headers will be url, title, keywords*/
 private final String link = "link";
@@ -28,28 +23,20 @@ insert into drudge values (link, title, keywords);
 	}
 
 	public DataBase(String d) {
-	dburl = d;
+	source = d;
 	}
 
 	public DataBase(String p, String d, String u) {
-	dburl = p + ":" + d + ":" + u;	
+	source = p + ":" + d + ":" + u;	
 	}
 	
 	public DataBase(String p, String d, String u, String e) {
 	this(p, d, u);
-	dburl = dburl + e;
+	source = source + e;
 	}
 	
 	public boolean add(T obj) {
 	return false;
-	}
-	
-	public void setLevel(int l) {
-	datalevel = l;
-	}
-
-	public int level() {
-	return datalevel;
 	}
 
 	public int size() {
@@ -161,7 +148,7 @@ insert into drudge values (link, title, keywords);
 	}
 
 	private ResultSet query(String query) throws SQLException {
-	Connection con = DriverManager.getConnection(dburl);
+	Connection con = DriverManager.getConnection(source);
 	Statement state = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 	ResultSet result = state.executeQuery(query);
 	return result;
@@ -185,46 +172,12 @@ insert into drudge values (link, title, keywords);
 	return true;
 	}
 	
-	public void setSource(String s) {
-	dburl = s;
+	public void begin() throws Exception {
+	
 	}
 	
-	public String source() {
-	return dburl;
-	}
-
-	public void begin() {
-
-	}
-
-	public void end() {
-
-	}
+	public void end() throws Exception {
 	
-	public void setExcluded(boolean b) {
-	exclude = b;
 	}
-	
-	public boolean excluded() {
-	return exclude;
-	}
-	
-	public void setIncluded(boolean b) {
-	include = b;
-	}
-	
-	public boolean included() {
-	return include;
-	}
-	
-	public boolean robotAllowed() {
-	return robotallowed;
-	}
-	
-	public void setRobotAllowed(boolean b) {
-	robotallowed = b;
-	}
-
-	
 
 }

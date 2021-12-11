@@ -216,7 +216,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.startsWith("-w=")) {
 			String[] b = a.split("=", 2);
 				try {
-				delay = Long.parseLong(b[1]);
+				delay = Long.parseUnsignedLong(b[1]);
 				}
 				catch (NumberFormatException N) {
 				Print.error(N);

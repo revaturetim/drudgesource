@@ -17,6 +17,7 @@
 2.  Elimnate unnescessary variables, methods, and classes in programs for efficiency;
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
 6.  UslessExceptions should not be recorded in the error log since they are uslessurlexceptions;
+7.  Fill checkError method in DataBase.java;
 8.  See if writing page objects instead of text data to a file would be better;
 9.  Make more efficient P.getKeywords method;
 10. Don't have UslessExceptions be written as an error.  They are not program errors;

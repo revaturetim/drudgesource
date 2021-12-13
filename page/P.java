@@ -81,7 +81,6 @@ final static private String Null = "null";
 						try {
 						URL c = new URL(rcon.getURL(), dir);//this thows exception
 						norob.add(c);
-						//Debug.println(c);
 						}
 						catch (MalformedURLException M) {
 						Hashtable<String, Object> d = new Hashtable<String, Object>();	
@@ -129,39 +128,19 @@ final static private String Null = "null";
 			data.put(email);
 			}
 			catch (MalformedURLException M) {
-			Hashtable<String, Object> d = new Hashtable<String, Object>();	
-			d.put("email", address);
-			d.put("Exception", M);
-			d.put("Location", "P.getEmails(CharSequence)");		
-			D.error(d);
+			Print.printRow(M, address);
 			}
 			catch (URISyntaxException U) {
-			Hashtable<String, Object> d = new Hashtable<String, Object>();	
-			d.put("email", address);
-			d.put("Exception", U);
-			d.put("Location", "P.getEmails(CharSequence)");		
-			D.error(d);
+			Print.printRow(U, address);
 			}
 			catch (DuplicateURLException Du) {
-			Hashtable<String, Object> d = new Hashtable<String, Object>();	
-			d.put("email", address);
-			d.put("Exception", Du);
-			d.put("Location", "P.getEmails(CharSequence)");		
-			D.error(d);
+			Du.printRow();
 			}
 			catch (ExcludedURLException E) {
-			Hashtable<String, Object> d = new Hashtable<String, Object>();	
-			d.put("email", address);
-			d.put("Exception", E);
-			d.put("Location", "P.getEmails(CharSequence)");		
-			D.error(d);
+			E.printRow();
 			}
 			catch (InvalidURLException I) {
-			Hashtable<String, Object> d = new Hashtable<String, Object>();	
-			d.put("email", address);
-			d.put("Exception", I);
-			d.put("Location", "P.getEmails(CharSequence)");		
-			D.error(d);
+			I.printRow();
 			}
 		}
 	return data;
@@ -188,17 +167,9 @@ final static private String Null = "null";
 			action.act(link);
 			}
 			catch (MalformedURLException M) {
-			Hashtable<String, Object> d = new Hashtable<String, Object>();	
-			d.put("Link Variable", link);
-			d.put("Exception", M);		
-			D.error(d);
 			Print.printRow(M, link);
 			}
 			catch (URISyntaxException U) {
-			Hashtable<String, Object> d = new Hashtable<String, Object>();	
-			d.put("Link Variable", link);
-			d.put("Exception", U);		
-			D.error(d);
 			Print.printRow(U, link);
 			}
 			//This is not a program error so it doensn't need to write out to the error file
@@ -295,17 +266,9 @@ final static private String Null = "null";
 								action.act(link);
 								}
 								catch (MalformedURLException M) {
-								Hashtable<String, Object> d = new Hashtable<String, Object>();	
-								d.put("Link Variable", link);
-								d.put("Exception", M);		
-								D.error(d);
 								Print.printRow(M, link);
 								}
 								catch (URISyntaxException U) {
-								Hashtable<String, Object> d = new Hashtable<String, Object>();	
-								d.put("Link Variable", link);
-								d.put("Exception", U);		
-								D.error(d);
 								Print.printRow(U, link);
 								}
 								//This is not a program error so it doensn't need to write out to the error file
@@ -606,19 +569,15 @@ final static private String Null = "null";
 		data.put(page);
 		}
 		catch (DuplicateURLException Du) {
-		D.error(Du);
 		Du.printRow();
 		}
 		catch (ExcludedURLException E) {
-		D.error(E);
 		E.printRow();
 		}
 		catch (URISyntaxException U) {
-		D.error(U);
 		Print.printRow(U, url);
 		}
 		catch (InvalidURLException I) {
-		D.error(I);
 		I.printRow();	
 		}
 		

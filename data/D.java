@@ -63,26 +63,26 @@ final public class D implements FileNames {
 	}
 
 	public static void error(Exception E) {
-	Hashtable<String, Object> t = new Hashtable<String, Object>();
-	t.put("Exception", E);
-	error(t);
-	}
-	
-	public static void error(boolean test, String msg) {
-		if (test) {
-		error(msg);
-		throw new IllegalStateException(msg);//this will terminate program
-		}
-	}
-	
-	public static void error(String msg) {
-	error("ERROR", msg);	
+	error(E.getClass().getName(), E.toString());
 	}
 
-	public static void error(String err, String msg) {
-	Hashtable<String, Object> t = new Hashtable<String, Object>();
-	t.put(err, msg);
-	error(t);
+	public static void error(String...errors) {
+	
+		if (errors.length % 2 == 0) {
+		Hashtable<String, Object> t = new Hashtable<String, Object>();
+		int i = 0;
+			while (i < errors.length) {
+			String err = errors[i];
+			i++;
+			String msg = errors[i];
+			t.put(err, msg);
+			i++;
+			}
+		error(t);
+		}
+		else {
+		throw new IllegalArgumentException("D.error() arguments must be in pairs!");
+		}
 	}
 
 	public static String getDate() {

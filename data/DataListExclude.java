@@ -20,17 +20,12 @@ public class DataListExclude<T> extends DataList<T>{
 	super(s);
 	}
 	
-	public T set(final int i, final T obj) {
+	final public T remove(final int i) {
 	//empty since it is going to be a read only object
 	return null;
 	}
 	
-	public T remove(final int i) {
-	//empty since it is going to be a read only object
-	return null;
-	}
-	
-	public void put(T link) {
+	final public void put(T link) {
 	//empty since it is going to be a read only object
 	}
 	
@@ -50,11 +45,11 @@ public class DataListExclude<T> extends DataList<T>{
 	}
 
 	/*The default assumes you are working with a page object.  Subclasses should override*/
-	public void end() throws Exception {
+	final public void end() throws Exception {
 	//empty since it is going to be a read only object
 	}
 	
-	public void truncate() {
+	final public void truncate() {
 	//empty since it is going to be a read only object
 	}
 	

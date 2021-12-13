@@ -20,20 +20,6 @@ public class DataListExcludeWords<T extends String> extends DataListExclude<T>{
 	super(s);
 	}
 	
-	public T set(final int i, final T obj) {
-	//empty since it is going to be a read only object
-	return null;
-	}
-	
-	public T remove(final int i) {
-	//empty since it is going to be a read only object
-	return null;
-	}
-	
-	public void put(T link) {
-	//empty since it is going to be a read only object
-	}
-	
 	@SuppressWarnings("unchecked")	
 	/*The default assumes that it is working with a page object*/
 	public void begin() throws Exception {
@@ -41,15 +27,6 @@ public class DataListExcludeWords<T extends String> extends DataListExclude<T>{
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 		add((T)line);
 		}
-	}
-
-	/*The default assumes you are working with a page object.  Subclasses should override*/
-	public void end() throws Exception {
-	//empty since it is going to be a read only object
-	}
-	
-	public void truncate() {
-	//empty since it is going to be a read only object
 	}
 	
 	/*this is an internal check to check the data within the data object itself not its source*/

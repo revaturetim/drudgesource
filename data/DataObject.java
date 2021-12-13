@@ -3,8 +3,9 @@ package drudge.data;
 import java.io.*;
 import java.net.*;
 
-public class DataDirectory<T> extends AbstractData<T> {
-
+public class DataObject<T> extends AbstractData<T> {
+private source String = "files";
+ 
 	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
 	
 	

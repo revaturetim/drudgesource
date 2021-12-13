@@ -16,11 +16,9 @@
 1.  Make a todo list of things to do like adding new features OR cleaning up bugs in the program;
 2.  Elimnate unnescessary variables, methods, and classes in programs for efficiency;
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
-6.  UslessExceptions should not be recorded in the error log since they are uslessurlexceptions;
-7.  Fill checkError method in DataBase.java;
+4.  Data mehtods that use Debug methods should be changed because check no longer throws exception;
 8.  See if writing page objects instead of text data to a file would be better;
 9.  Make more efficient P.getKeywords method;
-10. Don't have UslessExceptions be written as an error.  They are not program errors;
 14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;

@@ -10,14 +10,8 @@ import drudge.global.*;
 /*this class is a superclass of objects that use an array as the storage device*/
 /*T has to be assumed to be an object so it retains is general behavior for all types*/
 /*This is the default Data object for this program when not using database object*/
-public class DataList<T> extends AbstractList<T> implements Data<T> {
-private int size = 0;
-private String source = null;
-private Object[] objs = new Object[10];
-private int datalevel = 1;
-private boolean exclude = false;
-private boolean include = false;
-private boolean robotallowed = true;
+public class DataList<T> extends AbstractData<T> {
+public final List<T> list = new List<T>();
 
 	public DataList() {
 
@@ -28,73 +22,96 @@ private boolean robotallowed = true;
 	source = s;
 	}
 
-	public DataList(String s, int b) {
-	this(s);
-	objs = new Object[b];
-	}
-
-	public int size() {
-	return size;	
-	}
+	private class List<T> extends AbstractList<T> {
+	private int size = 0;
+	private Object[] objs = new Object[10];
 	
-	public T set(final int i, final T obj) {
-	T old = (T)objs[i];
-	objs[i] = obj;
-	return old;
-	}
-	
-	/*public boolean contains(Object page) {
-	boolean c = false;
-		
-		for (int i = size; i > 0; i--) {
-		Object p = objs[i];
-			if (page.equals(p)) {
-			c = true;
-			break;
-			}
-		}
-	return c;
-	}*/
-
-	public boolean add(T page) {
-	Debug.check(page, null);
-	boolean added = false;
-	
-		if (contains(page) == false) {
-		
-			if (size >= objs.length - 1) {
-			objs = Arrays.copyOf(objs, objs.length * 2);
-			}
-			if (objs[size] == null) {	
-			objs[size] = page;
-			added = true;
-			size++;//increases size by 1
-			}
-			else {
-			throw new IllegalArgumentException("Size variable was not set correctly.  It is erasing previous data.");
-			}
+		List() {
 		
 		}
-	return added;
+		
+		List(int i) {
+		objs = new Object[i];
+		}
+		
+		public int size() {
+		return size;	
+		}
+	
+		public T set(final int i, final T obj) {
+		T old = (T)objs[i];
+		objs[i] = obj;
+		return old;
+		}
+		
+		/*public boolean contains(Object page) {
+		boolean c = false;
+			
+			for (int i = size; i > 0; i--) {
+			Object p = objs[i];
+				if (page.equals(p)) {
+				c = true;
+				break;
+				}
+			}
+		return c;
+		}*/
+		
+		public boolean add(T page) {
+		Debug.check(page, null);
+		boolean added = false;
+		
+			if (contains(page) == false) {
+			
+				if (size >= objs.length - 1) {
+				objs = Arrays.copyOf(objs, objs.length * 2);
+				}
+				if (objs[size] == null) {	
+				objs[size] = page;
+				added = true;
+				size++;//increases size by 1
+				}
+				else {
+				throw new IllegalArgumentException("Size variable was not set correctly.  It is erasing previous data.");
+				}
+			
+			}
+		return added;
+		}
+		
+		public T remove(final int i) {
+		Debug.between("DataArray.remove(int)", i, 0, size);
+		T toberemoved = (T)objs[i];
+			for (int j = i; j < size - 1; j++) {
+			objs[j] = objs[j + 1];
+			}
+		objs[size - 1] = null;
+		size--;//this has to be last in order to make it work right
+		return toberemoved;
+		}
+	
+		public T get(int i) {
+		Debug.between("DataArray.get(int)", i, 0, size);//throws indexoutofboundsexception if it is outside of the 	exceptable range
+		@SuppressWarnings("unchecked")	
+		T entry = (T)objs[i];
+		return entry;
+		}
+	
+	
 	}
 	
-	public T remove(final int i) {
-	Debug.between("DataArray.remove(int)", i, 0, size);
-	T toberemoved = (T)objs[i];
-		for (int j = i; j < size - 1; j++) {
-		objs[j] = objs[j + 1];
-		}
-	objs[size - 1] = null;
-	size--;//this has to be last in order to make it work right
-	return toberemoved;
+	public boolean add(T obj) {
+	return list.add(obj);
 	}
-
+	
 	public T get(int i) {
-	Debug.between("DataArray.get(int)", i, 0, size);//throws indexoutofboundsexception if it is outside of the exceptable range
-	@SuppressWarnings("unchecked")	
-	T entry = (T)objs[i];
-	return entry;
+	return list.get(i);
 	}
+	
+	public T remove(int i) {
+	return list.remove(i);
+	}
+	
 	
 	public void put(T link) throws 
 	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
@@ -130,7 +147,7 @@ private boolean robotallowed = true;
 	/*The default assumes you are working with a page object.  Subclasses should override*/
 	public void end() throws Exception {
 	final BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
-		for (T t : this) {
+		for (T t : this.list) {
 		Debug.check(t, null);
 		Page page = (Page)t;
 		D.writeEntry(page, link_writer, level());
@@ -151,7 +168,7 @@ private boolean robotallowed = true;
 	
 	/*this is an internal check to check the data within the data object itself not its source*/
 	public boolean check() /*throws UselessURLException, IOException, URISyntaxException*/ {
-	Iterator<T> pages = this.iterator();
+	Iterator<T> pages = this.list.iterator();
 
 		for (int linecount = 1; pages.hasNext(); linecount++) {
 		T page = pages.next();
@@ -162,7 +179,7 @@ private boolean robotallowed = true;
 				if (u.getAuthority() == null) {
 			
 				}
-				Iterator<T> pages2 = this.iterator();
+				Iterator<T> pages2 = this.list.iterator();
 				for (int linecount2 = 1; pages2.hasNext(); linecount2++) {
 				T page2 = pages2.next();
 				String link2 = page2.toString();
@@ -200,13 +217,12 @@ private boolean robotallowed = true;
 				System.out.println("...There is a column length error at line " + String.valueOf(linecount));
 				}
 			/*this will check for decoding errors*/
-				for (String col : columns) {
-					if (col.contains("%")) {
-					System.out.println("...Possible encoding error at line " + String.valueOf(linecount));
-					}
-				}
-			/*This will check for duplicates in the data*/
 			String link = columns[0];
+				if (link.contains("%")) {
+				System.out.println("...Possible encoding error at line " + String.valueOf(linecount));
+				}
+				
+			/*This will check for duplicates in the data*/
 				try {
 				Page p = new Page(link);//this throws malformedurlexception
 				p.isValid();//this throws InvalidURLException, URISyntaxException
@@ -249,50 +265,10 @@ private boolean robotallowed = true;
 		System.out.println("...The number of lines in " + source() +  " is "  + linecount + ".");
 		}
 		catch (IOException I) {
-		System.out.println(I);
+		D.error(I);
 		}
 	return (duplicate || linkerror);
 	}
 	
-	public void setSource(String s) {
-	source = s;
-	}
-	
-	public String source() {
-	return source;
-	}
-
-	public void setLevel(int l) {
-	datalevel = l;
-	}
-
-	public int level() {
-	return datalevel;
-	}
-	
-	public void setExcluded(boolean b) {
-	exclude = b;
-	}
-	
-	public boolean excluded() {
-	return exclude;
-	}
-	
-	public void setIncluded(boolean b) {
-	include = b;
-	}
-	
-	public boolean included() {
-	return include;
-	}
-	
-	public boolean robotAllowed() {
-	return robotallowed;
-	}
-	
-	public void setRobotAllowed(boolean b) {
-	robotallowed = b;
-	}
-
 	
 }

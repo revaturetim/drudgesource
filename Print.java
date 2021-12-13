@@ -61,7 +61,7 @@ final private static String[] H = {
 	public static void printRow(Exception exc, Object obj) {
 	
 		if (UselessClass == UselessURLException.class || UselessClass == exc.getClass()) {
-		String mexc = exc.toString();
+		String mexc = exc.getClass().getSimpleName().toUpperCase();
 		String url = obj.toString();
 		printRow(GSTREAM, "", "", "", "", mexc, url);
 		}

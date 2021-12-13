@@ -43,7 +43,8 @@ public class DataListEmail<T extends URL> extends DataList<T> {
 		}
 	email_writer.close();
 	}
-
+	
+	/*since these values can't be changed they alwasy return a default value*/
 	public int level() {
 	return 1;
 	}
@@ -52,14 +53,17 @@ public class DataListEmail<T extends URL> extends DataList<T> {
 		if (add(email) == false) throw new DuplicateURLException(email);	
 	}
 	
+	/*since these values can't be changed they alwasy return a default value*/
 	public boolean excluded() {
 	return false;
 	}
 	
+	/*since these values can't be changed they alwasy return a default value*/
 	public boolean included() {
 	return false;
 	}
 	
+	/*since these values can't be changed they alwasy return a default value*/
 	public boolean check() {
 	return false;
 	}

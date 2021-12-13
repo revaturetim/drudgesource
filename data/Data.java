@@ -121,7 +121,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			}
 			
 			public void remove() {
-			//remove(i);
+			throw new UnsupportedOperationException("This Iterator is a read-only iterator");
 			}
 		};	
 	return it;

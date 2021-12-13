@@ -28,7 +28,7 @@ public static String XFACTOR = null;
 	
 		//this is the main program loop
 LOOP:		for (int i = 0; i < arg.length; i++) {
-		String a = arg[i];
+		final String a = arg[i];
 		/*TRY TO PUT OPTIONS IN ALPHABETICAL ORDER*/
 			if ((a.equals("-about") || a.equals("-a")) && arg.length == 1) {
 			Help.print(a);

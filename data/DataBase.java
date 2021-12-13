@@ -148,8 +148,8 @@ insert into drudge values (link, title, keywords);
 	}
 
 	private ResultSet query(String query) throws SQLException {
-	Connection con = DriverManager.getConnection(source);
-	Statement state = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	Connection con = DriverManager.getConnection(source());
+	Statement state = con.createStatement();
 	ResultSet result = state.executeQuery(query);
 	return result;
 	}
@@ -165,11 +165,80 @@ insert into drudge values (link, title, keywords);
 	}
 	
 	public boolean check() {
-	return true;
+	return false;
 	}
 	
 	public boolean checkError() {
-	return true;
+	System.out.println("Checking " + source() + " file for errors.");
+	boolean duplicate = false;
+	boolean linkerror = false;
+	
+	
+		try { 
+		final String query = "SELECT * FROM " + table;
+		final ResultSet result = query(query);
+		final ResultSetMetaData metadata = result.getMetaData();
+		final int width = metadata.getColumnCount();
+		int linecount = 0;
+		
+			while (result.next()) {
+			linecount = result.getRow();
+				/*this will check to make sure all columns have values*/
+				for (int i = 1; i <= width; i++) {
+				
+					if (result.getString(i) == null) {
+					System.out.println(
+					"...There is a column length error at line " + String.valueOf(linecount));
+					}
+				}
+			
+			/*This will check for duplicates in the data*/
+			String pagelink = result.getString(link);
+				/*this will check for decoding errors*/
+				if (pagelink.contains("%")) {
+				System.out.println("...Possible encoding error at line " + String.valueOf(linecount));
+				}
+				
+				try {
+				Page p = new Page(pagelink);//this throws malformedurlexception
+				p.isValid();//this throws InvalidURLException, URISyntaxException
+				URL u = p.getURL();
+					if (u.getAuthority() == null) {
+					throw new MalformedURLException("No Host");
+					}
+				final String query2 = 
+				"SELECT COUNT(" + link + ") FROM " + table + " WHERE " + link + " = " + pagelink;
+				ResultSet result2 = query(query2);
+				int duplicatecount = result2.getInt(link);
+					if (duplicatecount > 1) {
+					duplicate = true;
+					System.out.print(
+					"...There are " + String.valueOf(duplicatecount) + " duplicates of " + pagelink);
+					}
+				}
+				catch (InvalidURLException N) {
+				linkerror = true;
+				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't an html file: ");
+				System.out.println(link);
+				}
+				catch (URISyntaxException U) {
+				linkerror = true;
+				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
+				System.out.println(link);
+				}
+				catch (MalformedURLException M) {
+				linkerror = true;
+				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
+				System.out.println(link);
+				}
+			} 
+		System.out.println("...The number of lines in " + source() +  " is "  + linecount + ".");
+		result.close();
+		}
+		catch (SQLException S) {
+		D.error(S);
+		}
+	return (duplicate || linkerror);
 	}
 	
 	public void begin() throws Exception {

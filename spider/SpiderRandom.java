@@ -19,7 +19,7 @@ private Random random = new Random();
 		try {
 		p.getSource();
 		DataList<Page> pages = (DataList<Page>)p.getLinks();
-		Collections.shuffle(pages, random);
+		Collections.shuffle(pages.list, random);
 		DataObjects.dada.put(pages);
 		}
 		catch (SocketTimeoutException S) {

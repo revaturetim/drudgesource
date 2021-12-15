@@ -14,7 +14,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 
 	/*These are important methods because they interface with the rest of the program*/
 	public boolean add(T obj);//this is just to raw add an item into it without checking exceptions
-	public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException;
 	public T remove(int cycle);
 	public T get(int cycle);
 	public void setSource(String s);
@@ -27,7 +26,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	public void setIncluded(boolean b);
 	public boolean robotAllowed();
 	public void setRobotAllowed(boolean b);
-	public boolean check();
 	public boolean checkError();
 	public void begin() throws Exception;
 	public void end() throws Exception;
@@ -53,6 +51,21 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return has;
 	}
 
+	default public void put(T link) throws 
+	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
+	final Page page = (Page)link;
+	page.isValid();//throws invalidurlexception, urisyntaxexception
+		if (excluded() == true) {
+		page.isExcluded();//throws ExcludedURLException
+		}
+		if (included() == true) {
+		page.isIncluded();//throws ExcludedURLException
+		} 
+		if (add(link) == false) {
+		throw new DuplicateURLException(link);//throws DuplicateURLException
+		}	
+	}
+	
 	default public boolean put(Data<T> d) {
 	boolean scs = true;
 
@@ -125,6 +138,38 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			}
 		};	
 	return it;
+	}
+	
+	/*this is an internal check to check the data within the data object itself not its source*/
+	default public boolean check() /*throws UselessURLException, IOException, URISyntaxException*/ {
+	Iterator<T> pages = this.iterator();
+
+		for (int linecount = 1; pages.hasNext(); linecount++) {
+		T page = pages.next();
+			try {
+			String link = pages.toString();
+			Page p = new Page(link);//this throws InvalidURLException, malformedurlexception, URISyntaxException
+			URL u = p.getURL();
+				if (u.getAuthority() == null) {
+			
+				}
+				Iterator<T> pages2 = this.iterator();
+				for (int linecount2 = 1; pages2.hasNext(); linecount2++) {
+				T page2 = pages2.next();
+				String link2 = page2.toString();
+					if (link.equals(link2) && linecount != linecount2) {
+					String msg =  "[" 
+					+ link + "] Duplicate entry found at " 
+					+ String.valueOf(linecount) + " and " 
+					+ 			String.valueOf(linecount2);
+					}
+				}
+			}
+			catch (Exception E) {
+			
+			}
+		}
+	return true;
 	}
 
 	

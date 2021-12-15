@@ -63,11 +63,6 @@ public class DataListEmail<T extends URL> extends DataList<T> {
 	return false;
 	}
 	
-	/*since these values can't be changed they alwasy return a default value*/
-	public boolean check() {
-	return false;
-	}
-	
 	public boolean checkError() {
 	System.out.println("Checking " + source() + " file for errors.");
 	boolean duplicate = false;

@@ -53,38 +53,6 @@ public class DataListExclude<T> extends DataList<T>{
 	//empty since it is going to be a read only object
 	}
 	
-	/*this is an internal check to check the data within the data object itself not its source*/
-	public boolean check() /*throws UselessURLException, IOException, URISyntaxException*/ {
-	Iterator<T> pages = this.iterator();
-
-		for (int linecount = 1; pages.hasNext(); linecount++) {
-		T page = pages.next();
-			try {
-			String link = pages.toString();
-			Page p = new Page(link);//this throws InvalidURLException, malformedurlexception, URISyntaxException
-			URL u = p.getURL();
-				if (u.getAuthority() == null) {
-			
-				}
-				Iterator<T> pages2 = this.iterator();
-				for (int linecount2 = 1; pages2.hasNext(); linecount2++) {
-				T page2 = pages2.next();
-				String link2 = page2.toString();
-					if (link.equals(link2) && linecount != linecount2) {
-					String msg =  "[" 
-					+ link + "] Duplicate entry found at " 
-					+ String.valueOf(linecount) + " and " 
-					+ 			String.valueOf(linecount2);
-					}
-				}
-			}
-			catch (Exception E) {
-			
-			}
-		}
-	return true;
-	}
-	
 	public boolean checkError() {
 	System.out.println("Checking " + source() + " file for errors.");
 	boolean duplicate = false;

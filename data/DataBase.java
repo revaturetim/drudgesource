@@ -35,10 +35,6 @@ insert into drudge values (link, title, keywords);
 	source = source + e;
 	}
 	
-	public boolean add(T obj) {
-	return false;
-	}
-
 	public int size() {
 	int size = 0;
 	final String query = "SELECT count(link) FROM " + table;
@@ -96,11 +92,13 @@ insert into drudge values (link, title, keywords);
 	return page;
 	}
 
-	public void put(T page) {
+	public boolean add(T page) {
 	final Page p = (Page)page;
 	final String pagelink = p.toString();
 	String pagetitle = "null";
 	String pagekeywords = "null";
+	boolean added = false;
+	
 		if (level() > 1) {
 		pagetitle = p.getTitle().trim();//for some odd reason this needs .trim in there to make it work
 		}
@@ -121,12 +119,14 @@ insert into drudge values (link, title, keywords);
 			"WHERE " + link + "=" + pagelink;
 			query(updatequery);
 			}
+		added = true;
 		}
 		catch (SQLException S) {
 		Print.printRow(S, page);
 		//Debug.println(S);
 		//D.error(S);
 		}
+	return added;
 	}
 	
 	/*this should always return false since only unique entries are allowed--no repeats possible*/

@@ -12,7 +12,7 @@ import drudge.data.*;
 import drudge.global.DataObjects;
 
 /*this is the skeletal class of all page objects*/
-final public class Page {
+final public class Page implements Serializable {
 static public Proxy proxyserver = Proxy.NO_PROXY;
 final static private int pagesize = 35_000;
 //private variables for info about page itself which are set to the default values
@@ -240,7 +240,7 @@ private boolean connected = false;
 	}
 
 	//inner classes - Header - Source 
-	final public class Header {
+	final public class Header implements Serializable {
 	
 		public String getRedirectLocation() {
 		final String loc = "Location";
@@ -311,7 +311,7 @@ private boolean connected = false;
 
 	}//end of headers class 
 	
-	final public class Source implements CharSequence { 
+	final public class Source implements CharSequence, Serializable { 
 	/*This is really an attempt to make my own string object to increase efficiency of string, stringbuffer classes */
 	private int size = 0;
 	private char[] allc = null;	

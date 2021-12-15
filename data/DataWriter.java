@@ -70,16 +70,8 @@ abstract class DataWriter<T> extends AbstractData<T> {
 	return p;
 	}
 	
-	public void put(T obj) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
-	
-	}
-	
 	public void truncate() {
 	
-	}
-	
-	public boolean check() {
-	return false;
 	}
 	
 	public boolean checkError() {

@@ -643,8 +643,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				String[] b = a.split("=", 2);
 					try {
 					int num = Integer.parseUnsignedInt(b[1]);
-					String str = String.valueOf(num - 1);
-					begcyc = Integer.parseUnsignedInt(str);
+					begcyc = num - 1;
 					maxcyc = maxcyc + begcyc;
 					dada.begin();
 					}
@@ -706,7 +705,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			
 			Debug.time("Print Column Headers");
 			long begintime = System.currentTimeMillis(); 
-				for (Page p = dada.get(begcyc); p != null; p = dada.get(begcyc)) {
+				do {
+				Page p = dada.get(begcyc);
+					if (p == null) {
+					break;
+					}
 				boolean remove = spider.crawl(p);
 					if (remove == true) {
 					dada.remove(begcyc);
@@ -718,10 +721,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}
 				Print.printRow(p, begcyc);
 				begcyc++;
-					if (begcyc >= maxcyc) {
-					break;
-					}
-				}
+				} while (begcyc < maxcyc);
 			Debug.time("Spider Crawl");
 				try {
 				dada.end();
@@ -893,5 +893,15 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		erased = efile.delete();
 		}
 	return erased;
+	}
+	
+	static private int getInteger(String arg) throws NumberFormatException {
+	String[] ins = arg.split("=", 2);
+	return Integer.parseUnsignedInt(ins[1]);
 	}	
+	
+	static private String getString(String arg) {
+	String[] ins = arg.split("=", 2);
+	return ins[1];
+	}
 }

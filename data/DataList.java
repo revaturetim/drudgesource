@@ -10,7 +10,7 @@ import drudge.global.*;
 /*this class is a superclass of objects that use an array as the storage device*/
 /*T has to be assumed to be an object so it retains is general behavior for all types*/
 /*This is the default Data object for this program when not using database object*/
-public class DataList<T> extends AbstractData<T> {
+public class DataList<T> extends AbstractData<T> implements Serializable {
 public final List<T> list = new List<T>();
 
 	public DataList() {
@@ -22,7 +22,7 @@ public final List<T> list = new List<T>();
 	source = s;
 	}
 
-	private class List<T> extends AbstractList<T> {
+	private class List<T> extends AbstractList<T> implements Serializable {
 	private int size = 0;
 	private Object[] objs = new Object[10];
 	
@@ -112,22 +112,6 @@ public final List<T> list = new List<T>();
 	return list.remove(i);
 	}
 	
-	
-	public void put(T link) throws 
-	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
-	final Page page = (Page)link;
-	page.isValid();//throws invalidurlexception, urisyntaxexception
-		if (excluded() == true) {
-		page.isExcluded();//throws ExcludedURLException
-		}
-		if (included() == true) {
-		page.isIncluded();//throws ExcludedURLException
-		} 
-		if (add(link) == false) {
-		throw new DuplicateURLException(link);//throws DuplicateURLException
-		}	
-	}
-	
 	@SuppressWarnings("unchecked")	
 	/*The default assumes that it is working with a page object*/
 	public void begin() throws Exception {
@@ -166,37 +150,7 @@ public final List<T> list = new List<T>();
 		}
 	}
 	
-	/*this is an internal check to check the data within the data object itself not its source*/
-	public boolean check() /*throws UselessURLException, IOException, URISyntaxException*/ {
-	Iterator<T> pages = this.list.iterator();
-
-		for (int linecount = 1; pages.hasNext(); linecount++) {
-		T page = pages.next();
-			try {
-			String link = pages.toString();
-			Page p = new Page(link);//this throws InvalidURLException, malformedurlexception, URISyntaxException
-			URL u = p.getURL();
-				if (u.getAuthority() == null) {
-			
-				}
-				Iterator<T> pages2 = this.list.iterator();
-				for (int linecount2 = 1; pages2.hasNext(); linecount2++) {
-				T page2 = pages2.next();
-				String link2 = page2.toString();
-					if (link.equals(link2) && linecount != linecount2) {
-					String msg =  "[" 
-					+ link + "] Duplicate entry found at " 
-					+ String.valueOf(linecount) + " and " 
-					+ 			String.valueOf(linecount2);
-					}
-				}
-			}
-			catch (Exception E) {
-			
-			}
-		}
-	return true;
-	}
+	
 	
 	public boolean checkError() {
 	System.out.println("Checking " + source() + " file for errors.");

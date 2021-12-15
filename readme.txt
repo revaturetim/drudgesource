@@ -17,7 +17,7 @@
 2.  Elimnate unnescessary variables, methods, and classes in programs for efficiency;
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
 4.  Data mehtods that use Debug methods should be changed because check no longer throws exception;
-8.  See if writing page objects instead of text data to a file would be better;
+5.  Make a way to get image files as it crawls and perhaps other types of data.
 9.  Make more efficient P.getKeywords method;
 14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
@@ -25,7 +25,6 @@
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
 18. BUG! email file re-writes first one in test link;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
-20. Make a DataDirectory class that uses file for each url to store data;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
 

@@ -10,14 +10,12 @@ protected boolean exclude = false;
 protected boolean include = false;
 protected boolean robotallowed = true;
 
-	abstract public void put(T link) throws DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException;
 	abstract public T remove(int cycle);
 	abstract public T get(int cycle);
 	abstract public boolean add(T obj);
 	abstract public void begin() throws Exception;
 	abstract public void end() throws Exception;
 	abstract public void truncate();
-	abstract public boolean check();
 	abstract public boolean checkError();
 	
 	public void setSource(String s) {

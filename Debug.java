@@ -277,7 +277,7 @@ INNER:					while (true) {
 		if (on) {
 			for (int i = 0; i < objs.length; i++) {
 			String p = getPrompt();
-			System.out.print(p + ":");
+			System.out.print(p);
 			con.accept(objs[i]);
 			}
 		}
@@ -290,10 +290,10 @@ INNER:					while (true) {
 			public void accept(Object obj) {
 				if (obj != null) {
 				Class<? extends Object> c = obj.getClass();
-				System.out.printf("%10s=%-10s" + sep, c.getName(), obj.toString());
+				System.out.print(sep + " " + c.getName() + "=" + obj.toString() + " ");
 				}
 				else {
-				System.out.printf("%10s=%-10s" + sep, "Null", "Null");
+				System.out.print(sep + " NULL=NULL ");
 				}
 			}
 		};
@@ -307,35 +307,31 @@ INNER:					while (true) {
 			public void accept(Object obj) {
 				if (obj != null) {
 				Class<? extends Object> c = obj.getClass();
-				System.out.printf("%10s=%-10s\n", c.getName(), obj.toString());
+				System.out.println(sep + " " + c.getName() + "=" + obj.toString() + " ");
 				}
 				else {
-				System.out.printf("%10s=%-10s\n", "Null", "Null");
+				System.out.println(sep + " NULL=NULL ");
 				}
 			}
 		};
 	print(thing, objs);
 	}
 	
-	public static void check(final String msg, final BiPredicate<Object, Object> P, final Object...objs) {
+	public static void check(final BiPredicate<Object, Object> P, final Object...objs) {
 		if (on) {
 			for (int i = 1; i < objs.length; i++) {
 				
 				if (objs[i] == null && objs[i - 1] == null) {
-				System.out.println(msg + ":null object detected!");	
+				System.out.println(getPrompt() + "null object detected!");
 				}
 				else if ((objs[i] != null && objs[i - 1] != null) && !P.test(objs[i - 1], objs[i])) {//failed test
-				System.out.println(msg + ":" + objs[i - 1].toString() + " not equal " + objs[i]);
+				System.out.println(getPrompt() + objs[i - 1].toString() + " not equal " + objs[i]);
 				}
 			}
 		}
 	}
-
-	public static <T> void check(Predicate<T> P, final T...objs) {
-		check(getPrompt(), P, objs);
-	}
 	
-	public static void check(final String msg, final Object...objs) {
+	public static void check(final Object...objs) {
 	
 		BiPredicate<Object, Object> thing = new BiPredicate<Object, Object>() {
 		
@@ -343,27 +339,19 @@ INNER:					while (true) {
 			return b.equals(a);	
 			}	
 		};
-	check(msg, thing, objs); 
-	}
-	
-	public static void check(final Object...objs) {
-		check(getPrompt(), objs);
-	}
-	
-	public static void between(final String msg, final int a, final int b, final int e) throws IndexOutOfBoundsException {
-		if (on) {
-			if (a < b || a > e) {
-			throw new IndexOutOfBoundsException(String.valueOf(a) 
-			+ " was not between " 
-			+ String.valueOf(b) 
-			+ " and " + String.valueOf(e)
-			+ ". \n" + msg);
-			}
-		}		
+	check(thing, objs); 
 	}
 	
 	public static void between(final int a, final int b, final int e) throws IndexOutOfBoundsException {
-		between("", a, b, e);
+		if (on) {
+			if (a < b || a > e) {
+			System.out.println(getPrompt() + 
+			String.valueOf(e)
+			+ " was not between " 
+			+ String.valueOf(a) 
+			+ " and " + String.valueOf(b));
+			}
+		}		
 	}
 
 	public static void here(Object...objs) {
@@ -371,10 +359,9 @@ INNER:					while (true) {
 		Consumer<Object> thing = new Consumer<Object>() {
 			
 			public void accept(Object obj) {
-			System.out.printf("%10s=%S\n", "Location", obj.toString());
+			System.out.println("Location=" + obj.toString());
 			}
 		};
-		
 	print(thing, objs);		
 	}
 		
@@ -417,7 +404,7 @@ INNER:					while (true) {
 	private static String getPrompt() {
 		if (prompt == null) { 
 		GregorianCalendar cal = new GregorianCalendar();
-		String time = cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND);
+		String time = cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND) + "::";
 		return time;
 		}
 		else {

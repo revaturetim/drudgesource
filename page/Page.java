@@ -101,6 +101,7 @@ private boolean connected = false;
 	}
 
 	public String getTitle() {
+	Debug.println(content.size());
 	String title = P.getTitle(content);
 	Debug.time("Getting Title");
 	return title;

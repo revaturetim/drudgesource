@@ -18,6 +18,7 @@
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
 4.  Data mehtods that use Debug methods should be changed because check no longer throws exception;
 5.  Make a way to get image files as it crawls and perhaps other types of data.
+6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
 9.  Make more efficient P.getKeywords method;
 14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;

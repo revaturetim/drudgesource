@@ -69,6 +69,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			}
 			else if (a.equals("-e")) {
 			getemails = true;
+				try {	
+				dada_emails.begin();
+				}
+				catch (Exception E) {
+				Print.error(E);
+				}
 			}	
 			else if (a.startsWith("-exc") || a.startsWith("-exclude=")) {
 			dada.setExcluded(true);	
@@ -624,6 +630,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			/*!this is the last parameter in the program!*/
 			else if (i == arg.length - 1) {
 			Print.printColumnHeaders();//this should be called first to show errors correctly in output columns
+			Debug.time("Print Column Headers");
 			String lastarg = arg[arg.length - 1];
 				if (lastarg.equals("-s")) {
 					try {
@@ -661,7 +668,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					dada.truncate();//this will delete existing data and start over
 					Page firstpage = createFirstPage(lastarg);
 					dada.put(firstpage);
-					dada.begin();
 					}
 					catch (MalformedURLException M) {
 					Print.printRow(M, lastarg);
@@ -678,9 +684,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (ExcludedURLException E) {
 					E.printRow();
 					}
-					catch (NoRobotsURLException N) {
-					N.printRow();
-					}
 					catch (DuplicateURLException D) {
 					D.printRow();
 					}
@@ -694,17 +697,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			spider.setRobotsAllowed(robotsallowed);
 			spider.setDelay(delay);
 			
-				if (getemails) {
-					try {	
-					dada_emails.begin();
-					}
-					catch (Exception E) {
-					Print.error(E);
-					}
-				}
-			
-			Debug.time("Print Column Headers");
-			long begintime = System.currentTimeMillis(); 
+			final long begintime = System.currentTimeMillis(); 
 				do {
 				Page p = dada.get(begcyc);
 					if (p == null) {
@@ -737,7 +730,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					Print.error(E);
 					}
 				}
-			long endtime = System.currentTimeMillis();
+			final long endtime = System.currentTimeMillis();
 			Debug.time("DataBase disconnect");
 				try {
 				CountFile.set(begcyc);

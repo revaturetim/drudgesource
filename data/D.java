@@ -115,7 +115,7 @@ final public class D implements FileNames {
 	return page;
 	}
 	
-	static public <T> String rawString(Data<T> data) {
+	static <T> String rawString(Data<T> data) {
 	StringBuilder builder = new StringBuilder();
 		for (T t : data) {
 		builder.append(t.toString());
@@ -124,7 +124,7 @@ final public class D implements FileNames {
 	return builder.toString();
 	}
 	
-	static public void writeEntry(Page page, Writer writer, int level) throws IOException {
+	static void writeEntry(Page page, Writer writer, int level) throws IOException {
 		for (int r = 0; r < level; r++) {
 			if (r < 1) {
 			writer.append(page.toString() + CountFile.sep);
@@ -137,5 +137,83 @@ final public class D implements FileNames {
 			}
 		}
 	writer.append("\n");
+	}
+	
+	static boolean checkErrorFile(String file) {
+	System.out.println("Checking " + file + " file for errors.");
+	boolean duplicate = false;
+	boolean linkerror = false;
+	int linecount = 0;
+		try { 
+		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
+		int firstcolumnlength = 0;
+			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+			linecount = reader.getLineNumber();
+			String[] columns = line.split(CountFile.sep);
+			/*This will see if the total number of columns for each line is the same as the previous one*/
+				if (linecount == 1) {
+				firstcolumnlength = columns.length;
+				}
+				if (columns.length != firstcolumnlength) {
+				System.out.println("...There is a column length error at line " + String.valueOf(linecount));
+				}
+			/*this will check for decoding errors*/
+			String link = columns[0];
+				if (link.contains("%")) {
+				System.out.println("...Possible encoding error at line " + String.valueOf(linecount));
+				}
+				
+			/*This will check for duplicates in the data*/
+				try {
+				Page p = new Page(link);//this throws malformedurlexception
+				p.isValid();//this throws InvalidURLException, URISyntaxException
+				URL u = p.getURL();
+					if (u.getAuthority() == null) {
+					throw new MalformedURLException("No Host");
+					}
+				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(file)));
+					for (String line2 = reader2.readLine(); line2 != null; line2 = reader2.readLine()) {
+					int linecount2 = reader2.getLineNumber();
+						if (linecount2 < linecount) {
+						String[] columns2 = line2.split(CountFile.sep);
+						String link2 = columns2[0];
+							if (link.equals(link2)) {
+							duplicate = true;
+							System.out.print("..." + link + " is a duplicate entry found at ");
+					       	System.out.println(String.valueOf(linecount) 
+					       	+ " and " 
+					       	+ String.valueOf(linecount2));
+							}
+						}
+					}
+				}
+				catch (InvalidURLException N) {
+				linkerror = true;
+				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't an html file: ");
+				System.out.println(link);
+				}
+				catch (URISyntaxException U) {
+				linkerror = true;
+				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
+				System.out.println(link);
+				}
+				catch (MalformedURLException M) {
+				linkerror = true;
+				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
+				System.out.println(link);
+				}
+			}
+		System.out.println("...The number of lines in " + file +  " is "  + linecount + ".");
+		}
+		catch (IOException I) {
+		D.error(I);
+		}
+	return (duplicate || linkerror);
+	}
+	
+	static void writeLinkFile(final String file, Collection<Page> col) {
+	
+	
+	
 	}
 }

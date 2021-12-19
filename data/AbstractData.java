@@ -3,7 +3,7 @@ package drudge.data;
 import java.io.*;
 import java.net.*;
 
-abstract class AbstractData<T> implements Data<T> {
+abstract class AbstractData<T> implements Data<T>, Serializable {
 protected String source;
 protected int level = 1;
 protected boolean exclude = false;

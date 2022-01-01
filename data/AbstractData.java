@@ -2,8 +2,9 @@ package drudge.data;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
-abstract class AbstractData<T> implements Data<T>, Serializable {
+abstract class AbstractData<T> extends AbstractList<T> implements Data<T>, Serializable {
 protected String source;
 protected int level = 1;
 protected boolean exclude = false;

@@ -15,8 +15,24 @@ abstract class DataWriter<T> extends AbstractData<T> {
 	//this has to be filled with something in order for subclass works.
 	abstract <R extends Reader> R createReader();
 	abstract <W extends Writer> W createWriter();
-	abstract public boolean add(T obj);
 	
+	
+	public boolean add(T page) {
+	boolean added = false;
+		if (contains(page) == false) {
+		Page tp = (Page)page;
+		PrintWriter PRINTER = createWriter();
+			try {
+			D.writeEntry(tp, PRINTER, level());
+			PRINTER.close();
+			added = true;
+			}
+			catch (IOException I) {
+			D.error(I);
+			}
+		}
+	return added;
+	}
 
 	public T get(final int n) {
 	T entry = null;
@@ -70,8 +86,30 @@ abstract class DataWriter<T> extends AbstractData<T> {
 	return p;
 	}
 	
-	public void truncate() {
+	public int size() {
+	int size = 0;
+		try {
+		LineNumberReader READER = createReader();
+		READER.setLineNumber(0);
+			for (String line = READER.readLine(); line != null; line = READER.readLine()) {
+			size = READER.getLineNumber();
+			}
+		READER.close();
+		}
+		catch (IOException I) {
+		D.error(I);
+		}
+	return size;
+	}
 	
+	public void truncate() {
+		try {
+		FileWriter writer = new FileWriter(source());
+		writer.flush();//this should erase everything in the file
+		}
+		catch (IOException I) {
+		D.error(I);
+		}
 	}
 	
 	public boolean checkError() {

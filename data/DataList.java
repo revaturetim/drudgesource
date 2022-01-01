@@ -6,12 +6,14 @@ import java.util.*;
 import drudge.Debug;
 import drudge.page.*;
 import drudge.global.*;
+import drudge.spider.NaturalComparator;
 
 /*this class is a superclass of objects that use an array as the storage device*/
 /*T has to be assumed to be an object so it retains is general behavior for all types*/
 /*This is the default Data object for this program when not using database object*/
 public class DataList<T> extends AbstractData<T> {
-public final List<T> list = new List<T>();
+private int size = 0;
+private Object[] objs = new Object[10];
 
 	public DataList() {
 
@@ -21,96 +23,72 @@ public final List<T> list = new List<T>();
 	this();
 	source = s;
 	}
+	
+	public DataList(String s, int i) {
+	this(s);
+	objs = new Object[i];
+	}
 
-	private class List<T> extends AbstractList<T> implements Serializable {
-	private int size = 0;
-	private Object[] objs = new Object[10];
-	
-		List() {
+	public boolean add(T page) {
+	boolean added = false;
 		
-		}
-		
-		List(int i) {
-		objs = new Object[i];
-		}
-		
-		public int size() {
-		return size;	
-		}
-	
-		public T set(final int i, final T obj) {
-		T old = (T)objs[i];
-		objs[i] = obj;
-		return old;
-		}
-		
-		/*public boolean contains(Object page) {
-		boolean c = false;
+		if (contains(page) == false) {
 			
-			for (int i = size; i > 0; i--) {
-			Object p = objs[i];
-				if (page.equals(p)) {
-				c = true;
-				break;
-				}
+			if (size >= objs.length - 1) {
+			objs = Arrays.copyOf(objs, objs.length * 2);
 			}
-		return c;
-		}*/
-		
-		public boolean add(T page) {
-		Debug.check(page, null);
-		boolean added = false;
-		
-			if (contains(page) == false) {
-			
-				if (size >= objs.length - 1) {
-				objs = Arrays.copyOf(objs, objs.length * 2);
-				}
-				if (objs[size] == null) {	
-				objs[size] = page;
-				added = true;
-				size++;//increases size by 1
-				}
-				else {
-				throw new IllegalArgumentException("Size variable was not set correctly.  It is erasing previous data.");
-				}
-			
+			if (objs[size] == null) {	
+			objs[size] = page;
+			added = true;
+			size++;//increases size by 1
 			}
-		return added;
+			else {
+			throw new IllegalArgumentException("Size variable was not set correctly.  It is erasing previous data.");
+			}	
 		}
+	return added;
+	}
 		
-		public T remove(final int i) {
-		T toberemoved = (T)objs[i];
-			for (int j = i; j < size - 1; j++) {
-			objs[j] = objs[j + 1];
-			}
-		objs[size - 1] = null;
-		size--;//this has to be last in order to make it work right
-		return toberemoved;
+	public void add(int i, T page) {
+	
+	}
+	
+	/*public boolean contains(Object page) {
+	boolean has = false; 
+	List<T> newlist = new DataList<T>();
+	
+	Collections.copy(newlist, this);
+	Debug.check(size(), newlist.size());
+	//Arrays.sort(NewObjects, new NaturalComparator());
+		try {	
+		int f = Collections.binarySearch(newlist, (Page)page, new NaturalComparator());
+		if (f > -1) has = true;
 		}
-	
-		public T get(int i) {
-		@SuppressWarnings("unchecked")	
-		T entry = (T)objs[i];
-		return entry;
+		catch (Exception E) {
+		System.out.println(E);
 		}
-	
-	
+	return has;
+	}*/
+	 
+	public T remove(final int i) {
+	T toberemoved = (T)objs[i];
+		for (int j = i; j < size - 1; j++) {
+		objs[j] = objs[j + 1];
+		}
+	objs[size - 1] = null;
+	size--;//this has to be last in order to make it work right
+	return toberemoved;
 	}
 	
-	public boolean add(T obj) {
-	return list.add(obj);
+	public T get(int i) {	
+	T entry = (T)objs[i];
+	return entry;
 	}
 	
-	public T get(int i) {
-	return list.get(i);
+	public int size() {
+	return size;
 	}
 	
-	public T remove(int i) {
-	return list.remove(i);
-	}
-	
-	@SuppressWarnings("unchecked")	
 	/*The default assumes that it is working with a page object*/
 	public void begin() throws Exception {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
@@ -129,7 +107,7 @@ public final List<T> list = new List<T>();
 	/*The default assumes you are working with a page object.  Subclasses should override*/
 	public void end() throws Exception {
 	final BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
-		for (T t : this.list) {
+		for (T t : this) {
 		Page page = (Page)t;
 		D.writeEntry(page, link_writer, level());
 		}
@@ -146,8 +124,6 @@ public final List<T> list = new List<T>();
 		D.error(I);
 		}
 	}
-	
-	
 	
 	public boolean checkError() {
 	return D.checkErrorFile(source());

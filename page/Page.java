@@ -61,7 +61,7 @@ private boolean connected = false;
 		}
 	return isequal;
 	}
-
+	
 	/*Most override to avoid warning*/
 	public int hashCode() {
 	return toString().hashCode();

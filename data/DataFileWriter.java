@@ -37,26 +37,6 @@ public class DataFileWriter<T> extends DataWriter<T> {
 		}
 	}
 	
-	public boolean add(T page) {
-	Debug.check(page, null);
-	boolean added = false;
-		if (contains(page) == false) {
-		Page tp = (Page)page;
-		PrintWriter PRINTER = createWriter();
-			try {
-			D.writeEntry(tp, PRINTER, level());
-			PRINTER.close();
-			added = true;
-			}
-			catch (IOException I) {
-			D.error(I);
-			}
-		}
-	return added;
-	}
-	
-	
-	
 	
 
 }

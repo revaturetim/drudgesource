@@ -20,7 +20,7 @@ private Comparator<Page> compare = new TopComparator<Page>();
 		try {
 		p.getSource();
 		DataList<Page> pages = (DataList<Page>)p.getLinks();
-		Collections.sort(pages.list, compare);//this sorts it the way it should be sorted for this spider	
+		Collections.sort(pages, compare);//this sorts it the way it should be sorted for this spider	
 		DataObjects.dada.put(pages);
 		}
 		catch (SocketTimeoutException S) {

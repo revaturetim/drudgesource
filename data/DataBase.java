@@ -43,9 +43,7 @@ insert into drudge values (link, title, keywords);
 		size = result.getInt(1);
 		}
 		catch (SQLException S) {
-		Debug.println(S);
-		//D.error(S);
-
+		D.error(S);
 		}
 	return size;	
 	}
@@ -69,8 +67,6 @@ insert into drudge values (link, title, keywords);
 		}
 		catch (SQLException S) {
 		Print.printRow(S, page);
-		//Debug.println(S);
-		//D.error(S);
 		}
 	return page; 
 	}
@@ -86,8 +82,6 @@ insert into drudge values (link, title, keywords);
 		}
 		catch (SQLException S) {
 		Print.printRow(S, page);
-		//Debug.println(S);
-		//D.error(S);
 		}
 	return page;
 	}

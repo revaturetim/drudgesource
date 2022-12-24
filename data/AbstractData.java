@@ -9,7 +9,6 @@ protected String source;
 protected int level = 1;
 protected boolean exclude = false;
 protected boolean include = false;
-protected boolean robotallowed = true;
 
 	abstract public T remove(int cycle);
 	abstract public T get(int cycle);
@@ -51,15 +50,4 @@ protected boolean robotallowed = true;
 	include = b;
 	}
 	
-	public boolean robotAllowed() {
-	return robotallowed;
-	}
-	
-	public void setRobotAllowed(boolean b) {
-	robotallowed = b;
-	}
-
-	
-	
-
 }

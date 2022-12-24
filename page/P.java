@@ -72,11 +72,11 @@ final static private String Null = "null";
 		String[] spaces = line.split(" ", 2);
 			if (spaces.length == 2) {
 			String action = spaces[0];
-				if (action.equals(useragent)) {
+				if (action.equalsIgnoreCase(useragent)) {
 				user = spaces[1];//this could throw an exception 
 				}
-				else if (action.equals(disallow)) {
-					if (user.equals("*") | user.equals(ThisProgram.useragent)) {
+				else if (action.equalsIgnoreCase(disallow)) {
+					if (user.equals("*") | user.equalsIgnoreCase(ThisProgram.useragent)) {
 					String dir = spaces[1];
 						try {
 						URL c = new URL(rcon.getURL(), dir);//this thows exception

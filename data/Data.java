@@ -24,8 +24,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	public void setExcluded(boolean b);
 	public boolean included();
 	public void setIncluded(boolean b);
-	public boolean robotAllowed();
-	public void setRobotAllowed(boolean b);
 	public boolean checkError();
 	public void begin() throws Exception;
 	public void end() throws Exception;

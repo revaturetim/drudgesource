@@ -29,31 +29,29 @@ final private Data<String> klist = new DataList<String>();
 	public Page(URL u) throws IOException {
 	u.toString();//this checks if u is null and if it is it will throw a nullpointer exception
 	this.url = u;
-	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw IOException
-
+	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(URL p, String l) throws MalformedURLException, IOException {
 	this.url = new URL(p, l);//this throws malformedurlexception
-	this.connection = this.url.openConnection();//this will throw IOException
+	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 
 	public Page(String u) throws MalformedURLException, IOException {
 	this.url = new URL(u);//this will throw malformedurlexception
-	this.connection = this.url.openConnection();//this will throw IOException
+	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(String u, String l) throws MalformedURLException, IOException {
 	URL purl = new URL(u);//this will throw malformedurlexception
 	this.url = new URL(purl, l);//this will throw malformedurlexception
-	this.connection = this.url.openConnection();//this will throw the IOException
+	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(Page op, String l) throws MalformedURLException, IOException {
 	URL oldurl = op.getURL();
 	this.url = new URL(oldurl, l);//this will throw malformedurlexception
-	this.connection = this.url.openConnection();//this will throw IOException
-
+	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public boolean equals(Object obj) {

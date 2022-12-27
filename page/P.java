@@ -370,7 +370,7 @@ final static private String Null = "null";
 	}
     	
 	static URLConnection getConnection(final URL url, final Proxy proxyserver) throws IOException {
-	URLConnection connection = url.openConnection(proxyserver);//this throws ioexception
+	final URLConnection connection = url.openConnection(/*proxyserver*/);//this throws ioexception
 	connection.setConnectTimeout(20*1000);
 	connection.setReadTimeout(500);
 	connection.addRequestProperty("GET", url.toString());

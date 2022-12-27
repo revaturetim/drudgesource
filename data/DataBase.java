@@ -62,7 +62,10 @@ insert into drudge values (link, title, keywords);
 				}
 				catch (MalformedURLException U) {
 				D.error(U);
-				}					
+				}
+				catch (IOException I) {
+				D.error(I);
+				}
 			}
 		}
 		catch (SQLException S) {
@@ -225,6 +228,12 @@ insert into drudge values (link, title, keywords);
 				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
 				System.out.println(link);
 				}
+				catch (IOException I) {
+				linkerror = true;
+				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
+				System.out.println(link);
+				}
+
 			} 
 		System.out.println("...The number of lines in " + source() +  " is "  + linecount + ".");
 		result.close();

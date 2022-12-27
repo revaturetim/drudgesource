@@ -112,6 +112,9 @@ final public class D implements FileNames {
 		catch (MalformedURLException M) {
 		D.error(M);
 		}
+		catch (IOException I) {
+		D.error(I);
+		}
 	return page;
 	}
 	

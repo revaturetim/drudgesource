@@ -13,40 +13,47 @@ import drudge.global.DataObjects;
 
 /*this is the skeletal class of all page objects*/
 final public class Page implements Serializable {
-static public Proxy proxyserver = Proxy.NO_PROXY;
 final static private int pagesize = 35_000;
+static public Proxy proxyserver = Proxy.NO_PROXY;
 //private variables for info about page itself which are set to the default values
 //The default value for MOST of these should be null
 final private Source content = new Source(pagesize);
 final private Header header = new Header();
 private URL url = null;  
 private URLConnection connection = null;
+private boolean didconnect = false;
 final private Data<Page> dlist = new DataList<Page>();
 final private Data<URL> elist = new DataListEmail<URL>();
 final private Data<String> klist = new DataList<String>();
-private boolean connected = false;
 
-	public Page(URL u) {
+	public Page(URL u) throws IOException {
 	u.toString();//this checks if u is null and if it is it will throw a nullpointer exception
 	this.url = u;
+	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw IOException
+
 	}
 	
-	public Page(URL p, String l) throws MalformedURLException {
+	public Page(URL p, String l) throws MalformedURLException, IOException {
 	this.url = new URL(p, l);//this throws malformedurlexception
+	this.connection = this.url.openConnection();//this will throw IOException
 	}
 
-	public Page(String u) throws MalformedURLException {
+	public Page(String u) throws MalformedURLException, IOException {
 	this.url = new URL(u);//this will throw malformedurlexception
+	this.connection = this.url.openConnection();//this will throw IOException
 	}
 	
-	public Page(String u, String l) throws MalformedURLException {
+	public Page(String u, String l) throws MalformedURLException, IOException {
 	URL purl = new URL(u);//this will throw malformedurlexception
 	this.url = new URL(purl, l);//this will throw malformedurlexception
+	this.connection = this.url.openConnection();//this will throw the IOException
 	}
 	
-	public Page(Page op, String l) throws MalformedURLException {
+	public Page(Page op, String l) throws MalformedURLException, IOException {
 	URL oldurl = op.getURL();
 	this.url = new URL(oldurl, l);//this will throw malformedurlexception
+	this.connection = this.url.openConnection();//this will throw IOException
+
 	}
 	
 	public boolean equals(Object obj) {
@@ -73,7 +80,7 @@ private boolean connected = false;
 		if (content.wasFilled() && content.size() > 0) {
 			P.LinkAction<String> action = new P.LinkAction<String>() {
 				
-				public void act(String link) throws URISyntaxException, UselessURLException, MalformedURLException {
+				public void act(String link) throws URISyntaxException, UselessURLException, MalformedURLException, IOException {
 				Page p = new Page(url, link);
 				//WeakReference<Page> w = new WeakReference<Page>(p);
 				//SoftReference<Page> s = new SoftReference<Page>(p);
@@ -121,10 +128,10 @@ private boolean connected = false;
 	public boolean isUseless() throws RedirectedURLException, InvalidURLException, 
 	       NotOKURLException, NoContentURLException, BadEncodingURLException, IOException {
 	Debug.time("Checking Uselessness");
-	connection = P.getConnection(url, proxyserver);//this throws IOException
+	//connection = P.getConnection(url, proxyserver);//this throws IOException
 	//P.checkHeaders(connection);
-	//P.checkHeaders(header, toString());
-	P.checkHeaders(this);
+	P.checkHeaders(header, toString());
+	//P.checkHeaders(this);
 	return false; //if it made it this far then this is the default answer
 	}
 
@@ -135,7 +142,7 @@ private boolean connected = false;
 
 	public Source getSource() throws IOException {
 	final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()), content.length());//throws ioexcpetion above 
-	connected = true;
+	didconnect = true;	
 		for (int i = 0; i < content.length(); i++) {
 			try {
 			reader.mark(0);
@@ -157,6 +164,10 @@ private boolean connected = false;
 	public URL getURL() {
 	return url;
 	}
+	
+	public URLConnection getConnection() {
+	return connection;
+	}
 
 	public URL getRobotURL() {
 		try {
@@ -169,11 +180,6 @@ private boolean connected = false;
 		}			
 	}
 	
-	public URLConnection openConnection() throws IOException {
-	connection = P.getConnection(url, proxyserver);
-	return connection;
-	}
-
 	public Header header() {
 	return header;
 	}
@@ -186,14 +192,14 @@ private boolean connected = false;
 	return url.toString();
 	}
 
-	public boolean didConnect() {
-	return connected;
-	}
-	
 	public boolean sameHost(Page p) {
 	return P.sameHost(this, p);
 	}
-	
+
+	public boolean didConnect() {
+	return didconnect;
+	}
+
 	public boolean isIncluded() throws ExcludedURLException {
 	boolean included = false;
 		for (Page p : DataObjects.include) {		
@@ -225,7 +231,7 @@ private boolean connected = false;
 		}
 		else {
 			try {
-			URLConnection c = roboturl.openConnection(proxyserver);
+			URLConnection c = roboturl.openConnection(/*proxyserver*/);
 			dr = new DataList<URL>();
 			P.readRobotFile(c, dr);
 			DataObjects.norobothash.put(roboturl, dr);

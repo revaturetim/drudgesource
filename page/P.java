@@ -148,7 +148,7 @@ final static private String Null = "null";
 
 	static interface LinkAction<T> {
 	//this throws a more general uselessurlexception so it can catch all uselessurlexceptions
-	public void act(T u) throws UselessURLException, URISyntaxException, MalformedURLException;
+	public void act(T u) throws UselessURLException, URISyntaxException, MalformedURLException, IOException;
 	}
 
 	static class GetLinkAction {
@@ -171,6 +171,9 @@ final static private String Null = "null";
 			}
 			catch (URISyntaxException U) {
 			Print.printRow(U, link);
+			}
+			catch (IOException I) {
+			Print.printRow(I, link);
 			}
 			//This is not a program error so it doensn't need to write out to the error file
 			catch (UselessURLException U) {
@@ -271,6 +274,9 @@ final static private String Null = "null";
 								catch (URISyntaxException U) {
 								Print.printRow(U, link);
 								}
+								catch (IOException I) {
+								Print.printRow(I, link);
+								}
 								//This is not a program error so it doensn't need to write out to the error file
 								catch (UselessURLException U) {
 								U.printRow();
@@ -363,8 +369,8 @@ final static private String Null = "null";
 	return words;
 	}
     	
-    	static URLConnection getConnection(URL url, Proxy proxy) throws IOException {
-	URLConnection connection = url.openConnection(proxy);//this throws ioexception
+	static URLConnection getConnection(final URL url, final Proxy proxyserver) throws IOException {
+	URLConnection connection = url.openConnection(proxyserver);//this throws ioexception
 	connection.setConnectTimeout(20*1000);
 	connection.setReadTimeout(500);
 	connection.addRequestProperty("GET", url.toString());
@@ -375,12 +381,8 @@ final static private String Null = "null";
 	connection.addRequestProperty("Accept-Language", "en-US, en");
 	return connection;
 	}
-	
-	static URLConnection getConnection(String url, Proxy proxy) throws IOException, MalformedURLException {
-	URL u = new URL(url);//this throws malformedurlexception
-	URLConnection connection = getConnection(u, proxy);	
-	return connection;
-	}
+
+
 
 	static void checkResponse(final int response, String page) throws NoContentURLException, RedirectedURLException, NotOKURLException {
 		if (response >= 200 && response < 300) {//does the most common first 
@@ -579,6 +581,9 @@ final static private String Null = "null";
 		}
 		catch (InvalidURLException I) {
 		I.printRow();	
+		}
+		catch (IOException I) {
+		Print.printRow(I, url);
 		}
 		
 	return data;

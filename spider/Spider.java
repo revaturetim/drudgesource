@@ -42,7 +42,7 @@ protected long delay = 0L;
 		D.error(I);
 		}
 	}
-	
+
 	protected void redirect(final Page p) {
 	final Page.Header h = p.header();
 	final String redloc = h.getRedirectLocation();
@@ -68,14 +68,18 @@ protected long delay = 0L;
 		catch (MalformedURLException M) {
 		Print.printRow(M, redloc);
 		}
+		catch (IOException I) {
+		Print.printRow(I, redloc);
+		}
 	}
 	
 	public boolean crawl(Page p) {
 	boolean remove = false;
 	delay();//this will be universal for all crawlers since delay=0 is the same as no delay
+
 		try {
 			if (checkok) {
-			p.isUseless();//this throws uselessurlexception(s)
+			p.isUseless();
 			Debug.time("Checing is UseLess");
 			}
 			if (norobots) {

@@ -23,6 +23,7 @@ public static String XFACTOR = null;
 	boolean okays = true;//default value
 	boolean robotsallowed = true;//default value
 	long delay = 0;//default value
+	Proxy proxy = Proxy.NO_PROXY;//default value
 	Spider spider = null;
 	eraseFile(FileNames.error);
 	
@@ -271,6 +272,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
 				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
+				}
+
 			break;
 			}
 			else if (a.equals("-C") && arg.length == 2 && i == 0) {
@@ -298,22 +303,17 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if ((a.equals("-H")) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
-					try {	
-					URLConnection c = p.openConnection();
-					System.out.println("----------------Request-Fields------------------");
-					Map<String, List<String>> request = c.getRequestProperties();
-						for (Map.Entry<String, List<String>> entry: request.entrySet()) {
-						System.out.println( entry.getKey() + " : " + entry.getValue());
-						}	
-			
-					System.out.println("----------------Response-Headers----------------");	
-					Map<String, List<String>> heads = c.getHeaderFields();
-						for (Map.Entry<String, List<String>> entry : heads.entrySet()) {
-						System.out.println(entry.getKey() + " : " + entry.getValue());
-						}
-					}
-					catch (IOException I) {
-					Print.error(I, p);
+				URLConnection c = p.getConnection();
+				System.out.println("----------------Request-Fields------------------");
+				Map<String, List<String>> request = c.getRequestProperties();
+					for (Map.Entry<String, List<String>> entry: request.entrySet()) {
+					System.out.println( entry.getKey() + " : " + entry.getValue());
+					}	
+		
+				System.out.println("----------------Response-Headers----------------");	
+				Map<String, List<String>> heads = c.getHeaderFields();
+					for (Map.Entry<String, List<String>> entry : heads.entrySet()) {
+					System.out.println(entry.getKey() + " : " + entry.getValue());
 					}
 				}
 				catch (MalformedURLException M) {
@@ -322,6 +322,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
 				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
+				}
+
 			break;
 			}
 			else if (a.equals("-I") && arg.length == 2 && i == 0) {
@@ -350,6 +354,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
 				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
+				}
+
 			break;
 			}
 			else if (a.equals("-HELP") && arg.length == 1) {
@@ -390,6 +398,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
 				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
+				}
+
 			break;
 			}
 			else if (a.equals("-L") && arg.length == 2 && i == 0) {
@@ -417,13 +429,16 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
-					}	
+					}
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
+				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
@@ -470,6 +485,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
+				}
 			break;	
 			}
 			else if (a.equals("-S") && arg.length == 2 && i == 0) {
@@ -500,6 +518,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
+				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
@@ -534,6 +555,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
 				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
+				}
 			break;
 			}
 			else if (a.equals("-U") && arg.length == 2 && i == 0) {
@@ -556,6 +580,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
 				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
+				}
 			break;
 			}
 			else if (a.equals("-V") && arg.length == 2 && i == 0) {
@@ -577,6 +604,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
+				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
@@ -624,6 +654,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				catch (UnknownHostException U) {
 				Print.error(U, arg[i + 1]);
+				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
 				}
 			break;
 			}
@@ -674,6 +707,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}
 					catch (UnknownHostException U) {
 					Print.printRow(U, lastarg);
+					}
+					catch (IOException I) {
+					Print.error(I, arg[i + 1]);
 					}
 					catch (URISyntaxException U) {
 					Print.printRow(U, lastarg);
@@ -757,7 +793,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		}//end of loop
 	}//end of program
 
-	static Page createFirstPage(String link) throws MalformedURLException, UnknownHostException {
+	static Page createFirstPage(String link) throws MalformedURLException, UnknownHostException, IOException {
 	Page firstpage = null;
 		if (link.equals("-samp") || link.equals("-t")) {
 		File sampf = new File(FileNames.samp);

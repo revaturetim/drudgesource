@@ -11,7 +11,7 @@ import java.util.*;
 
 public class Spider {
 protected boolean checkok = true;
-protected boolean norobots = false;
+protected boolean robotsallowed = true;
 protected long delay = 0L;
 
 	//a convenience method for handling links and it makes other spiders do different things
@@ -82,7 +82,7 @@ protected long delay = 0L;
 			p.isUseless();
 			Debug.time("Checing is UseLess");
 			}
-			if (norobots) {
+			if (!robotsallowed) {
 			p.isRobotAllowed();//this throws norobotsallowedexception	
 			Debug.time("Checking Robot Allowed");
 			}
@@ -122,7 +122,7 @@ protected long delay = 0L;
 	}
 
 	public void setRobotsAllowed(boolean b) {
-	norobots = !b;//since most variables that set this are norobotsallowed vs robots allowed the values must be opposite
+	robotsallowed = b;
 	}
 
 	public void setDelay(long l) {

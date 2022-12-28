@@ -29,29 +29,29 @@ final private Data<String> klist = new DataList<String>();
 	public Page(URL u) throws IOException {
 	u.toString();//this checks if u is null and if it is it will throw a nullpointer exception
 	this.url = u;
-	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
+	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(URL p, String l) throws MalformedURLException, IOException {
 	this.url = new URL(p, l);//this throws malformedurlexception
-	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
+	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 
 	public Page(String u) throws MalformedURLException, IOException {
 	this.url = new URL(u);//this will throw malformedurlexception
-	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
+	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(String u, String l) throws MalformedURLException, IOException {
 	URL purl = new URL(u);//this will throw malformedurlexception
 	this.url = new URL(purl, l);//this will throw malformedurlexception
-	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
+	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(Page op, String l) throws MalformedURLException, IOException {
 	URL oldurl = op.getURL();
 	this.url = new URL(oldurl, l);//this will throw malformedurlexception
-	this.connection = P.getConnection(this.url, Page.proxyserver);//this will throw the IOException
+	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public boolean equals(Object obj) {
@@ -126,7 +126,6 @@ final private Data<String> klist = new DataList<String>();
 	public boolean isUseless() throws RedirectedURLException, InvalidURLException, 
 	       NotOKURLException, NoContentURLException, BadEncodingURLException, IOException {
 	Debug.time("Checking Uselessness");
-	//connection = P.getConnection(url, proxyserver);//this throws IOException
 	//P.checkHeaders(connection);
 	P.checkHeaders(header, toString());
 	//P.checkHeaders(this);
@@ -222,25 +221,19 @@ final private Data<String> klist = new DataList<String>();
 	public boolean isRobotAllowed() throws NoRobotsURLException {
 	final URL roboturl = getRobotURL();
 	Data<URL> dr = DataObjects.norobothash.get(roboturl);//this could throw a null pointer exception
-		if (dr != null) {
-			if (dr.contains(this.url)) {
-			throw new NoRobotsURLException(this.url);
-			}
-		}
-		else {
+		if (dr == null) {
 			try {
-			URLConnection c = roboturl.openConnection(/*proxyserver*/);
-			dr = new DataList<URL>();
-			P.readRobotFile(c, dr);
+			URLConnection c = roboturl.openConnection(Page.proxyserver);
+			dr = P.readRobotFile(c);
 			DataObjects.norobothash.put(roboturl, dr);
-				if (dr.contains(this.url)) {
-				throw new NoRobotsURLException(this.url);
-				}
 			}
 			catch (IOException I) {
 			D.error(I);
 			}
 		}	
+		if (dr != null && dr.contains(this.url)) {
+		throw new NoRobotsURLException(this.url);
+		}
 	return true;
 	}
 

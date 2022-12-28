@@ -23,7 +23,6 @@ public static String XFACTOR = null;
 	boolean okays = true;//default value
 	boolean robotsallowed = true;//default value
 	long delay = 0;//default value
-	Proxy proxy = Proxy.NO_PROXY;//default value
 	Spider spider = null;
 	eraseFile(FileNames.error);
 	

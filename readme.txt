@@ -28,6 +28,7 @@
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
 18. BUG! email file re-writes first one in test link;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
+20. BUG!  P.createConnection proxyserver variable doesn't work.   Could be java 20 bug in API;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
 

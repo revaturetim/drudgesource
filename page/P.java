@@ -55,11 +55,12 @@ final static private String Null = "null";
 	}
 
 	//I am assuming that this works.  I have no way to really test it thoroughly. 
-	static void readRobotFile(final URLConnection rcon, Data<URL> norob) throws IOException {
+	static Data<URL> readRobotFile(final URLConnection rcon) throws IOException {
 	final LineNumberReader reader = new LineNumberReader(new BufferedReader(new InputStreamReader(rcon.getInputStream())));
 	final String useragent = "User-agent:";
 	final String disallow = "Disallow:";
 	final String comment = "#";
+	final Data<URL> norob = new DataList<URL>();
 	String user = null;
 	
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
@@ -93,6 +94,7 @@ final static private String Null = "null";
 				}
 			}	
 		}
+	return norob;
 	}
 
 	static private String encodeLink(String link) {
@@ -369,7 +371,7 @@ final static private String Null = "null";
 	return words;
 	}
     	
-	static URLConnection getConnection(final URL url, final Proxy proxyserver) throws IOException {
+	static URLConnection createConnection(final URL url, final Proxy proxyserver) throws IOException {
 	final URLConnection connection = url.openConnection(/*proxyserver*/);//this throws ioexception
 	connection.setConnectTimeout(20*1000);
 	connection.setReadTimeout(500);

@@ -81,7 +81,7 @@ final private Data<String> klist = new DataList<String>();
 		//I just liked anonymous classes/methods so I decided to keep this
 		//It also refers to the this object url variable for its absolute path
 		if (content.wasFilled() && content.size() > 0) {
-			P.LinkAction<String> action = new P.LinkAction<String>() {
+			LinkAction<String> action = new LinkAction<String>() {
 				
 				public void act(String link) throws URISyntaxException, UselessURLException, MalformedURLException, IOException {
 				Page p = new Page(url, link);

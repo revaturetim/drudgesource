@@ -39,20 +39,13 @@ final static private String Null = "null";
 		}
 		else if (!schm.equals("file")) {
 		URI uri = url.toURI();//this throws URISyntaxExeption
-			if (uri.isOpaque()) {
-			throw new InvalidURLException(url);
-			}
-			if (aut == null) {
-			throw new InvalidURLException(url);
-			}
-			else if (aut.isEmpty()) {
+			if (uri.isOpaque() || aut == null || aut.isEmpty()) {
 			throw new InvalidURLException(url);
 			}
 		String ftype = URLConnection.guessContentTypeFromName(url.toString());
-			if (ftype != null) {
-				if (!ftype.startsWith("text")) {
-				throw new InvalidURLException(url);
-				}
+			if (ftype != null && !ftype.startsWith("text")) {
+			throw new InvalidURLException(url);
+				
 			}
 		}
 	}
@@ -146,11 +139,6 @@ final static private String Null = "null";
 			}
 		}
 	return data;
-	}
-
-	static interface LinkAction<T> {
-	//this throws a more general uselessurlexception so it can catch all uselessurlexceptions
-	public void act(T u) throws UselessURLException, URISyntaxException, MalformedURLException, IOException;
 	}
 
 	static class GetLinkAction {

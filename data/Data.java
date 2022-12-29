@@ -49,10 +49,8 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return has;
 	}
 
-	default public void put(T link) throws 
-	DuplicateURLException, ExcludedURLException, InvalidURLException, URISyntaxException {
+	default public void put(T link) throws DuplicateURLException, ExcludedURLException {
 	final Page page = (Page)link;
-	page.isValid();//throws invalidurlexception, urisyntaxexception
 		if (excluded() == true) {
 		page.isExcluded();//throws ExcludedURLException
 		}
@@ -71,14 +69,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			try {
 			put(page);
 			}
-			catch (URISyntaxException U) {
-			scs = false;
-			Print.printRow(U, page);
-			}
-			catch (InvalidURLException I) {
-			scs = false;
-			I.printRow();
-			}
 			catch (DuplicateURLException Du) {
 			scs = false;
 			Du.printRow();
@@ -96,14 +86,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 		for (T link : links) {
 			try {
 			put(link);
-			}
-			catch (URISyntaxException U) {
-			scs = false;
-			Print.printRow(U, link);
-			}
-			catch (InvalidURLException I) {
-			scs = false;
-			I.printRow();
 			}
 			catch (DuplicateURLException Du) {
 			scs = false;

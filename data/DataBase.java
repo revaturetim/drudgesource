@@ -60,6 +60,12 @@ insert into drudge values (link, title, keywords);
 				try {
 				page = (T)new Page(s);
 				}
+				catch (URISyntaxException U) {
+				D.error(U);
+				}
+				catch (InvalidURLException I) {
+				D.error(I);
+				}
 				catch (MalformedURLException U) {
 				D.error(U);
 				}

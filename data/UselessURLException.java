@@ -26,7 +26,7 @@ private final static long serialVersionUID = 0;
 
 	public void printRow(String...m) {
 	String[] n = {m[0], m[1], m[2], m[3], m[4], getUrl()};
-	
+		
 		if (Print.UselessClass == UselessURLException.class || Print.UselessClass == this.getClass()) {
 		Print.printRow(n);
 		}

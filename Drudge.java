@@ -242,20 +242,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					p.isUseless();	
 						try {
-						p.isValid();
-							try {
-							p.isRobotAllowed();
-							System.out.println("Yes!  " + ThisProgram.name + " is allowed");
-							}
-							catch (NoRobotsURLException N) {
-							Print.error(N, p);
-							}
+						p.isRobotAllowed();
+						System.out.println("Yes!  " + ThisProgram.name + " is allowed");
 						}
-						catch (URISyntaxException U) {
-						Print.error(U, arg[i + 1]);
-						}
-						catch (InvalidURLException N) {
-						Print.error(N, arg[i + 1]);
+						catch (NoRobotsURLException N) {
+						Print.error(N, p);
 						}
 					}
 					catch (IOException I) {
@@ -264,6 +255,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
+				}
+				catch (InvalidURLException N) {
+				Print.error(N, arg[i + 1]);
+				}	
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -315,6 +312,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					System.out.println(entry.getKey() + " : " + entry.getValue());
 					}
 				}
+				catch (InvalidURLException N) {
+				Print.error(N, arg[i + 1]);
+				}	
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
+				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
@@ -347,6 +350,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					Print.error(E);
 					}	
 				}
+				catch (InvalidURLException N) {
+				Print.error(N, arg[i + 1]);
+				}	
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
+				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
@@ -369,19 +378,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
 					p.isUseless();
-						try {
-						p.isValid();
-						p.getSource();
-						Data<String> keywords = p.getKeywords();
-							for (String keyword : keywords) {
-							System.out.println(keyword);
-							}	
-						}
-						catch (URISyntaxException U) {
-						Print.error(U, arg[i + 1]);
-						}
-						catch (InvalidURLException N) {
-						Print.error(N, arg[i + 1]);
+					p.getSource();
+					Data<String> keywords = p.getKeywords();
+						for (String keyword : keywords) {
+						System.out.println(keyword);
 						}	
 					}
 					catch (IOException I) {
@@ -390,6 +390,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
+				}
+				catch (InvalidURLException N) {
+				Print.error(N, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -409,18 +415,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					p.isUseless();	
 					p.getSource();
-						try {
-						p.isValid();
-						Data<Page> pages = p.getLinks();
-							for (Page page : pages) {
-							System.out.println(page.toString());
-							}
-						}
-						catch (URISyntaxException U) {
-						Print.error(U, arg[i + 1]);
-						}
-						catch (InvalidURLException N) {
-						Print.error(N, arg[i + 1]);
+					Data<Page> pages = p.getLinks();
+						for (Page page : pages) {
+						System.out.println(page.toString());
 						}
 					}
 					catch (IOException I) {
@@ -429,6 +426,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
+				}
+				catch (InvalidURLException N) {
+				Print.error(N, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -467,7 +470,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals("-R") && arg.length == 2 && i == 0) {//this doesn not work yet!
+			else if (a.equals("-R") && arg.length == 2 && i == 0) {
 				try {
 				Page p = new Page(arg[i + 1]);
 					
@@ -480,6 +483,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					Print.error(N, arg[i + 1]);
 					}
 			
+				}
+				catch (InvalidURLException I) {
+				Print.error(I, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -494,16 +503,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
 					p.isUseless();
-						try {
-						p.isValid();
-						System.out.println(p.getSource());
-						}
-						catch (URISyntaxException U) {
-						Print.error(U, arg[i + 1]);
-						}
-						catch (InvalidURLException N) {
-						Print.error(N, arg[i + 1]);
-						}
+					System.out.println(p.getSource());
 					}
 					catch (IOException I) {
 					Print.error(I, p);
@@ -511,6 +511,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}	
+				}
+				catch (InvalidURLException I) {
+				Print.error(I, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -528,18 +534,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
 					p.isUseless();
-						try {
-						p.isValid();
-						p.getSource(); 
-						String title = p.getTitle();
-						System.out.println(title);
-						}
-						catch (InvalidURLException I) {
-						Print.error(I, arg[i + 1]);
-						}
-						catch (URISyntaxException U) {
-						Print.error(U, arg[i + 1]);
-						}
+					p.getSource(); 
+					String title = p.getTitle();
+					System.out.println(title);
 					}
 					catch (IOException I) {
 					Print.error(I, p);
@@ -547,6 +544,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
+				}
+				catch (InvalidURLException I) {
+				Print.error(I, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -573,6 +576,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					Print.error(U, p);
 					}
 				}
+				catch (InvalidURLException I) {
+				Print.error(I, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
+				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
 				}
@@ -587,16 +596,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals("-V") && arg.length == 2 && i == 0) {
 				try { 
 				Page p = createFirstPage(arg[i + 1]); 
-					try {
-					p.isValid();
-					System.out.println(p.toString() + " is a valid html file for " + ThisProgram.name);
-					}
-					catch (URISyntaxException U) {
-					Print.error(U, arg[i + 1]);
-					}
-					catch (InvalidURLException N) {
-					Print.error(N, arg[i + 1]);
-					}	
+				/*if is valid it should naturally continue to the next line*/
+				System.out.println(p.toString() + " is a valid html file for " + ThisProgram.name);
+				}
+				catch (InvalidURLException I) {
+				Print.error(I, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -647,6 +654,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (Exception E) {
 					Print.error(E);
 					}	
+				
+				}
+				catch (InvalidURLException I) {
+				Print.error(I, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
 				}
 				catch (MalformedURLException M) {
 				Print.error(M, arg[i + 1]);
@@ -792,7 +806,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		}//end of loop
 	}//end of program
 
-	static Page createFirstPage(String link) throws MalformedURLException, UnknownHostException, IOException {
+	static Page createFirstPage(String link) throws URISyntaxException, InvalidURLException, MalformedURLException, UnknownHostException, IOException {
 	Page firstpage = null;
 		if (link.equals("-samp") || link.equals("-t")) {
 		File sampf = new File(FileNames.samp);

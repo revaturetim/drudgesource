@@ -33,8 +33,11 @@ final static private String Null = "null";
 	//final String file = url.getFile();
 	//final FileNameMap map = URLConnection.getFileNameMap();
 	//final String ftype = map.getContentTypeFor(url.toString());	
-	
-		if (!schm.equals("file")) {
+		
+		if (schm.equals("mailto")) {
+		throw new InvalidURLException(url);
+		}
+		else if (!schm.equals("file")) {
 		URI uri = url.toURI();//this throws URISyntaxExeption
 			if (uri.isOpaque()) {
 			throw new InvalidURLException(url);
@@ -140,9 +143,6 @@ final static private String Null = "null";
 			}
 			catch (ExcludedURLException E) {
 			E.printRow();
-			}
-			catch (InvalidURLException I) {
-			I.printRow();
 			}
 		}
 	return data;
@@ -372,7 +372,12 @@ final static private String Null = "null";
 	}
     	
 	static URLConnection createConnection(final URL url, final Proxy proxyserver) throws IOException {
-	final URLConnection connection = url.openConnection(/*proxyserver*/);//this throws ioexception
+	/*For some reason this won't work if the scheme is a mailto link
+	 * so either isValid() has to be called or checkHTMLFile does
+	 * Page constructer has to call these methods or it won't work.  
+	 * I believe it is a bug in the API with openConnection(proxy)
+	 */
+	final URLConnection connection = url.openConnection(proxyserver);//this throws ioexception
 	connection.setConnectTimeout(20*1000);
 	connection.setReadTimeout(500);
 	connection.addRequestProperty("GET", url.toString());
@@ -406,9 +411,14 @@ final static private String Null = "null";
 		if (response != null) {
 		String[] values = response.split(" ");
 			if (values[0].equals("HTTP/1.1")) {
-			Integer num = new Integer(values[1]);
-			int code = num.intValue();
-			checkResponse(code, page);
+				try { 
+				Integer num = Integer.parseInt(values[1]);
+				int code = num.intValue();
+				checkResponse(code, page);
+				}
+				catch (NumberFormatException N) {
+				D.error(N);	
+				}
 			}	
 		}
 	Debug.time("...Response-Code");		
@@ -607,17 +617,11 @@ final static private String Null = "null";
 			try {
 			data.put(page);
 			}
-			catch (URISyntaxException U) {
-			Print.printRow(U, page);
-			}
 			catch (DuplicateURLException Du) {
 			Du.printRow();
 			}
 			catch (ExcludedURLException E) {
 			E.printRow();
-			}
-			catch (InvalidURLException I) {
-			I.printRow();
 			}
 		}
 	return data;
@@ -630,17 +634,11 @@ final static private String Null = "null";
 			try {
 			data.put(page);
 			}
-			catch (URISyntaxException U) {
-			Print.printRow(U, page);
-			}
 			catch (DuplicateURLException Du) {
 			Du.printRow();
 			}
 			catch (ExcludedURLException E) {
 			E.printRow();
-			}
-			catch (InvalidURLException I) {
-			I.printRow();
 			}
 		}
 	return data;
@@ -658,6 +656,12 @@ final static private String Null = "null";
 		p = new Page(url);
 		}
 		catch (IOException I) {
+		D.error(I);
+		}
+		catch (URISyntaxException U) {
+		D.error(U);
+		}
+		catch (InvalidURLException I) {
 		D.error(I);
 		}
 	return p;

@@ -26,31 +26,36 @@ final private Data<Page> dlist = new DataList<Page>();
 final private Data<URL> elist = new DataListEmail<URL>();
 final private Data<String> klist = new DataList<String>();
 
-	public Page(URL u) throws IOException {
+	public Page(URL u) throws IOException, URISyntaxException, InvalidURLException {
 	u.toString();//this checks if u is null and if it is it will throw a nullpointer exception
 	this.url = u;
+	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
-	public Page(URL p, String l) throws MalformedURLException, IOException {
+	public Page(URL p, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
 	this.url = new URL(p, l);//this throws malformedurlexception
+	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 
-	public Page(String u) throws MalformedURLException, IOException {
+	public Page(String u) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
 	this.url = new URL(u);//this will throw malformedurlexception
+	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
-	public Page(String u, String l) throws MalformedURLException, IOException {
+	public Page(String u, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
 	URL purl = new URL(u);//this will throw malformedurlexception
 	this.url = new URL(purl, l);//this will throw malformedurlexception
+	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
-	public Page(Page op, String l) throws MalformedURLException, IOException {
+	public Page(Page op, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
 	URL oldurl = op.getURL();
 	this.url = new URL(oldurl, l);//this will throw malformedurlexception
+	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
@@ -80,8 +85,6 @@ final private Data<String> klist = new DataList<String>();
 				
 				public void act(String link) throws URISyntaxException, UselessURLException, MalformedURLException, IOException {
 				Page p = new Page(url, link);
-				//WeakReference<Page> w = new WeakReference<Page>(p);
-				//SoftReference<Page> s = new SoftReference<Page>(p);
 				dlist.put(p);
 				}
 			};

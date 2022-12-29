@@ -109,6 +109,12 @@ final public class D implements FileNames {
 		String[] entries = line.split(CountFile.sep);
 		page = new Page(entries[0]);
 		}
+		catch (URISyntaxException U) {
+		D.error(U);
+		}
+		catch (InvalidURLException I) {
+		D.error(I);
+		}
 		catch (MalformedURLException M) {
 		D.error(M);
 		}

@@ -206,29 +206,15 @@ final static private String Null = "null";
 			String[] words = text.split(" ");
 				
 				for (String word : words) {
-					if (word.startsWith("http://")) {
+					/*branchless programming*/
+					if (word.startsWith("http://") 
+						|| word.endsWith(".html") 
+						|| word.endsWith(".shtml") 
+						|| word.endsWith(".htm") 
+						|| word.startsWith("https://") 
+						|| word.startsWith("../") 
+						|| word.startsWith("/")) {
 					actWith(word, action);//found absolute link
-					}
-					else if (word.endsWith(".html")) {
-					actWith(word, action);
-					}
-					else if (word.endsWith(".shtml")) {
-					actWith(word, action);
-					}
-					else if (word.endsWith(".htm")) {
-					actWith(word, action);
-					}
-					else if (word.startsWith("https://")) {
-					actWith(word, action);
-					}
-					else if (word.startsWith("../")) {
-					actWith(word, action);//found relative link
-					}
-					else if (word.startsWith("/")) {
-					actWith(word, action);
-					}
-					else {
-					//this is do nothing
 					}
 				}
 			}	

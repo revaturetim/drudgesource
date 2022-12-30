@@ -33,20 +33,20 @@ final static private String Null = "null";
 	//final String file = url.getFile();
 	//final FileNameMap map = URLConnection.getFileNameMap();
 	//final String ftype = map.getContentTypeFor(url.toString());	
-		
-		if (schm.equals("mailto")) {
-		throw new InvalidURLException(url);
+	final boolean ishttp = schm.equals("http") || schm.equals("https");
+
+		if (ishttp || schm.equals("file")) {
+		final URI uri = url.toURI();//this throws URISyntaxExeption
+		final String ftype = URLConnection.guessContentTypeFromName(url.toString());
+		/* Collapsing this into one line of code instead of nesting if statements is suppose to make it faster
+		 * This is an example of branchless programming
+		 */
+			if (ishttp && (uri.isOpaque() || (aut == null || aut.isEmpty()) || (ftype != null && !ftype.startsWith("text")))) {
+			throw new InvalidURLException(url);
+			}
 		}
-		else if (!schm.equals("file")) {
-		URI uri = url.toURI();//this throws URISyntaxExeption
-			if (uri.isOpaque() || aut == null || aut.isEmpty()) {
-			throw new InvalidURLException(url);
-			}
-		String ftype = URLConnection.guessContentTypeFromName(url.toString());
-			if (ftype != null && !ftype.startsWith("text")) {
-			throw new InvalidURLException(url);
-				
-			}
+		else {	
+		throw new InvalidURLException(url);
 		}
 	}
 

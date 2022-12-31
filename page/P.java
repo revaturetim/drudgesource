@@ -93,18 +93,6 @@ final static private String Null = "null";
 	return norob;
 	}
 
-	static private String encodeLink(String link) {
-	link = link.replace('\"', ' ');
-	link = link.trim();
-		/*try {
-		link = URLEncoder.encode(link, "UTF-8");
-		}
-		catch (UnsupportedEncodingException U) {
-		D.error(U);
-		}*/
-	return link;
-	}	
-	
 	static Data<URL> getEmails(CharSequence src, Data<URL> data) {
 	final String s = src.toString().toLowerCase();
 		
@@ -141,37 +129,21 @@ final static private String Null = "null";
 	return data;
 	}
 
-	static class GetLinkAction {
+	static class Links {
 		
-		private static void actWith(final String link, LinkAction<String> action) {
-
-			try {
-			/*Ths is to catch all subdirectories of a link*/
-			final int doubleslash = link.indexOf("//");
-				for (int slash = link.indexOf("/");slash != -1; slash = link.indexOf("/", slash + 1)) {
-					if (slash > doubleslash + 1 && slash > doubleslash) {
-					String sublink = link.substring(0, slash + 1);
-					action.act(sublink.toString());
-					}
+		private static void findInPath(final String link, LinkAction<String> action) {
+		/*Ths is to catch all subdirectories of a link*/
+		final int doubleslash = link.indexOf("//");
+			for (int slash = link.indexOf("/");slash != -1; slash = link.indexOf("/", slash + 1)) {
+				if (slash > doubleslash + 1 && slash > doubleslash) {
+				String sublink = link.substring(0, slash + 1);
+				action.act(sublink.toString());
 				}
-			action.act(link);
 			}
-			catch (MalformedURLException M) {
-			Print.printRow(M, link);
-			}
-			catch (URISyntaxException U) {
-			Print.printRow(U, link);
-			}
-			catch (IOException I) {
-			Print.printRow(I, link);
-			}
-			//This is not a program error so it doensn't need to write out to the error file
-			catch (UselessURLException U) {
-			U.printRow();
-			}
+		action.act(link);
 		}
 
-		static void get(CharSequence source, LinkAction<String> action) {
+		static void find(CharSequence source, LinkAction<String> action) {
 		final String html = source.toString().toLowerCase();
 
 			for (int b = html.indexOf("<"); b != -1; b = html.indexOf("<", b + 1)) {
@@ -192,7 +164,7 @@ final static private String Null = "null";
 				final int rbeg = tag.indexOf("\"", r);
 				final int rend = tag.indexOf("\"", rbeg + 1);
 				String link = tag.substring(rbeg + 1, rend);
-				actWith(link, action);
+				findInPath(link, action);
 				}
 			}
 			for (int b = 0; b != -1; b = html.indexOf(">", b + 1)) {
@@ -214,7 +186,7 @@ final static private String Null = "null";
 						|| word.startsWith("https://") 
 						|| word.startsWith("../") 
 						|| word.startsWith("/")) {
-					actWith(word, action);//found absolute link
+					findInPath(word, action);//found absolute link
 					}
 				}
 			}	
@@ -241,22 +213,7 @@ final static private String Null = "null";
 						m4.reset();
 							while (m4.find()) {//this treats all subdirectories found as a seperate link
 							String link = href.substring(b, m4.end());
-								try {
-								action.act(link);
-								}
-								catch (MalformedURLException M) {
-								Print.printRow(M, link);
-								}
-								catch (URISyntaxException U) {
-								Print.printRow(U, link);
-								}
-								catch (IOException I) {
-								Print.printRow(I, link);
-								}
-								//This is not a program error so it doensn't need to write out to the error file
-								catch (UselessURLException U) {
-								U.printRow();
-								}
+							action.act(link);
 							}
 						}
 					}

@@ -28,6 +28,7 @@
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
 18. BUG! email file re-writes first one in test link;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
+20. Consider Getting rid of LinkAction and use P.add method instead for program simplicity;
 21. Have readrobots find new urls under the "allowed" sections of file;
 22. Have Page find sitmap files to find extra urls;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;

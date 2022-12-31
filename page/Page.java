@@ -83,12 +83,26 @@ final private Data<String> klist = new DataList<String>();
 		if (content.wasFilled() && content.size() > 0) {
 			LinkAction<String> action = new LinkAction<String>() {
 				
-				public void act(String link) throws URISyntaxException, UselessURLException, MalformedURLException, IOException {
-				Page p = new Page(url, link);
-				dlist.put(p);
+				public void act(String link) {
+					try {
+					Page p = new Page(url, link);
+					dlist.put(p);
+					}
+					catch (MalformedURLException M) {
+					Print.printRow(M, link);
+					}
+					catch (URISyntaxException U) {
+					Print.printRow(U, link);
+					}
+					catch (IOException I) {
+					Print.printRow(I, link);
+					}
+					catch (UselessURLException U) {
+					U.printRow();
+					}
 				}
 			};
-		P.GetLinkAction.get(content, action);
+		P.Links.find(content, action);
 		}
 	Debug.time("Getting Links");
 	return dlist;

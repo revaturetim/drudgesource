@@ -34,6 +34,7 @@
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
 25. BUG!  String index out of bounds exception when index is greater than the max page limit of 35K;
+26. See if URLDecoder for urls makes a difference in the number of links it finds or see if it rejects undecoded urls;
 
 *************************OFFICIAL FORMAT OF THIS FILE*********************************************************
 1. All sections of this file must have ******Section title********** to seperate it from the rest of the file;

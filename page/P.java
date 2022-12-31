@@ -170,11 +170,12 @@ final static private String Null = "null";
 			for (int b = 0; b != -1; b = html.indexOf(">", b + 1)) {
 			int e = html.indexOf("<", b);
 				if (e == -1) {
-				e = html.length();
+				e = html.length();//this will see if there is a end quote
+				}
+				if (b > 0) {
+				b++;//this will get rid of the '/' character
 				}
 			String text = html.substring(b, e);
-			text = text.replace(">", "");
-			boolean out = true;
 			String[] words = text.split(" ");
 				
 				for (String word : words) {
@@ -189,11 +190,11 @@ final static private String Null = "null";
 					findInPath(word, action);//found absolute link
 					}
 				}
-			}	
-		}		
+			}
+		}
 	}
 	
-	static class GetLinkActionByRegex {
+	static class LinksRegex {
 	
 		void get(CharSequence source, LinkAction<String> action) {
 		Matcher m1 = Patterns.Links.LINK.match(source);

@@ -20,20 +20,22 @@
 5.  Make a way to get image files as it crawls and perhaps other types of data.
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
 7.  Get rid of type variable in Data interface.  Make it all Page objects;
+8.  Fix help so that include and exclude are lined up evenly in their columns;
 9.  Make more efficient P.getKeywords method;
-10. Improve respect robots!  It hangs for some reason;
+10. Improve respect robots!  It hangs for some reasoni;
+11. BUG!  Why does it store unecoided links?
+12. Have debug.here replace all debug.print since I hate debug.print;
 14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
 18. BUG! email file re-writes first one in test link;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
+20. Investigate to see if translating international urls unicode to american ascii will be useful;
 21. Have readrobots find new urls under the "allowed" sections of file;
 22. Have Page find sitmap files to find extra urls;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
-24. Experiment with references to see if deleting page objects when appopriate will improves program speed;
 25. BUG!  String index out of bounds exception when index is greater than the max page limit of 35K;
-26. See if URLDecoder for urls makes a difference in the number of links it finds or see if it rejects undecoded urls;
 
 *************************OFFICIAL FORMAT OF THIS FILE*********************************************************
 1. All sections of this file must have ******Section title********** to seperate it from the rest of the file;

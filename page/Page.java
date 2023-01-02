@@ -27,34 +27,55 @@ final private Data<URL> elist = new DataListEmail<URL>();
 final private Data<String> klist = new DataList<String>();
 
 	public Page(URL u) throws IOException, URISyntaxException, InvalidURLException {
-	u.toString();//this checks if u is null and if it is it will throw a nullpointer exception
-	this.url = u;
+		if (u == null) {
+		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
+		}
+		try {
+		String decodedlink = P.decode(u.toString());
+		this.url = new URL(decodedlink);
+		}
+		catch (MalformedURLException M) {
+		D.error(M);
+		this.url = u;
+		}
 	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(URL p, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
-	this.url = new URL(p, l);//this throws malformedurlexception
+		if (p == null || l == null) {
+		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
+		}
+	this.url = new URL(p, P.decode(l));//this throws malformedurlexception
 	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 
 	public Page(String u) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
-	this.url = new URL(u);//this will throw malformedurlexception
+		if (u == null) {
+		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
+		}
+	this.url = new URL(P.decode(u));//this will throw malformedurlexception
 	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(String u, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
-	URL purl = new URL(u);//this will throw malformedurlexception
-	this.url = new URL(purl, l);//this will throw malformedurlexception
+		if (u == null || l == null) {
+		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
+		}
+	URL purl = new URL(P.decode(u));//this will throw malformedurlexception
+	this.url = new URL(purl, P.decode(l));//this will throw malformedurlexception
 	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(Page op, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
+		if (op == null || l == null) {
+		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
+		}
 	URL oldurl = op.getURL();
-	this.url = new URL(oldurl, l);//this will throw malformedurlexception
+	this.url = new URL(oldurl, P.decode(l));//this will throw malformedurlexception
 	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
@@ -237,19 +258,26 @@ final private Data<String> klist = new DataList<String>();
 
 	public boolean isRobotAllowed() throws NoRobotsURLException {
 	final URL roboturl = getRobotURL();
-	Data<URL> dr = DataObjects.norobothash.get(roboturl);//this could throw a null pointer exception
-		if (dr == null) {
-			try {
-			URLConnection c = roboturl.openConnection(Page.proxyserver);
-			dr = P.readRobotFile(c);
-			DataObjects.norobothash.put(roboturl, dr);
+		try {
+		final URLConnection c = roboturl.openConnection(Page.proxyserver);
+		final Data<URL> dr = P.readRobotFile(c);
+		DataObjects.norobots.put(dr);
+			for (URL use : dr) {
+				try {
+				Page p = new Page(use);
+				DataObjects.dada.put(p);
+				}
+				catch(Exception E) {
+				
+				}
+			
 			}
-			catch (IOException I) {
-			D.error(I);
+			if (dr.contains(this.url)) {
+			throw new NoRobotsURLException(this.url);
 			}
-		}	
-		if (dr != null && dr.contains(this.url)) {
-		throw new NoRobotsURLException(this.url);
+		}
+		catch (IOException I) {
+		D.error(I);
 		}
 	return true;
 	}

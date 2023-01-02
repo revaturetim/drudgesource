@@ -20,10 +20,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	public String source();
 	public void setLevel(int l);
 	public int level();
-	public boolean excluded();
-	public void setExcluded(boolean b);
-	public boolean included();
-	public void setIncluded(boolean b);
 	public boolean checkError();
 	public void begin() throws Exception;
 	public void end() throws Exception;
@@ -49,14 +45,8 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return has;
 	}
 
-	default public void put(T link) throws DuplicateURLException, ExcludedURLException {
-	final Page page = (Page)link;
-		if (excluded() == true) {
-		page.isExcluded();//throws ExcludedURLException
-		}
-		if (included() == true) {
-		page.isIncluded();//throws ExcludedURLException
-		} 
+	default public void put(T link) throws DuplicateURLException {
+	//final Page page = (Page)link;
 		if (add(link) == false) {
 		throw new DuplicateURLException(link);//throws DuplicateURLException
 		}	
@@ -73,10 +63,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			scs = false;
 			Du.printRow();
 			}
-			catch (ExcludedURLException E) {
-			scs = false;
-			E.printRow();
-			}
 		}
 	return scs;
 	}
@@ -90,10 +76,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			catch (DuplicateURLException Du) {
 			scs = false;
 			Du.printRow();
-			}
-			catch (ExcludedURLException E) {
-			scs = false;
-			E.printRow();
 			}
 		}
 	

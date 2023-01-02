@@ -136,7 +136,7 @@ final public class D implements FileNames {
 	static void writeEntry(Page page, Writer writer, int level) throws IOException {
 		for (int r = 0; r < level; r++) {
 			if (r < 1) {//link
-			writer.append(decode(page.toString()) + CountFile.sep);
+			writer.append(page.toString() + CountFile.sep);
 			}
 			else if (r < 2) {//title
 			writer.append(page.getTitle() + CountFile.sep);
@@ -147,16 +147,6 @@ final public class D implements FileNames {
 		}
 	writer.append("\n");
 	}
-	
-	static String decode(String link) {
-		try {
-		link = URLDecoder.decode(link, "UTF-8");
-		}
-		catch (UnsupportedEncodingException U) {
-		D.error(U);
-		}
-	return link;
-	}	
 	
 	static boolean checkErrorFile(String file) {
 	System.out.println("Checking " + file + " file for errors.");

@@ -22,6 +22,8 @@ public static String XFACTOR = null;
 	boolean getemails = false;//default value
 	boolean okays = true;//default value
 	boolean robotsallowed = true;//default value
+	boolean included = false;//defalut behavior
+	boolean excluded = false;//default behavior
 	long delay = 0;//default value
 	Spider spider = null;
 	eraseFile(FileNames.error);
@@ -77,7 +79,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			}	
 			else if (a.startsWith("-exc") || a.startsWith("-exclude=")) {
-			dada.setExcluded(true);	
+			excluded = true;	
 			String file = exclude.source();
 				//this is for custom exclude file
 				if (a.startsWith("-exclude=")) {
@@ -134,7 +136,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.startsWith("-inc") || a.startsWith("-include=")) {
-			dada.setIncluded(true);
+			included = true;
 			String file = include.source();
 				//this is for custom exclude file
 				if (a.startsWith("-include=")) {
@@ -730,9 +732,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					catch (InvalidURLException N) {
 					N.printRow();
 					}
-					catch (ExcludedURLException E) {
-					E.printRow();
-					}
 					catch (DuplicateURLException D) {
 					D.printRow();
 					}
@@ -745,6 +744,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			spider.setCheckOK(okays);
 			spider.setRobotsAllowed(robotsallowed);
 			spider.setDelay(delay);
+			spider.setIncluded(included);
+			spider.setExcluded(excluded);
 			
 			final long begintime = System.currentTimeMillis(); 
 				do {

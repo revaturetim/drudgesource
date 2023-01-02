@@ -77,7 +77,14 @@ final static private String Null = "null";
 					String dir = spaces[1];
 						try {
 						URL c = new URL(rcon.getURL(), dir);//this thows exception
-						norob.add(c);
+						norob.put(c);
+						}
+						catch (DuplicateURLException Du) {
+						Hashtable<String, Object> h = new Hashtable<String, Object>();
+						h.put("Robot URL", rcon.getURL());
+						h.put("Duplicate", dir);
+						h.put("Exception", Du);
+						D.error(h);
 						}
 						catch (MalformedURLException M) {
 						Hashtable<String, Object> d = new Hashtable<String, Object>();	
@@ -93,6 +100,16 @@ final static private String Null = "null";
 	return norob;
 	}
 
+	static String decode(String link) {
+		try {
+		link = URLDecoder.decode(link, "UTF-8");
+		}
+		catch (UnsupportedEncodingException U) {
+		D.error(U);
+		}
+	return link;
+	}	
+	
 	static Data<URL> getEmails(CharSequence src, Data<URL> data) {
 	final String s = src.toString().toLowerCase();
 		
@@ -121,9 +138,6 @@ final static private String Null = "null";
 			}
 			catch (DuplicateURLException Du) {
 			Du.printRow();
-			}
-			catch (ExcludedURLException E) {
-			E.printRow();
 			}
 		}
 	return data;
@@ -517,9 +531,6 @@ final static private String Null = "null";
 		catch (DuplicateURLException Du) {
 		Du.printRow();
 		}
-		catch (ExcludedURLException E) {
-		E.printRow();
-		}
 		catch (URISyntaxException U) {
 		Print.printRow(U, url);
 		}
@@ -552,9 +563,6 @@ final static private String Null = "null";
 			catch (DuplicateURLException Du) {
 			Du.printRow();
 			}
-			catch (ExcludedURLException E) {
-			E.printRow();
-			}
 		}
 	return data;
 	}
@@ -568,9 +576,6 @@ final static private String Null = "null";
 			}
 			catch (DuplicateURLException Du) {
 			Du.printRow();
-			}
-			catch (ExcludedURLException E) {
-			E.printRow();
 			}
 		}
 	return data;

@@ -49,7 +49,7 @@ public class DataListEmail<T extends URL> extends DataList<T> {
 	return 1;
 	}
 	
-	public void put(T email) throws DuplicateURLException, ExcludedURLException {
+	public void put(T email) throws DuplicateURLException {
 		if (add(email) == false) throw new DuplicateURLException(email);	
 	}
 	

@@ -7,8 +7,6 @@ import java.util.*;
 abstract class AbstractData<T> extends AbstractList<T> implements Data<T>, Serializable {
 protected String source;
 protected int level = 1;
-protected boolean exclude = false;
-protected boolean include = false;
 
 	abstract public T remove(int cycle);
 	abstract public T get(int cycle);
@@ -33,21 +31,4 @@ protected boolean include = false;
 	public int level() {
 	return level;
 	}
-	
-	public boolean excluded() {
-	return exclude;
-	}
-	
-	public void setExcluded(boolean b) {
-	exclude = b;
-	}
-	
-	public boolean included() {
-	return include;
-	}
-	
-	public void setIncluded(boolean b) {
-	include = b;
-	}
-	
 }

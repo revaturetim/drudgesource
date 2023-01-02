@@ -26,44 +26,26 @@ final private Data<Page> dlist = new DataList<Page>();
 final private Data<URL> elist = new DataListEmail<URL>();
 final private Data<String> klist = new DataList<String>();
 
-	public Page(URL u) throws IOException, URISyntaxException, InvalidURLException {
-		if (u == null) {
-		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
-		}
-		try {
-		String decodedlink = P.decode(u.toString());
-		this.url = new URL(decodedlink);
-		}
-		catch (MalformedURLException M) {
-		D.error(M);
-		this.url = u;
-		}
+	public Page(URL u) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
+	final String decodedlink = P.decode(u.toString());//throws nullpointerexception if (u == null)
+	this.url = new URL(decodedlink);
 	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(URL p, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
-		if (p == null || l == null) {
-		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
-		}
 	this.url = new URL(p, P.decode(l));//this throws malformedurlexception
 	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 
 	public Page(String u) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
-		if (u == null) {
-		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
-		}
 	this.url = new URL(P.decode(u));//this will throw malformedurlexception
 	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(String u, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
-		if (u == null || l == null) {
-		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
-		}
 	URL purl = new URL(P.decode(u));//this will throw malformedurlexception
 	this.url = new URL(purl, P.decode(l));//this will throw malformedurlexception
 	this.isValid();//this throws InvalidURLException and URISyntaxException
@@ -71,9 +53,6 @@ final private Data<String> klist = new DataList<String>();
 	}
 	
 	public Page(Page op, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
-		if (op == null || l == null) {
-		throw new NullPointerException("Attempting to pass a null value into a Page constructor");
-		}
 	URL oldurl = op.getURL();
 	this.url = new URL(oldurl, P.decode(l));//this will throw malformedurlexception
 	this.isValid();//this throws InvalidURLException and URISyntaxException

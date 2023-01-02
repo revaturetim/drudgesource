@@ -45,8 +45,10 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return has;
 	}
 
-	default public void put(T link) throws DuplicateURLException {
-	//final Page page = (Page)link;
+	default public void put(T link) throws DuplicateURLException, IllegalArgumentException {
+		if (link == null) {
+		throw new IllegalArgumentException("Attempting to add a null object to " + this.getClass().getName());
+		}
 		if (add(link) == false) {
 		throw new DuplicateURLException(link);//throws DuplicateURLException
 		}	
@@ -63,6 +65,9 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			scs = false;
 			Du.printRow();
 			}
+			catch (IllegalArgumentException I) {
+			D.error(I);
+			}
 		}
 	return scs;
 	}
@@ -76,6 +81,9 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			catch (DuplicateURLException Du) {
 			scs = false;
 			Du.printRow();
+			}
+			catch (IllegalArgumentException I) {
+			D.error(I);
 			}
 		}
 	

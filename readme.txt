@@ -22,7 +22,7 @@
 7.  Get rid of type variable in Data interface.  Make it all Page objects;
 8.  Fix help so that include and exclude are lined up evenly in their columns;
 9.  Make more efficient P.getKeywords method;
-10. Improve respect robots!  It hangs for some reasoni;
+10. Improve respect robots!  It hangs for some reason;
 11. BUG!  Why does it store unecoided links?
 12. Have debug.here replace all debug.print since I hate debug.print;
 14. Change Help enum so that it has a getHelpDetails() for each help option;
@@ -36,6 +36,12 @@
 22. Have Page find sitmap files to find extra urls;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 25. BUG!  String index out of bounds exception when index is greater than the max page limit of 35K;
+26. BUG! IP address throws malformedurlexception because there is no http: protocol in url string.
+27. See if Debug should be its own independent package instead of something attached to Drudge project;
+28. Sample.html should have delibertly broken links
+29. Create sample robot.txt file and sample sitemap file for testing purposes;
+30. Create P.encode() to compliment P.decode();
+31. Page.isIncluded(), Page.isExcluded(), and Page.isRobotAllowed() should be condensed more for efficiency reasons;
 
 *************************OFFICIAL FORMAT OF THIS FILE*********************************************************
 1. All sections of this file must have ******Section title********** to seperate it from the rest of the file;

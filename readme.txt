@@ -42,6 +42,7 @@
 29. Create sample robot.txt file and sample sitemap file for testing purposes;
 30. Create P.encode() to compliment P.decode();
 31. Page.isIncluded(), Page.isExcluded(), and Page.isRobotAllowed() should be condensed more for efficiency reasons;
+32. Update license option to make sure license printed is up to date and can't be used to undo the license in readme.txt;
 
 *************************OFFICIAL FORMAT OF THIS FILE*********************************************************
 1. All sections of this file must have ******Section title********** to seperate it from the rest of the file;

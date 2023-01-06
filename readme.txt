@@ -23,8 +23,9 @@
 8.  Fix help so that include and exclude are lined up evenly in their columns;
 9.  Make more efficient P.getKeywords method;
 10. Improve respect robots!  It hangs for some reason;
-11. BUG!  Why does it store unecoided links?
+11. BUG!  Why does it store unencoded links?
 12. Have debug.here replace all debug.print since I hate debug.print;
+13. Insert comment saying that String.append() is faster than String + String operation in P.getSource() methods;
 14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
@@ -35,14 +36,25 @@
 21. Have readrobots find new urls under the "allowed" sections of file;
 22. Have Page find sitmap files to find extra urls;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
+24. Have proper malformedurlexception when new url objects are created in Page.getRobotsURL();
 25. BUG!  String index out of bounds exception when index is greater than the max page limit of 35K;
 26. BUG! IP address throws malformedurlexception because there is no http: protocol in url string.
 27. See if Debug should be its own independent package instead of something attached to Drudge project;
 28. Sample.html should have delibertly broken links
 29. Create sample robot.txt file and sample sitemap file for testing purposes;
-30. Create P.encode() to compliment P.decode();
 31. Page.isIncluded(), Page.isExcluded(), and Page.isRobotAllowed() should be condensed more for efficiency reasons;
 32. Update license option to make sure license printed is up to date and can't be used to undo the license in readme.txt;
+33. Restore isRobotsAllowed() method to use robots url as an index vs putting all disallowed urls into one excluded list;
+34. See if simplying adding robot disallowed to excluded data would be better in terms of program efficiency;
+35. Fix createPage so that when you put an IP number without protocol that it will either put its own in or tell the user to do so;
+36. Consider getting rid of type variable for Data classes since they create more problems than they solve;
+37. Use proper exceptions in Page.isRobotAllowed() for page constructor;
+38. Have Page.isIncluded() only include a page if it is below its directory
+39. Use P.add() for all data insertions;
+40. Explore the idea of having a Page.create() for all page object creations that create and add to data<> object;
+41. Improve D.error() so I don't have to hand create a new hashtable object each and every time;
+42. Create findlinks using xml api;
+43. Link all the page objects together as a way of storing them;
 
 *************************OFFICIAL FORMAT OF THIS FILE*********************************************************
 1. All sections of this file must have ******Section title********** to seperate it from the rest of the file;

@@ -109,7 +109,17 @@ final static private String Null = "null";
 		}
 	return link;
 	}	
-	
+
+	static String encode(String link) {
+		try {
+		link = URLEncoder.encode(link, "UTF-8");
+		}
+		catch (UnsupportedEncodingException U) {
+		D.error(U);
+		}
+	return link;
+	}
+
 	static Data<URL> getEmails(CharSequence src, Data<URL> data) {
 	final String s = src.toString().toLowerCase();
 		
@@ -151,7 +161,7 @@ final static private String Null = "null";
 			for (int slash = link.indexOf("/");slash != -1; slash = link.indexOf("/", slash + 1)) {
 				if (slash > doubleslash + 1 && slash > doubleslash) {
 				String sublink = link.substring(0, slash + 1);
-				action.act(sublink.toString());
+				action.act(sublink);
 				}
 			}
 		action.act(link);
@@ -228,7 +238,7 @@ final static private String Null = "null";
 						m4.reset();
 							while (m4.find()) {//this treats all subdirectories found as a seperate link
 							String link = href.substring(b, m4.end());
-							action.act(link);
+							Links.findInPath(link, action);
 							}
 						}
 					}
@@ -237,7 +247,7 @@ final static private String Null = "null";
 		}		
 	}
 	
-	public static String getTitleByRegex(final CharSequence source) {
+	static String getTitleByRegex(final CharSequence source) {
 	Matcher m1 = Patterns.Title.TITLE.match(source);
 	String text = notitle;	
 		if (m1.find()) {
@@ -254,7 +264,7 @@ final static private String Null = "null";
 	return text;
 	}
 
-	public static String getTitle(final CharSequence source) { 
+	static String getTitle(final CharSequence source) { 
 	String title = P.notitle;
 	final String btit = "<title>";
 	final String etit = "</title>";
@@ -268,7 +278,7 @@ final static private String Null = "null";
 	return title;
 	}
 
-	public static Data<String> getKeywords(final CharSequence source, Data<String> words) {
+	static Data<String> getKeywords(final CharSequence source, Data<String> words) {
 	final String text = source.toString().toLowerCase();
 	String[] somewords = text.split("<.*>|\\s|<script.*script>|<style.*style>");//this splits and coincidently removes all whitespace characters
 		for (String word : somewords) {
@@ -281,7 +291,7 @@ final static private String Null = "null";
 	return words;
 	}
 	
-	public static Data<String> getKeywords_old(final CharSequence source, Data<String> words) {
+	static Data<String> getKeywords_old(final CharSequence source, Data<String> words) {
 	final String text = source.toString().toLowerCase();
 	int e = 0;
 		for (int b = 0; b != -1; b = text.indexOf(">", b + 1)) {
@@ -305,7 +315,7 @@ final static private String Null = "null";
 	}
 	
 
-	public static Data<String> getKeywordsByRegex(final CharSequence source, Data<String> words) {
+	static Data<String> getKeywordsByRegex(final CharSequence source, Data<String> words) {
 	String text = source.toString().toLowerCase();
 		for (Patterns.Keywords p : Patterns.Keywords.values()) {
 		text = p.replace(text, " ");
@@ -409,10 +419,7 @@ final static private String Null = "null";
 	}
 
 	/*checkHeaders methods do not throw all uselessurl exceptions so -U option may not catch them all*/
-	static void checkHeaders(final URLConnection con) throws
-	       	BadEncodingURLException, NoContentURLException,
-	       	RedirectedURLException, NotOKURLException, InvalidURLException {
-		
+	static void checkHeaders(final URLConnection con) throws BadEncodingURLException, NoContentURLException, RedirectedURLException, NotOKURLException, InvalidURLException {
 	final String u = con.toString();
 		try {
 		String response = ((HttpURLConnection)con).getResponseMessage();
@@ -435,10 +442,7 @@ final static private String Null = "null";
 	}
 
 
-	static void checkHeaders(final Page.Header h, final String u) throws
-	       	BadEncodingURLException, NoContentURLException,
-	       	RedirectedURLException, NotOKURLException, InvalidURLException {
-	
+	static void checkHeaders(final Page.Header h, final String u) throws BadEncodingURLException, NoContentURLException, RedirectedURLException, NotOKURLException, InvalidURLException {
 	final String response = h.getResponse();
 	final String contype = h.getContentType();
 	final String contenc = h.getContentEncoding();
@@ -450,15 +454,33 @@ final static private String Null = "null";
 	checkContentEncoding(contenc, u);
 	}
 
-	static void checkHeaders(final Page p) throws
-	       	BadEncodingURLException, NoContentURLException,
-	       	RedirectedURLException, NotOKURLException, InvalidURLException {
+	static void checkHeaders(final Page p) throws BadEncodingURLException, NoContentURLException, RedirectedURLException, NotOKURLException, InvalidURLException {
 	final Page.Header h = p.header();
 	final String u = p.toString();
 	checkHeaders(h, u);
 	}
 	
-	static Page.Source getSource(Page.Source source, URLConnection con) throws IOException {
+	static Page.Source getSource(Page.Source source, URLConnection connection) throws IOException, SocketTimeoutException {
+	final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()), source.length());//throws ioexcpetion and sockettimeoutexception 
+		for (int i = 0; i < source.length(); i++) {
+			try {
+			reader.mark(0);
+			int n =  reader.read();//this throws ioexception
+				if (n == -1) {
+				break;
+				}
+			source.append((char)n, i);
+			}
+			catch (IOException I) {
+			D.error(I);
+			reader.reset();
+			}
+		}
+	reader.close();//closes the reader and throws ioexception
+	return source;
+	}
+
+	static Page.Source getSource_old(Page.Source source, URLConnection con) throws IOException {
 	final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()), source.length());//throws ioexcpetion above 
 	boolean errorwrite = false;
 		for (int i = 0; i < source.length(); i++) {
@@ -519,53 +541,66 @@ final static private String Null = "null";
 	}
 
 	/*These methods are used to directly add a page into the dada variable*/
-	static Data<Page> add(URL url, Data<Page> data) {
-	Debug.check(url, null);
-	Debug.check(data, null);
-	final String msg = "This happen in P.add(URL)";
-
+	static Data add(URL url, String link, Data<Page> data) {
 		try {
-		Page page = new Page(url);
-		data.put(page);
+		Page p = new Page(url, link);
+		data.put(p);
 		}
-		catch (DuplicateURLException Du) {
-		Du.printRow();
+		catch (MalformedURLException M) {
+		Print.printRow(M, link);
+		}
+		catch (URISyntaxException U) {
+		Print.printRow(U, link);
+		}
+		catch (IOException I) {
+		Print.printRow(I, link);
+		}
+		catch (UselessURLException U) {
+		U.printRow();
+		}
+	return data;
+	}
+
+	static Data<Page> add(URL url, Data<Page> data) {
+		try {
+		Page p = new Page(url);
+		data.put(p);
+		}
+		catch (MalformedURLException M) {
+		Print.printRow(M, url);
 		}
 		catch (URISyntaxException U) {
 		Print.printRow(U, url);
 		}
-		catch (InvalidURLException I) {
-		I.printRow();	
-		}
 		catch (IOException I) {
 		Print.printRow(I, url);
 		}
-		
-	return data;
-	}
-
-	static Data<Page> add(Page page, Data<Page> data) throws 
-	DuplicateURLException, ExcludedURLException, InvalidURLException, 
-	NoRobotsURLException, URISyntaxException {
-	Debug.check(page, null);
-	Debug.check(data, null);
-	data.put(page);//this throws duplicateurlexception
-	return data;
-	}
-	
-	static Data<Page> add(Collection<Page> pages, Data<Page> data) {
-	Debug.check(pages, null);
-	Debug.check(data, null);
-		for (Page page : pages) {
-			try {
-			data.put(page);
-			}
-			catch (DuplicateURLException Du) {
-			Du.printRow();
-			}
+		catch (UselessURLException U) {
+		U.printRow();
 		}
 	return data;
 	}
+	
+	static public Data<Page> add(String link, Data<Page> data) {
+		try {
+		Page p = new Page(link);
+		data.put(p);
+		}
+		catch (MalformedURLException M) {
+		Print.printRow(M, link);
+		}
+		catch (URISyntaxException U) {
+		Print.printRow(U, link);
+		}
+		catch (IOException I) {
+		Print.printRow(I, link);
+		}
+		catch (UselessURLException U) {
+		U.printRow();
+		}
+	return data;
+	}
+
 
 	static Data<Page> add(Page[] pages, Data<Page> data) {
 	Debug.check(pages, null);

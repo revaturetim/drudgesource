@@ -49,10 +49,6 @@ private Object[] objs = new Object[10];
 	return added;
 	}
 		
-	public void add(int i, T page) {
-	
-	}
-	
 	/*public boolean contains(Object page) {
 	boolean has = false; 
 	List<T> newlist = new DataList<T>();

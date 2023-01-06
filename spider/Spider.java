@@ -18,20 +18,9 @@ protected long delay = 0L;
 
 	//a convenience method for handling links and it makes other spiders do different things
 	protected void links(final Page p) {
-		
-		try {
-		p.getSource();
-		Data<Page> pages = p.getLinks();
-		DataObjects.dada.put(pages);
-		}
-		catch (SocketTimeoutException S) {
-		spinIssue("Found a Socket Timeout while getting source", p.getURL(), S);
-		Print.printRow(S, p);
-		}
-		catch (IOException I) {
-		spinIssue("Found and Input/Output while getting source", p.getURL(), I);
-		Print.printRow(I, p);
-		}
+	p.getSource();
+	Data<Page> pages = p.getLinks();
+	DataObjects.dada.put(pages);
 	Debug.time("End Links");
 	}
 	
@@ -87,7 +76,7 @@ protected long delay = 0L;
 
 		try {
 			if (checkok) {
-			p.isUseless();
+			p.isUseless();//this throws a uselesssurlexception
 			Debug.time("Checing is UseLess");
 			}
 			if (!robotsallowed) {
@@ -129,10 +118,6 @@ protected long delay = 0L;
 		catch (ExcludedURLException E) {
 		remove = true;
 		E.printRow();
-		}
-		catch (IOException I) {
-		spinIssue("Found an IOException while checking if it is useless", p, I); 
-		Print.printRow(I, p);
 		}
 	return remove;
 	}

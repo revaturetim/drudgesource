@@ -251,9 +251,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						Print.error(N, p);
 						}
 					}
-					catch (IOException I) {
-					Print.error(I, p);
-					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
@@ -386,9 +383,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						System.out.println(keyword);
 						}	
 					}
-					catch (IOException I) {
-					Print.error(I, p);
-					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
@@ -421,9 +415,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						for (Page page : pages) {
 						System.out.println(page.toString());
 						}
-					}
-					catch (IOException I) {
-					Print.error(I, p);
 					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
@@ -507,9 +498,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					p.isUseless();
 					System.out.println(p.getSource());
 					}
-					catch (IOException I) {
-					Print.error(I, p);
-					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}	
@@ -540,9 +528,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					String title = p.getTitle();
 					System.out.println(title);
 					}
-					catch (IOException I) {
-					Print.error(I, p);
-					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
 					}
@@ -570,9 +555,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {	
 					p.isUseless();
 					System.out.println(p.toString() + " is not a useless url for this program");	
-					}
-					catch (IOException I) {
-					Print.error(I, p);
 					}
 					catch (UselessURLException U) {
 					Print.error(U, p);
@@ -724,7 +706,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					Print.printRow(U, lastarg);
 					}
 					catch (IOException I) {
-					Print.error(I, arg[i + 1]);
+					Print.error(I, lastarg);
 					}
 					catch (URISyntaxException U) {
 					Print.printRow(U, lastarg);
@@ -826,13 +808,17 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
 		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")
 		) {
+		Debug.here();
 		String[] bites = link.split("\\.");
 		byte[] ip = new byte[bites.length];
 			for (int i = 0; i < bites.length; i++) {
 			ip[i] = Byte.valueOf(bites[i]);
 			}
+		Debug.here(ip);
 		InetAddress address = InetAddress.getByAddress(ip);
+		Debug.here(address);
 		String host = address.getCanonicalHostName();
+		Debug.here(host);
 		firstpage = new Page(host);
 		}
 		else if (link.equals("yourcomputer")) {

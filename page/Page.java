@@ -26,9 +26,8 @@ final private Data<Page> dlist = new DataList<Page>();
 final private Data<URL> elist = new DataListEmail<URL>();
 final private Data<String> klist = new DataList<String>();
 
-	public Page(URL u) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
-	final String decodedlink = P.decode(u.toString());//throws nullpointerexception if (u == null)
-	this.url = new URL(decodedlink);
+	public Page(URL u) throws IOException, URISyntaxException, InvalidURLException {
+	this.url = u;
 	this.isValid();//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
@@ -64,10 +63,7 @@ final private Data<String> klist = new DataList<String>();
 		if (obj instanceof Page) {
 		String urlstring = this.toString();
 		String pstring = obj.toString();
-		int e = urlstring.compareTo(pstring);
-			if (e == 0) {
-			isequal = true;
-			}
+		isequal = urlstring.equals(pstring);
 		}
 	return isequal;
 	}
@@ -84,22 +80,7 @@ final private Data<String> klist = new DataList<String>();
 			LinkAction<String> action = new LinkAction<String>() {
 				
 				public void act(String link) {
-					try {
-					Page p = new Page(url, link);
-					dlist.put(p);
-					}
-					catch (MalformedURLException M) {
-					Print.printRow(M, link);
-					}
-					catch (URISyntaxException U) {
-					Print.printRow(U, link);
-					}
-					catch (IOException I) {
-					Print.printRow(I, link);
-					}
-					catch (UselessURLException U) {
-					U.printRow();
-					}
+				P.add(url, link, dlist);
 				}
 			};
 		P.Links.find(content, action);
@@ -123,7 +104,6 @@ final private Data<String> klist = new DataList<String>();
 	}
 
 	public String getTitle() {
-	Debug.println(content.size());
 	String title = P.getTitle(content);
 	Debug.time("Getting Title");
 	return title;
@@ -140,12 +120,9 @@ final private Data<String> klist = new DataList<String>();
 	}
 
 	//this will essentiallly handle all the prechecking needed before it gets content
-	public boolean isUseless() throws RedirectedURLException, InvalidURLException, 
-	       NotOKURLException, NoContentURLException, BadEncodingURLException, IOException {
+	public boolean isUseless() throws RedirectedURLException, InvalidURLException, NotOKURLException, NoContentURLException, BadEncodingURLException {
 	Debug.time("Checking Uselessness");
-	//P.checkHeaders(connection);
 	P.checkHeaders(header, toString());
-	//P.checkHeaders(this);
 	return false; //if it made it this far then this is the default answer
 	}
 
@@ -154,24 +131,17 @@ final private Data<String> klist = new DataList<String>();
 	return true;
 	}
 
-	public Source getSource() throws IOException {
-	final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()), content.length());//throws ioexcpetion above 
-	didconnect = true;	
-		for (int i = 0; i < content.length(); i++) {
-			try {
-			reader.mark(0);
-			int n =  reader.read();//this throws ioexception
-				if (n == -1) {
-				break;
-				}
-			content.append((char)n, i);
-			}
-			catch (IOException I) {
-			//Debug.here(I);
-			reader.reset();
-			}
+	public Source getSource() {
+		try {
+		P.getSource(content, connection);
+		didconnect = true;
 		}
-	reader.close();//closes the reader and throws ioexception
+		catch (SocketTimeoutException S) {
+		Print.printRow(S, this);
+		}
+		catch (IOException I) {
+		Print.printRow(I, this);
+		}
 	return content;
 	}
 	
@@ -242,13 +212,7 @@ final private Data<String> klist = new DataList<String>();
 		final Data<URL> dr = P.readRobotFile(c);
 		DataObjects.norobots.put(dr);
 			for (URL use : dr) {
-				try {
-				Page p = new Page(use);
-				DataObjects.dada.put(p);
-				}
-				catch(Exception E) {
-				
-				}
+			P.add(use, DataObjects.dada);
 			
 			}
 			if (dr.contains(this.url)) {
@@ -354,14 +318,10 @@ final private Data<String> klist = new DataList<String>();
 		}
 		
 		public boolean isComplete() {
-		boolean complete = false;
-			if (size < allc.length) {
-			complete = false;
-			}
-			else {
-			complete = true;
-			}
-		return complete;
+		return (size >= allc.length);//if size is greater than array length then it is complete else it isn't
+		/* for some reason using this branchless programming sped up my program a lot.  
+		 * I don't know why.  It just did.
+		 */
 		}
 		
 		public boolean wasFilled() {

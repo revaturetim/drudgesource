@@ -8,13 +8,6 @@ abstract class AbstractData<T> extends AbstractList<T> implements Data<T>, Seria
 protected String source;
 protected int level = 1;
 
-	abstract public T remove(int cycle);
-	abstract public T get(int cycle);
-	abstract public boolean add(T obj);
-	abstract public void begin() throws Exception;
-	abstract public void end() throws Exception;
-	abstract public void truncate();
-	abstract public boolean checkError();
 	
 	public void setSource(String s) {
 	source = s;

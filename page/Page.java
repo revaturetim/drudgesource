@@ -9,7 +9,7 @@ import java.lang.ref.*;
 import drudge.*;
 import drudge.spider.*;
 import drudge.data.*;
-import drudge.global.DataObjects;
+import drudge.global.*;
 
 /*this is the skeletal class of all page objects*/
 final public class Page implements Serializable {
@@ -153,15 +153,27 @@ final private Data<String> klist = new DataList<String>();
 	return connection;
 	}
 
-	public URL getRobotURL() {
-		try {
-		URL roboturl = new URL(url, "/robots.txt");
-		return roboturl;
+	public URL getURL(final String sample, final String real) {
+	URL url = null;//default value
+		if (this.url.getProtocol().equals("file")) {	
+			try {
+			File r = new File(sample);
+			url = new URL(r.toURI().toString());
+			}
+			catch (IOException I) {
+			D.error(I);
+			}
+		
 		}
-		catch (IOException I) {
-		D.error(I);
-		return null;
-		}			
+		else {
+			try {
+			url = new URL(this.url, real);
+			}
+			catch (IOException I) {
+			D.error(I);
+			}
+		}
+	return url;
 	}
 	
 	public Header header() {
@@ -206,7 +218,7 @@ final private Data<String> klist = new DataList<String>();
 	}
 
 	public boolean isRobotAllowed() throws NoRobotsURLException {
-	final URL roboturl = getRobotURL();
+	final URL roboturl = getURL(FileNames.samprobot, "/robots.txt");
 		try {
 		final URLConnection c = roboturl.openConnection(Page.proxyserver);
 		final Data<URL> dr = P.readRobotFile(c);

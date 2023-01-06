@@ -18,7 +18,7 @@ o("-o", "This will write the output to a file called " + FileNames.out),
 p("-p", "This will let you set a proxy server to use while crawling."),
 r("-r", "This will set " + ThisProgram.name + " to respect a robots.txt policy if the website has one."),
 s("-s", "This will set from what cycle to continue from."),
-t("-t", "This will use the test option from a sample file called " + FileNames.samp + "."),
+t("-t", "This will use the test option from a sample file called " + FileNames.samphtml + "."),
 w("-w", "This will slow your crawler down so you don't overload a website."), 
 x("-x", "This will let you pass in extra options for " + ThisProgram.name + "."),
 inc("-inc", "This will set " + ThisProgram.name + " to only include page from certain websites."),
@@ -75,7 +75,7 @@ static final private String HELP = "-HELP";
 		System.out.println("-----------Help-----------");
 
 			for (Help h : Help.values()) {
-			System.out.println(h.par + "\t\t" + h.msg);
+			System.out.printf("%-10s" + h.msg + "\n", h.par);
 			}
 		}
 		else if (key.equals(about.par) || key.equals(a.par)) {

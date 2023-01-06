@@ -60,9 +60,7 @@ final static private String Null = "null";
 	String user = null;
 	
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-			if (((HttpURLConnection)rcon).getResponseCode() != HttpURLConnection.HTTP_OK) {
-			break;
-			}
+			
 			if (line.startsWith(comment)) {
 			continue;
 			}

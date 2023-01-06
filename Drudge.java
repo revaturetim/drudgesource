@@ -792,9 +792,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	static Page createFirstPage(String link) throws URISyntaxException, InvalidURLException, MalformedURLException, UnknownHostException, IOException {
 	Page firstpage = null;
 		if (link.equals("-samp") || link.equals("-t")) {
-		File sampf = new File(FileNames.samp);
-		File absfile = sampf.getAbsoluteFile();
-		String samplepage = absfile.toURI().toString();
+		File sampf = new File(FileNames.samphtml);
+		String samplepage = sampf.toURI().toString();
 		firstpage = new Page(samplepage);
 		}
 		else if (link.matches("http[s]://.*")) {

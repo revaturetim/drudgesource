@@ -20,7 +20,7 @@
 5.  Make a way to get image files as it crawls and perhaps other types of data.
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
 7.  Get rid of type variable in Data interface.  Make it all Page objects;
-8.  Fix help so that include and exclude are lined up evenly in their columns;
+8.  Have help and HELP be their own enums;
 9.  Make more efficient P.getKeywords method;
 10. Improve respect robots!  It hangs for some reason;
 11. BUG!  Why does it store unencoded links?

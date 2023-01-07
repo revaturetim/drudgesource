@@ -25,18 +25,14 @@ public class DataListExclude<T> extends DataList<T>{
 	return null;
 	}
 	
-	final public void put(T link) {
-	//empty since it is going to be a read only object
-	}
-	
 	@SuppressWarnings("unchecked")	
 	/*The default assumes that it is working with a page object*/
 	public void begin() throws Exception {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 			try {
-			T p = (T)new Page(line);
-			add(p);
+			T u = (T)new URL(line);
+			put(u);
 			}
 			catch (MalformedURLException M) {
 			D.error(M);

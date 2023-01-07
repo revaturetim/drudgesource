@@ -22,8 +22,8 @@ final public static Data<Page> dada = (Data<Page>)new DataList<Page>(FileNames.l
 final public static Data<URL> dada_emails = (Data<URL>)new DataListEmail<URL>(FileNames.emails);
 
 /*THIS IS FOR EXCLUDE/INCLUDE OBJECTS*/
-final public static Data<Page> exclude = new DataListExclude<Page>(FileNames.exclude);
-final public static Data<Page> include = new DataListExclude<Page>(FileNames.include);
+final public static Data<URL> exclude = new DataListExclude<URL>(FileNames.exclude);
+final public static Data<URL> include = new DataListExclude<URL>(FileNames.include);
 
 /*THIS IS FOR NOROBOT OBJECTS*/
 final public static Data<URL> norobots = (Data<URL>)new DataList<URL>();

@@ -58,8 +58,7 @@ private File dir;
 	return obj;
 	}
 	
-	public boolean add(T obj) {
-	boolean added = false;
+	public void put(T obj) {
 	Page p = (Page)obj;
 	File f = new File(dir, String.valueOf(p.hashCode()));
 	
@@ -69,7 +68,6 @@ private File dir;
 			out.writeObject(p);
 			//out.writeFields();
 			out.close();
-			added = true;
 			}
 			catch (IOException I) {
 			D.error(I);
@@ -78,7 +76,6 @@ private File dir;
 		else {
 		Debug.here("found a matching file");
 		}
-	return added;
 	}
 	
 	public boolean contains(Object obj) {

@@ -131,6 +131,9 @@ final private Data<String> klist = new DataList<String>();
 	return true;
 	}
 
+	/* Use String.append() instead of String + String for all getSouce() methods
+	 * I discovered it was much faster that way
+	 */
 	public Source getSource() {
 		try {
 		P.getSource(content, connection);
@@ -188,18 +191,14 @@ final private Data<String> klist = new DataList<String>();
 	return url.toString();
 	}
 
-	public boolean sameHost(Page p) {
-	return P.sameHost(this, p);
-	}
-
 	public boolean didConnect() {
 	return didconnect;
 	}
 
 	public boolean isIncluded() throws ExcludedURLException {
 	boolean included = false;
-		for (Page p : DataObjects.include) {		
-		included = this.sameHost(p);
+		for (URL u : DataObjects.include) {
+		included = this.toString().contains(u.toString());
 			if (included) {
 			break;
 			}
@@ -211,7 +210,7 @@ final private Data<String> klist = new DataList<String>();
 	}
 	
 	public boolean isExcluded() throws ExcludedURLException {
-		if (DataObjects.exclude.contains(this)) {
+		if (DataObjects.exclude.contains(this.url)) {
 		throw new ExcludedURLException(this.url);
 		}
 	return false;

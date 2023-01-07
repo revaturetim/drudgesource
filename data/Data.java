@@ -13,8 +13,8 @@ import drudge.global.*;
 public interface Data<T> extends Iterable<T>, RandomAccess {
 
 	/*These are important methods because they interface with the rest of the program*/
-	public boolean add(T obj);//this is just to raw add an item into it without checking exceptions
 	public T remove(int cycle);
+	public void put(T page) throws DuplicateURLException, IllegalArgumentException;
 	public T get(int cycle);
 	public void setSource(String s);
 	public String source();
@@ -45,15 +45,6 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return has;
 	}
 
-	default public void put(T link) throws DuplicateURLException, IllegalArgumentException {
-		if (link == null) {
-		throw new IllegalArgumentException("Attempting to add a null object to " + this.getClass().getName());
-		}
-		if (add(link) == false) {
-		throw new DuplicateURLException(link);//throws DuplicateURLException
-		}	
-	}
-	
 	default public boolean put(Data<T> d) {
 	boolean scs = true;
 

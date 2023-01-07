@@ -29,8 +29,7 @@ private Object[] objs = new Object[10];
 	objs = new Object[i];
 	}
 
-	public boolean add(T page) {
-	boolean added = false;
+	public void put(T page) throws DuplicateURLException, IllegalArgumentException {
 		
 		if (contains(page) == false) {
 			
@@ -39,14 +38,15 @@ private Object[] objs = new Object[10];
 			}
 			if (objs[size] == null) {	
 			objs[size] = page;
-			added = true;
 			size++;//increases size by 1
 			}
 			else {
-			throw new IllegalArgumentException("Size variable was not set correctly.  It is erasing previous data.");
+			throw new IllegalStateException("Size variable was not set correctly.  It is erasing previous data.");
 			}	
 		}
-	return added;
+		else {
+		throw new DuplicateURLException(page);
+		}
 	}
 		
 	/*public boolean contains(Object page) {
@@ -54,7 +54,6 @@ private Object[] objs = new Object[10];
 	List<T> newlist = new DataList<T>();
 	
 	Collections.copy(newlist, this);
-	Debug.check(size(), newlist.size());
 	//Arrays.sort(NewObjects, new NaturalComparator());
 		try {	
 		int f = Collections.binarySearch(newlist, (Page)page, new NaturalComparator());

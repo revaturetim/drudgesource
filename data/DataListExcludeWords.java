@@ -29,12 +29,6 @@ public class DataListExcludeWords<T extends String> extends DataListExclude<T>{
 		}
 	}
 	
-	/*this is an internal check to check the data within the data object itself not its source*/
-	public boolean check() {
-	
-	return false;
-	}
-	
 	public boolean checkError() {
 	System.out.println("Checking " + source() + " file for errors.");
 	boolean duplicate = false;

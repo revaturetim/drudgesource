@@ -20,7 +20,18 @@ protected long delay = 0L;
 	protected void links(final Page p) {
 	p.getSource();
 	Data<Page> pages = p.getLinks();
-	DataObjects.dada.put(pages);
+		for (Page page : pages) {
+			try {
+			checkIncluded(page);
+			DataObjects.dada.put(page);
+			}
+			catch (DuplicateURLException D) {
+				
+			}
+			catch (ExcludedURLException E) {
+
+			}
+		}
 	Debug.time("End Links");
 	}
 	

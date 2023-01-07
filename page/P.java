@@ -174,17 +174,29 @@ final static private String Null = "null";
 				continue;//this skips in case there is an error in the html
 				}
 			final String tag = html.substring(b, e);
-			int r = tag.indexOf("href=\"");
+			int r = tag.indexOf("href=");
 				if (r == -1) {
-				r = tag.indexOf("action=\"");
+				r = tag.indexOf("action=");
 					if (r == -1) {
-					r = tag.indexOf("src=\"");	
+					r = tag.indexOf("src=");	
 					}
 				}
 
 				if (r != -1) { 
-				final int rbeg = tag.indexOf("\"", r);
-				final int rend = tag.indexOf("\"", rbeg + 1);
+				int rbeg = tag.indexOf("\"", r);
+				int rend;
+					//this is for one or two quotes
+					if (rbeg != -1) {
+					rend = tag.indexOf("\"", rbeg + 1);
+						if (rend == -1) {
+						rend = tag.length();
+						}
+					}
+					//this is no quotes
+					else {
+					rbeg = tag.indexOf("=", r);
+					rend = tag.length();
+					}
 				String link = tag.substring(rbeg + 1, rend);
 				findInPath(link, action);
 				}
@@ -282,7 +294,12 @@ final static private String Null = "null";
 		for (String word : somewords) {
 			if (word.length() > 2) {
 				if (!DataObjects.donotusewords.contains(word)) {	
-				words.add(word);
+					try {
+					words.put(word);
+					}
+					catch (DuplicateURLException D) {
+
+					}
 				}
 			}
 		}
@@ -303,9 +320,13 @@ final static private String Null = "null";
 			for (String word : somewords) {
 				if (word.length() > 2) {
 					if (!DataObjects.donotusewords.contains(word)) {	
-					words.add(word);
+						try {
+						words.put(word);
+						}
+						catch (DuplicateURLException D) {
+
+						}
 					}
-					else Debug.print(word);
 				}
 			}
 		}
@@ -320,7 +341,12 @@ final static private String Null = "null";
 		}
 	String[] keywords = text.split(" ");
 		for (String word : keywords) {
-		words.add(word);
+			try {
+			words.put(word);
+			}
+			catch (DuplicateURLException D) {
+	
+			}
 		}
 	return words;
 	}
@@ -458,6 +484,9 @@ final static private String Null = "null";
 	checkHeaders(h, u);
 	}
 	
+	/* Use String.append() instead of String + String for all getSouce() methods
+	 * I discovered it was much faster that way
+	 */
 	static Page.Source getSource(Page.Source source, URLConnection connection) throws IOException, SocketTimeoutException {
 	final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()), source.length());//throws ioexcpetion and sockettimeoutexception 
 		for (int i = 0; i < source.length(); i++) {
@@ -478,6 +507,9 @@ final static private String Null = "null";
 	return source;
 	}
 
+	/* Use String.append() instead of String + String for all getSouce() methods
+	 * I discovered it was much faster that way
+	 */
 	static Page.Source getSource_old(Page.Source source, URLConnection con) throws IOException {
 	final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()), source.length());//throws ioexcpetion above 
 	boolean errorwrite = false;
@@ -508,6 +540,9 @@ final static private String Null = "null";
 	return source;
 	}
 
+	/* Use String.append() instead of String + String for all getSouce() methods
+	 * I discovered it was much faster that way
+	 */
 	static char[] getSource(char[] chars, URLConnection con) throws IOException {
 	final BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()), chars.length);//throws ioexcpetion above 
 	boolean errorwrite = false;

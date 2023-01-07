@@ -17,21 +17,24 @@ abstract class DataWriter<T> extends AbstractData<T> {
 	abstract <W extends Writer> W createWriter();
 	
 	
-	public boolean add(T page) {
-	boolean added = false;
+	public void put(T page) throws DuplicateURLException, IllegalArgumentException {
+		if (page == null) {
+		throw new IllegalArgumentException("Attempting to add a null object into the database");
+		}
 		if (contains(page) == false) {
 		Page tp = (Page)page;
 		PrintWriter PRINTER = createWriter();
 			try {
 			D.writeEntry(tp, PRINTER, level());
 			PRINTER.close();
-			added = true;
 			}
 			catch (IOException I) {
 			D.error(I);
 			}
 		}
-	return added;
+		else {
+		throw new DuplicateURLException(page);
+		}
 	}
 
 	public T get(final int n) {

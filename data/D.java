@@ -220,9 +220,4 @@ final public class D implements FileNames {
 	return (duplicate || linkerror);
 	}
 	
-	static void writeLinkFile(final String file, Collection<Page> col) {
-	
-	
-	
-	}
 }

@@ -26,7 +26,8 @@ final public static Data<URL> exclude = new DataListExclude<URL>(FileNames.exclu
 final public static Data<URL> include = new DataListExclude<URL>(FileNames.include);
 
 /*THIS IS FOR NOROBOT OBJECTS*/
-final public static Data<URL> norobots = (Data<URL>)new DataList<URL>();
+//final public static Data<URL> norobots = (Data<URL>)new DataList<URL>();
+final public static Hashtable<URL, Data<URL>> norobots = new Hashtable<URL, Data<URL>>();
 
 /*THIS IS FOR ALL OTHER OBJECTS MISCILANIOUS*/
 final public static Data<String> donotusewords = new DataListExcludeWords<String>(FileNames.words);

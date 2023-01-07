@@ -244,10 +244,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					p.isUseless();	
 						try {
-						p.isRobotAllowed();
+						p.isRobotExcluded();
 						System.out.println("Yes!  " + ThisProgram.name + " is allowed");
 						}
-						catch (NoRobotsURLException N) {
+						catch (RobotsExcludedURLException N) {
 						Print.error(N, p);
 						}
 					}
@@ -468,11 +468,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Page p = new Page(arg[i + 1]);
 					
 					try {
-					p.isRobotAllowed();
+					p.isRobotExcluded();
 					System.out.println(arg[i + 1] + 
 					" is NOT disallowed by sites robot.txt file."); 
 					}
-					catch (NoRobotsURLException N) {
+					catch (RobotsExcludedURLException N) {
 					Print.error(N, arg[i + 1]);
 					}
 			

@@ -16,6 +16,7 @@
 1.  Make a todo list of things to do like adding new features OR cleaning up bugs in the program;
 2.  Elimnate unnescessary variables, methods, and classes in programs for efficiency;
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
+4.  Must find broken links in code;
 5.  Make a way to get image files as it crawls and perhaps other types of data.
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
 7.  Get rid of type variable in Data interface.  Make it all Page objects;
@@ -24,10 +25,12 @@
 10. Improve respect robots!  It hangs for some reason;
 11. BUG!  Why does it store unencoded links?
 12. Have debug.here replace all debug.print since I hate debug.print;
+13. BUG! Must find broken link where there is only one quote quoting it
 14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
+18. BUG! It picks up image files in the sample test page;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
 20. Investigate to see if translating international urls unicode to american ascii will be useful;
 21. Have readrobots find new urls under the "allowed" sections of file;
@@ -40,7 +43,6 @@
 30. Improve efficiency of checkIncluded methods;
 31. Page.isIncluded(), Page.isExcluded(), and Page.isRobotAllowed() should be condensed more for efficiency reasons;
 32. Update license option to make sure license printed is up to date and can't be used to undo the license in readme.txt;
-33. Restore isRobotsAllowed() method to use robots url as an index vs putting all disallowed urls into one excluded list;
 34. See if simplying adding robot disallowed to excluded data would be better in terms of program efficiency;
 35. Fix createPage so that when you put an IP number without protocol that it will either put its own in or tell the user to do so;
 36. Consider getting rid of type variable for Data classes since they create more problems than they solve;

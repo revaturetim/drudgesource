@@ -153,7 +153,7 @@ final static private String Null = "null";
 
 	static class Links {
 		
-		private static void findInPath(final String link, LinkAction<String> action) {
+		private static void findInPath(final String link, LinkFilter<String> action) {
 		/*Ths is to catch all subdirectories of a link*/
 		final int doubleslash = link.indexOf("//");
 			for (int slash = link.indexOf("/");slash != -1; slash = link.indexOf("/", slash + 1)) {
@@ -165,7 +165,7 @@ final static private String Null = "null";
 		action.act(link);
 		}
 
-		static void find(CharSequence source, LinkAction<String> action) {
+		static void find(CharSequence source, LinkFilter<String> action) {
 		final String html = source.toString().toLowerCase();
 
 			for (int b = html.indexOf("<"); b != -1; b = html.indexOf("<", b + 1)) {
@@ -183,18 +183,16 @@ final static private String Null = "null";
 				}
 
 				if (r != -1) { 
+				//this is for normal two quotes
 				int rbeg = tag.indexOf("\"", r);
-				int rend;
-					//this is for one or two quotes
-					if (rbeg != -1) {
-					rend = tag.indexOf("\"", rbeg + 1);
-						if (rend == -1) {
-						rend = tag.length();
-						}
-					}
-					//this is no quotes
-					else {
+				int rend = tag.indexOf("\"", rbeg + 1);
+					//this is for no quotes
+					if (rbeg == -1) {
 					rbeg = tag.indexOf("=", r);
+					rend = tag.length();
+					}
+					//this is for one quote or more
+					else if (rend == -1) {
 					rend = tag.length();
 					}
 				String link = tag.substring(rbeg + 1, rend);
@@ -230,7 +228,7 @@ final static private String Null = "null";
 	
 	static class LinksRegex {
 	
-		void get(CharSequence source, LinkAction<String> action) {
+		void get(CharSequence source, LinkFilter<String> action) {
 		Matcher m1 = Patterns.Links.LINK.match(source);
 		
 			while (m1.find()) {

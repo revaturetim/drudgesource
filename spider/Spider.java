@@ -20,18 +20,7 @@ protected long delay = 0L;
 	protected void links(final Page p) {
 	p.getSource();
 	Data<Page> pages = p.getLinks();
-		for (Page page : pages) {
-			try {
-			checkIncluded(page);
-			DataObjects.dada.put(page);
-			}
-			catch (DuplicateURLException D) {
-				
-			}
-			catch (ExcludedURLException E) {
-
-			}
-		}
+	checkExcluded(pages);
 	Debug.time("End Links");
 	}
 	
@@ -72,7 +61,23 @@ protected long delay = 0L;
 		}
 	}
 
-	protected void checkIncluded(Page p) throws ExcludedURLException {
+	protected void checkExcluded(Data<Page> pages) {
+		for (Page page : pages) {
+			try {
+			checkExcluded(page);
+			DataObjects.dada.put(page);
+			}
+			catch (DuplicateURLException D) {
+			D.printRow();	
+			}
+			catch (ExcludedURLException E) {
+			E.printRow();
+			}
+		}
+	}
+	
+	protected void checkExcluded(Page p) throws ExcludedURLException {
+
 		if (included) {
 		p.isIncluded();	
 		}
@@ -91,16 +96,16 @@ protected long delay = 0L;
 			Debug.time("Checing is UseLess");
 			}
 			if (!robotsallowed) {
-			p.isRobotAllowed();//this throws norobotsallowedexception	
+			p.isRobotExcluded();//this throws RobotsExcludedURLException	
 			Debug.time("Checking Robot Allowed");
 			}
-		checkIncluded(p);//throws excluded url eception
+		checkExcluded(p);//throws excluded url eception
 		links(p);
 		}
 		catch (RedirectedURLException R) {
 		R.printRow();
 			try {
-			checkIncluded(p);//throws excluded url exception
+			checkExcluded(p);//throws excluded url exception
 			redirect(p);
 			}
 			catch (ExcludedURLException E) {
@@ -116,15 +121,14 @@ protected long delay = 0L;
 		remove = true;
 		I.printRow();
 		}
-		catch (NoRobotsURLException N) {
-		remove = true;
-		N.printRow();
-		}
 		catch (NoContentURLException N) {
 		N.printRow();
 		}	
 		catch (BadEncodingURLException B) {
 		B.printRow();
+		}
+		catch (RobotsExcludedURLException N) {
+		N.printRow();
 		}
 		catch (ExcludedURLException E) {
 		remove = true;

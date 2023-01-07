@@ -28,33 +28,33 @@ final private Data<String> klist = new DataList<String>();
 
 	public Page(URL u) throws IOException, URISyntaxException, InvalidURLException {
 	this.url = u;
-	this.isValid();//this throws InvalidURLException and URISyntaxException
+	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(URL p, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
 	this.url = new URL(p, P.decode(l));//this throws malformedurlexception
-	this.isValid();//this throws InvalidURLException and URISyntaxException
+	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 
 	public Page(String u) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
 	this.url = new URL(P.decode(u));//this will throw malformedurlexception
-	this.isValid();//this throws InvalidURLException and URISyntaxException
+	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(String u, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
 	URL purl = new URL(P.decode(u));//this will throw malformedurlexception
 	this.url = new URL(purl, P.decode(l));//this will throw malformedurlexception
-	this.isValid();//this throws InvalidURLException and URISyntaxException
+	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
 	public Page(Page op, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
 	URL oldurl = op.getURL();
 	this.url = new URL(oldurl, P.decode(l));//this will throw malformedurlexception
-	this.isValid();//this throws InvalidURLException and URISyntaxException
+	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	}
 	
@@ -72,19 +72,23 @@ final private Data<String> klist = new DataList<String>();
 	public int hashCode() {
 	return toString().hashCode();
 	}
+
+	public Data<Page> getLinks(LinkFilter filter) {
+		if (content.wasFilled() && content.size() > 0) {
+		P.Links.find(content, filter);
+		}
+	Debug.time("Getting Links Filter");
+	return dlist;
+	}
 	
 	public Data<Page> getLinks() {
-		//I just liked anonymous classes/methods so I decided to keep this
-		//It also refers to the this object url variable for its absolute path
-		if (content.wasFilled() && content.size() > 0) {
-			LinkAction<String> action = new LinkAction<String>() {
-				
-				public void act(String link) {
-				P.add(url, link, dlist);
-				}
-			};
-		P.Links.find(content, action);
-		}
+		LinkFilter<String> action = new LinkFilter<String>() {
+			
+			public void act(String link) {
+			P.add(url, link, dlist);
+			}
+		};
+	this.getLinks(action);
 	Debug.time("Getting Links");
 	return dlist;
 	}
@@ -216,22 +220,27 @@ final private Data<String> klist = new DataList<String>();
 	return false;
 	}
 
-	public boolean isRobotAllowed() throws NoRobotsURLException {
+	public boolean isRobotExcluded() throws RobotsExcludedURLException {
 	final URL roboturl = getURL(FileNames.samprobot, "/robots.txt");
-		try {
-		final URLConnection c = roboturl.openConnection(Page.proxyserver);
-		final Data<URL> dr = P.readRobotFile(c);
-		DataObjects.norobots.put(dr);
-			for (URL use : dr) {
-			P.add(use, DataObjects.dada);
-			
+		if (!DataObjects.norobots.containsKey(roboturl)) {
+			try {
+			final URLConnection c = roboturl.openConnection(Page.proxyserver);
+			final Data<URL> dr = P.readRobotFile(c);
+			DataObjects.norobots.put(roboturl, dr);
+				//this is for add disallowed urls to database
+				for (URL use : dr) {
+				P.add(use, DataObjects.dada);
+				}
 			}
-			if (dr.contains(this.url)) {
-			throw new NoRobotsURLException(this.url);
+			catch (IOException I) {
+			D.error(I);
 			}
 		}
-		catch (IOException I) {
-		D.error(I);
+		else {
+		Data<URL> urls = DataObjects.norobots.get(roboturl);
+			if (urls.contains(this.url)) { 
+			throw new RobotsExcludedURLException(this.url);
+			}
 		}
 	return true;
 	}

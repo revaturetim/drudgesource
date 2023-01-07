@@ -8,13 +8,8 @@ import java.io.*;
 public class SizeComparator<T extends Page> implements Comparator<T> {
 
 	public int compare(T p1, T p2) {
-		try {
-		p1.getSource();
-		p2.getSource();
-		}
-		catch (IOException I) {
-
-		}
+	p1.getSource();
+	p2.getSource();
 	p1.getLinks();
 	p2.getLinks();
 	int c1 = p1.getLinkCount();

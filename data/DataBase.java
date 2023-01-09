@@ -75,7 +75,7 @@ insert into drudge values (link, title, keywords);
 			}
 		}
 		catch (SQLException S) {
-		Print.printRow(S, page);
+		Print.row(S, page);
 		}
 	return page; 
 	}
@@ -90,7 +90,7 @@ insert into drudge values (link, title, keywords);
 			}
 		}
 		catch (SQLException S) {
-		Print.printRow(S, page);
+		Print.row(S, page);
 		}
 	return page;
 	}
@@ -123,7 +123,7 @@ insert into drudge values (link, title, keywords);
 			}
 		}
 		catch (SQLException S) {
-		Print.printRow(S, page);
+		Print.row(S, page);
 		}
 	}
 	
@@ -140,7 +140,7 @@ insert into drudge values (link, title, keywords);
 			}
 		}
 		catch (SQLException S) {
-		Print.printRow(S, page);
+		Print.row(S, page);
 		}
 	return exist;
 	}

@@ -48,16 +48,16 @@ protected long delay = 0L;
 			}
 		}	
 		catch (URISyntaxException U) {
-		Print.printRow(U, redloc);
+		Print.row(U, redloc);
 		}
 		catch (InvalidURLException I) {
 		I.printRow();
 		}
 		catch (MalformedURLException M) {
-		Print.printRow(M, redloc);
+		Print.row(M, redloc);
 		}
 		catch (IOException I) {
-		Print.printRow(I, redloc);
+		Print.row(I, redloc);
 		}
 	}
 

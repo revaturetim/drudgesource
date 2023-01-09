@@ -139,10 +139,10 @@ final static private String Null = "null";
 			data.put(email);
 			}
 			catch (MalformedURLException M) {
-			Print.printRow(M, address);
+			Print.row(M, address);
 			}
 			catch (URISyntaxException U) {
-			Print.printRow(U, address);
+			Print.row(U, address);
 			}
 			catch (DuplicateURLException Du) {
 			Du.printRow();
@@ -578,13 +578,13 @@ final static private String Null = "null";
 		data.put(p);
 		}
 		catch (MalformedURLException M) {
-		Print.printRow(M, link);
+		Print.row(M, link);
 		}
 		catch (URISyntaxException U) {
-		Print.printRow(U, link);
+		Print.row(U, link);
 		}
 		catch (IOException I) {
-		Print.printRow(I, link);
+		Print.row(I, link);
 		}
 		catch (UselessURLException U) {
 		U.printRow();
@@ -598,13 +598,13 @@ final static private String Null = "null";
 		data.put(p);
 		}
 		catch (MalformedURLException M) {
-		Print.printRow(M, url);
+		Print.row(M, url);
 		}
 		catch (URISyntaxException U) {
-		Print.printRow(U, url);
+		Print.row(U, url);
 		}
 		catch (IOException I) {
-		Print.printRow(I, url);
+		Print.row(I, url);
 		}
 		catch (UselessURLException U) {
 		U.printRow();
@@ -618,13 +618,13 @@ final static private String Null = "null";
 		data.put(p);
 		}
 		catch (MalformedURLException M) {
-		Print.printRow(M, link);
+		Print.row(M, link);
 		}
 		catch (URISyntaxException U) {
-		Print.printRow(U, link);
+		Print.row(U, link);
 		}
 		catch (IOException I) {
-		Print.printRow(I, link);
+		Print.row(I, link);
 		}
 		catch (UselessURLException U) {
 		U.printRow();

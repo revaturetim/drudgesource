@@ -33,7 +33,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		final String a = arg[i];
 		/*TRY TO PUT OPTIONS IN ALPHABETICAL ORDER*/
 			if ((a.equals("-about") || a.equals("-a")) && arg.length == 1) {
-			Help.print(a);
+			Print.helpMenu(a);
 			break;
 			}
 			//the only commands that should have startWith vs equals are ones that use a combination like c=xxxxx
@@ -98,11 +98,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}	
 			}
 			else if ((a.equals("-help") || a.equals("-h")) && arg.length == 1) {
-			Help.print(a);
+			Print.helpMenu(a);
 			break;
 			}
 			else if ((a.equals("-help") || a.equals("-h")) && i == 0 && arg.length == 2) {
-			Help.print(arg[i + 1]);
+			Print.helpMenu(arg[i + 1]);
 			break;	
 			}
 			else if (a.equals("-i") && arg.length == 1) {
@@ -126,7 +126,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				catch (FileNotFoundException F) {
 				System.out.println("File " + FileNames.in + " could not be foun");
-				Help.print(a);
+				Print.helpMenu(a);
 				Print.error(F);
 				}
 				catch (IOException I) {
@@ -166,7 +166,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.UselessClass = UselessMessages.getClass(c);
 				}
 				catch (NumberFormatException N) {
-				Help.print(a);
+				Print.helpMenu(a);
 				Print.error(N, b[1]);
 				break;
 				}
@@ -368,8 +368,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals("-HELP") && arg.length == 1) {
-			//Print.HELP();
-			Help.print(a);
+			Print.helpMenu(a);
 			break;
 			}
 			else if (a.equals("-K") && arg.length == 2 && i == 0) {
@@ -659,7 +658,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			}
 			/*!this is the last parameter in the program!*/
 			else if (i == arg.length - 1) {
-			Print.printColumnHeaders();//this should be called first to show errors correctly in output columns
+			Print.columnHeaders();//this should be called first to show errors correctly in output columns
 			Debug.time("Print Column Headers");
 			String lastarg = arg[arg.length - 1];
 				if (lastarg.equals("-s")) {
@@ -700,16 +699,16 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					dada.put(firstpage);
 					}
 					catch (MalformedURLException M) {
-					Print.printRow(M, lastarg);
+					Print.row(M, lastarg);
 					}
 					catch (UnknownHostException U) {
-					Print.printRow(U, lastarg);
+					Print.row(U, lastarg);
 					}
 					catch (IOException I) {
 					Print.error(I, lastarg);
 					}
 					catch (URISyntaxException U) {
-					Print.printRow(U, lastarg);
+					Print.row(U, lastarg);
 					}
 					catch (InvalidURLException N) {
 					N.printRow();
@@ -718,7 +717,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					D.printRow();
 					}
 					catch (Exception E) {
-					Print.printRow(E, lastarg);
+					Print.row(E, lastarg);
 					}
 				}
 
@@ -744,7 +743,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					Data<URL> emails = p.getEmails();
 					dada_emails.put(emails);
 					}
-				Print.printRow(p, begcyc);
+				Print.row(p, begcyc);
 				begcyc++;
 				} while (begcyc < maxcyc);
 			Debug.time("Spider Crawl");
@@ -906,7 +905,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			default:
 			System.out.println("There is no spider option for " + String.valueOf(c));
-			Help.print("-c");	
+			Print.helpMenu("-c");	
 			break;
 		}
 		

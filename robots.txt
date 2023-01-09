@@ -1,0 +1,3 @@
+user-agent: *
+Disallow: sample.html
+#these are comments and should be ignored

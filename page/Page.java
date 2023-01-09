@@ -144,10 +144,10 @@ final private Data<String> klist = new DataList<String>();
 		didconnect = true;
 		}
 		catch (SocketTimeoutException S) {
-		Print.printRow(S, this);
+		Print.row(S, this);
 		}
 		catch (IOException I) {
-		Print.printRow(I, this);
+		Print.row(I, this);
 		}
 	return content;
 	}

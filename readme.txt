@@ -20,13 +20,11 @@
 5.  Make a way to get image files as it crawls and perhaps other types of data.
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
 7.  Get rid of type variable in Data interface.  Make it all Page objects;
-8.  Have help and HELP be their own enums;
+8.  Replace all help words with Help enum parameters for better consistency;
 9.  Make more efficient P.getKeywords method;
 10. Improve respect robots!  It hangs for some reason;
 11. BUG!  Why does it store unencoded links?
-12. Have debug.here replace all debug.print since I hate debug.print;
 13. BUG! Must find broken link where there is only one quote quoting it
-14. Change Help enum so that it has a getHelpDetails() for each help option;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;

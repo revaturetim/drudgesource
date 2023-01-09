@@ -83,8 +83,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			String file = exclude.source();
 				//this is for custom exclude file
 				if (a.startsWith("-exclude=")) {
-				String[] b = a.split("=", 2);
-				file = b[1];
+				file = getString(a);
 				}
 				try {
 				exclude.setSource(file);
@@ -105,9 +104,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Print.helpMenu(arg[i + 1]);
 			break;	
 			}
-			else if (a.equals("-i") && arg.length == 1) {
+			else if ((a.equals("-i") || a.startsWith("-input=")) && arg.length == 1) {
+			String file = FileNames.in;
+				if (a.startsWith("-input=")) {
+				file = getString(a);
+				}
 				try {
-				LineNumberReader reader = new LineNumberReader(new FileReader(FileNames.in));
+				LineNumberReader reader = new LineNumberReader(new FileReader(file));
 				String[] inputs = new String[0];
 					for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 					String[] lineinputs = line.split(" ");
@@ -140,8 +143,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			String file = include.source();
 				//this is for custom exclude file
 				if (a.startsWith("-include=")) {
-				String[] b = a.split("=", 2);
-				file = b[1];
+				file = getString(a);
 				}
 				try {
 				include.setSource(file);
@@ -218,7 +220,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 		
 			}
-			else if (a.equals("-r")) {
+			else if (a.equals("-rob")) {
 			robotsallowed = false;
 			}
 			else if (a.startsWith("-w=")) {
@@ -790,9 +792,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 	static Page createFirstPage(String link) throws URISyntaxException, InvalidURLException, MalformedURLException, UnknownHostException, IOException {
 	Page firstpage = null;
-		if (link.equals("-samp") || link.equals("-t")) {
-		File sampf = new File(FileNames.samphtml);
-		String samplepage = sampf.toURI().toString();
+		if (link.equals("-t") || link.startsWith("-samp=")) {
+		String file = FileNames.samphtml;
+			if (link.startsWith("-samp=")) {
+			file = getString(link);
+			}
+		File sampfile = new File(file);
+		String samplepage = sampfile.toURI().toString();
 		firstpage = new Page(samplepage);
 		}
 		else if (link.matches("http[s]://.*")) {

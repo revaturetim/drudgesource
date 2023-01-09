@@ -241,105 +241,22 @@ final private static String[] H = {
 				}
 			}
 		}
-		else if (key.equals(Help.about.parameter) || key.equals(Help.a.parameter)) {
-		System.out.println("------About------");
-		System.out.println("This program is a spider program that attempts ");
-		System.out.println("to index webpage on the world wide web");
-		System.out.println(ThisProgram.name + " " + ThisProgram.version);
-		System.out.println("by " + ThisProgram.author);
-		}
-		else if (key.equals(Help.i.parameter)) {
-		System.out.println("This is to read inputs from an input file called \"" + FileNames.in + "\"");
-		System.out.println("The first line of the file should be identical to the commands you want to use for this program");
-		System.out.println("The file should only have to be one line and is a convenience so you don't have to type them in yourself");
-		System.out.println("You're Welcome");
-		}
-		else if (key.equals(Help.l.parameter)) {
-		System.out.println("This will print out the license agreement");
-		}
-		else if (key.equals(Help.o.parameter)) {
-		System.out.println("This is to send all output to a file called \"" + FileNames.out + "\"");
-		}
-		else if (key.equals(Help.d.parameter)) {
-		System.out.println("This is used to set what you will be filling in for final data");
-		System.out.println("The default value is -d=1 which will be just place urls in datafile");
-		System.out.println("A value of -d=2 will insert page url and page titles into datafile");
-		System.out.println("A value of -d=3 will insert page url, page titles, and page keywords");
-		}
-		else if (key.equals(Help.e.parameter)) {
-		System.out.println("This is to collect emails and store them in a seperate email file called " + FileNames.emails);
-		}
 		else if (key.equals(Help.m.parameter)) {
-		System.out.println("Each Exception is numbered and if you want to see them in the output you have to use a number");
 			for (UselessMessages U : UselessMessages.values()) {
-			System.out.printf("%-4s %s\n", U.num, U.hlp); 
+			System.out.printf("%-4s %s\n", U.num, U.hlp);
 			}
 		System.out.printf("See if you can find them all!\n");
 		}
-		else if (key.equals(Help.c.parameter)) {
-		System.out.println("Option c is used for the different crawl methods that are available to this program.");
-		System.out.println("Method 1 is the basic web spider of this program.  It spiders links in the order that it finds them.");
-		System.out.println("Method 2 is meant to be a website overload tool and not to be used by nice people.");
-		System.out.println("Method 5 randomizes the order of the links so that it doesn't spiders them in the order that they are found.");
-		System.out.println("Method 6 searches links that are not a not from the same domain first.");
-		System.out.println("Method 7 crawls redirected links as they are found");
-		System.out.println("Method 8 sorts data in purley alpha-numeric order and is faster than other methods");
+		else {
+			for (Help h : Help.values()) {
+				if (key.equals(h.parameter)) {
+				System.out.println(h.submessage);
+				}
+
+			}
+		
 		}
-		else if (key.equals(Help.n.parameter)) {
-		System.out.println("This is to determine the number of cycles this program will execute");
-		System.out.println("Example:  -n=(number of cycles) http://my.website.com/goes/here");
-		System.out.println("This is the most important part of the program inputs because it will not do anything without this");
-		System.out.println("A url must follow the -n option or it won't work");
-		System.out.println("This option plus the url must be the last commands or it wont work");
-		System.out.println("Example:  -m=(message) -c=(crawl method) -n=(1, 2, 3...) http://my.website.com/goes/here");
-		}
-		else if (key.equals(Help.x.parameter)) {
-		System.out.println("This is used for extra options for various commands.");
-		System.out.println("See specific help on how it is used with those options.:)");
-		}
-		else if (key.equals(Help.s.parameter)) {
-		System.out.println("This is used for continuation purposes so you don't have to start over every time you start program.");
-		System.out.println("Just specify a entry number to start from and use the -n option to specify where it should stop.");
-		System.out.println("Example:  >drudge -n=100 -s=10"); 
-		System.out.println("Example:  drudge -n=100 -s to tell this program to pick up where it last left off.");
-		System.out.println("This will start at the entry of 10 and stop at 100.");
-		}
-		else if (key.equals(Help.samp.parameter) || key.equals(Help.t.parameter)) {
-		System.out.println("The -samp (or -t) option can be used only as the last parameter and in place of the url parameter.");
-		System.out.println("It is used as a test page for testing this program.");
-		}
-		else if (key.equals(Help.p.parameter)) {
-		System.out.println("This option is used in case you want to use a proxy server");
-		System.out.println("Example: -p=www.proxyserver.com");
-		}
-		else if (key.equals(Help.r.parameter)) {
-		System.out.println("This is used when you want to respect robots.txt policies of a website.");
-		System.out.println("Warning: Don't assume this will always work because not all robots.txt files are made correctly!");
-		}
-		else if (key.equals(Help.inc.parameter) || key.equals(Help.include.parameter)) {
-		System.out.println("This is to include only urls listed in the " + FileNames.exclude + " file");
-		System.out.println("This is a very inclusive option because it will include all urls listed in file");
-		System.out.println("Example: -inc");
-		System.out.println("You can also use -include= if you want to use your own custom file");
-		System.out.println("Example: -include=your/custom/file/here");
-		}
-		else if (key.equals(Help.exc.parameter) || key.equals(Help.exclude.parameter)) {
-		System.out.println("This is to exclude urls listed in the " + FileNames.exclude + " file");
-		System.out.println("This is a very exclusive option because it will exlcude all other urls listed in file");
-		System.out.println("Example: -exc");
-		System.out.println("You can also use -exclude= if you want to use your own custom file");
-		System.out.println("Example: -exclude=your/custom/file/here");
-		}
-		else if (key.equals(Help.nok.parameter)) {
-		System.out.println("This will force the spider to only accept all HTTP responses.");
-		System.out.println("This option will greatly speed up crawling but it may not get quality websites since it accepts useless urls.");
-		System.out.println("Having this option on will capture redirects which can lead to better quality results.");
-		System.out.println("It is suggested that this be turned off and only turned on for faster crawling.");
-		}
-		else if (key.equals(Help.w.parameter)) {
-		System.out.println("This will slow your crawler down between page crawls");
-		System.out.println("Example: -w=889 will be 889 milliseconds between crawls.");
-		}
+		
 
 	}
 

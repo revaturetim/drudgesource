@@ -273,50 +273,6 @@ INNER:					while (true) {
 	stop(null, thing);
 	}
 
-	public static void print(Consumer<Object> con, Object...objs) {
-		if (on) {
-			for (int i = 0; i < objs.length; i++) {
-			String p = getPrompt();
-			System.out.print(p);
-			con.accept(objs[i]);
-			}
-		}
-	}
-	
-	public static void print(Object...objs) {
-	
-		Consumer<Object> thing = new Consumer<Object>() {
-		
-			public void accept(Object obj) {
-				if (obj != null) {
-				Class<? extends Object> c = obj.getClass();
-				System.out.print(sep + " " + c.getName() + "=" + obj.toString() + " ");
-				}
-				else {
-				System.out.print(sep + " NULL=NULL ");
-				}
-			}
-		};
-	print(thing, objs);
-	}
-	
-	public static void println(Object...objs) {
-	
-		Consumer<Object> thing = new Consumer<Object>() {
-		
-			public void accept(Object obj) {
-				if (obj != null) {
-				Class<? extends Object> c = obj.getClass();
-				System.out.println(sep + " " + c.getName() + "=" + obj.toString() + " ");
-				}
-				else {
-				System.out.println(sep + " NULL=NULL ");
-				}
-			}
-		};
-	print(thing, objs);
-	}
-	
 	public static void check(final BiPredicate<Object, Object> P, final Object...objs) {
 		if (on) {
 			for (int i = 1; i < objs.length; i++) {
@@ -411,4 +367,15 @@ INNER:					while (true) {
 		return prompt;
 		}
 	}
+	
+	private static void print(Consumer<Object> con, Object...objs) {
+		if (on) {
+			for (int i = 0; i < objs.length; i++) {
+			String p = getPrompt();
+			System.out.print(p);
+			con.accept(objs[i]);
+			}
+		}
+	}
+	
 }	

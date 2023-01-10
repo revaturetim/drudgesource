@@ -23,7 +23,7 @@
 8.  Replace all help words with Help enum parameters for better consistency;
 9.  Make more efficient P.getKeywords method;
 10. Improve respect robots!  It hangs for some reason;
-11. BUG!  Why does it store unencoded links?
+11. BUG! Why does it store unencoded links?
 13. BUG! Must find broken link where there is only one quote quoting it
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;

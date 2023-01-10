@@ -12,6 +12,7 @@ import java.nio.file.*;
 
 public class Drudge implements DataObjects {
 public static String XFACTOR = null;
+private static final String sep = "=";
 
 	public static void main(final String[] arg) {
 	long MemoryStart = Runtime.getRuntime().freeMemory();
@@ -32,15 +33,14 @@ public static String XFACTOR = null;
 LOOP:		for (int i = 0; i < arg.length; i++) {
 		final String a = arg[i];
 		/*TRY TO PUT OPTIONS IN ALPHABETICAL ORDER*/
-			if ((a.equals("-about") || a.equals("-a")) && arg.length == 1) {
+			if ((a.equals(Help.about.parameter) || a.equals(Help.a.parameter)) && arg.length == 1) {
 			Print.helpMenu(a);
 			break;
 			}
 			//the only commands that should have startWith vs equals are ones that use a combination like c=xxxxx
-			else if (a.startsWith("-c=")) {
-			String[] b = a.split("=", 2);
+			else if (a.startsWith(Help.c.parameter + Drudge.sep)) {
 				try {
-				crawlmethod = Integer.parseUnsignedInt(b[1]);
+				crawlmethod = getNumber(a);
 				}
 				catch (NumberFormatException N) {
 				Print.error(N);
@@ -48,10 +48,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				
 			}
-			else if (a.startsWith("-d=")) {
-			String[] b = a.split("=", 2);
+			else if (a.startsWith(Help.d.parameter + Drudge.sep)) {
 				try {
-				int pagedata = Integer.parseUnsignedInt(b[1]);
+				int pagedata = getNumber(a);
 				dada.setLevel(pagedata);
 					if (pagedata == 3) {
 						try {
@@ -67,9 +66,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				catch (NumberFormatException N) {
 				Print.error(N);
+				break;
 				}
 			}
-			else if (a.equals("-e")) {
+			else if (a.equals(Help.e.parameter)) {
 			getemails = true;
 				try {	
 				dada_emails.begin();
@@ -78,13 +78,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(E);
 				}
 			}	
-			else if (a.startsWith("-exc") || a.startsWith("-exclude=")) {
+			else if (a.equals(Help.exc.parameter)) {
 			excluded = true;	
 			String file = exclude.source();
-				//this is for custom exclude file
-				if (a.startsWith("-exclude=")) {
-				file = getString(a);
-				}
 				try {
 				exclude.setSource(file);
 				exclude.begin();
@@ -96,17 +92,31 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(E);
 				}	
 			}
-			else if ((a.equals("-help") || a.equals("-h")) && arg.length == 1) {
+			else if (a.startsWith(Help.exclude.parameter + Drudge.sep)) {
+			excluded = true;	
+			String file = getString(a);
+				try {
+				exclude.setSource(file);
+				exclude.begin();
+				}
+				catch (IOException I) {
+				Print.error(I);
+				}
+				catch (Exception E) {
+				Print.error(E);
+				}	
+			}
+			else if ((a.equals(Help.help.parameter) || a.equals(Help.h.parameter)) && arg.length == 1) {
 			Print.helpMenu(a);
 			break;
 			}
-			else if ((a.equals("-help") || a.equals("-h")) && i == 0 && arg.length == 2) {
+			else if ((a.equals(Help.help.parameter) || a.equals(Help.h.parameter)) && i == 0 && arg.length == 2) {
 			Print.helpMenu(arg[i + 1]);
 			break;	
 			}
-			else if ((a.equals("-i") || a.startsWith("-input=")) && arg.length == 1) {
+			else if ((a.equals(Help.i.parameter) || a.startsWith(Help.input.parameter + Drudge.sep)) && arg.length == 1) {
 			String file = FileNames.in;
-				if (a.startsWith("-input=")) {
+				if (a.startsWith(Help.input.parameter + Drudge.sep)) {
 				file = getString(a);
 				}
 				try {
@@ -138,13 +148,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.startsWith("-inc") || a.startsWith("-include=")) {
+			else if (a.equals(Help.inc.parameter)) {
 			included = true;
 			String file = include.source();
-				//this is for custom exclude file
-				if (a.startsWith("-include=")) {
-				file = getString(a);
-				}
 				try {
 				include.setSource(file);
 				include.begin();
@@ -155,52 +161,76 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (Exception E) {
 				Print.error(E);
 				}
-				
 			}
-			else if (a.equals("-l") && arg.length == 1) {
+			else if (a.startsWith(Help.include.parameter + Drudge.sep)) {
+			included = true;
+			String file = getString(a);
+				try {
+				include.setSource(file);
+				include.begin();
+				}	
+				catch (IOException I) {
+				Print.error(I);
+				}
+				catch (Exception E) {
+				Print.error(E);
+				}
+			}
+			else if (a.equals(Help.l.parameter) && arg.length == 1) {
 			System.out.println(ThisProgram.license);
 			break;
 			}
-			else if (a.startsWith("-m=")) {
-			String[] b = a.split("=", 2);
+			else if (a.startsWith(Help.m.parameter + Drudge.sep)) {
 				try {
-				final int c = Integer.parseUnsignedInt(b[1]);
+				final int c = getNumber(a);
 				Print.UselessClass = UselessMessages.getClass(c);
 				}
 				catch (NumberFormatException N) {
 				Print.helpMenu(a);
-				Print.error(N, b[1]);
+				Print.error(N);
 				break;
 				}
 			}
-			else if (a.startsWith("-n=")) {
-			String[] b = a.split("=", 2);
+			else if (a.startsWith(Help.n.parameter + Drudge.sep)) {
 				try {
-				maxcyc = Integer.parseUnsignedInt(b[1]);
+				maxcyc = getNumber(a);
 				}
 				catch (NumberFormatException N) {
 				Print.error(N);
 				break;
 				}
 			}
-			else if (a.equals("-nok")) {
+			else if (a.equals(Help.nok.parameter)) {
 			okays = false;//this means it won't check for ok responses in spider
 			}
-			else if (a.equals("-o")) {
+			else if (a.equals(Help.o.parameter)) {
+			final String outfile = FileNames.out;	
 				try {
-				PrintStream p = new PrintStream(FileNames.out);
-				System.out.println("Printing to file called " + FileNames.out);
+				PrintStream p = new PrintStream(outfile);
+				System.out.println("Printing to file called " + outfile);
 				Print.GSTREAM = p;
 				}
 				catch (FileNotFoundException F) {
-				System.out.println("Could not find file " + FileNames.out);
+				Print.error(F, outfile);
 				break;
 				}
 			}
-			else if (a.startsWith("-p=")) {
-			String[] b = a.split("=", 2);
+			else if (a.startsWith(Help.output.parameter + Drudge.sep)) {
+			final String outfile = getString(a);	
 				try {
-				InetAddress inetadress = InetAddress.getByName(b[1]);//I net a dress funny :)
+				PrintStream p = new PrintStream(outfile);
+				System.out.println("Printing to file called " + outfile);
+				Print.GSTREAM = p;
+				}
+				catch (FileNotFoundException F) {
+				Print.error(F, outfile);
+				break;
+				}
+			}
+			else if (a.startsWith(Help.p.parameter + Drudge.sep)) {
+				try {
+				String p = getString(a);
+				InetAddress inetadress = InetAddress.getByName(p);//I net a dress funny :)
 					try {
 					InetSocketAddress sockdress = new InetSocketAddress(inetadress, 80);//more funny stuff
 						try {
@@ -220,13 +250,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 		
 			}
-			else if (a.equals("-rob")) {
+			else if (a.equals(Help.rob.parameter)) {
 			robotsallowed = false;
 			}
-			else if (a.startsWith("-w=")) {
-			String[] b = a.split("=", 2);
+			else if (a.startsWith(Help.w.parameter + Drudge.sep)) {
 				try {
-				delay = Long.parseUnsignedLong(b[1]);
+				delay = (long)getNumber(a);
 				}
 				catch (NumberFormatException N) {
 				Print.error(N);
@@ -235,12 +264,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			
 			}
 			else if (a.startsWith("-x=")) {
-			String[] b = a.split("=", 2);
-			Drudge.XFACTOR = b[1];
+			Drudge.XFACTOR = getString(a);
 			}
 	
 			//secret debugger options down here
-			else if (a.equals("-A") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.A.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
@@ -275,18 +303,18 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			break;
 			}
-			else if (a.equals("-C") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.C.parameter) && arg.length == 2 && i == 0) {
 			Debug.cycletimeon = true;
 			continue;
 			}
-			else if (a.equals("-E") && arg.length == 1) {
+			else if (a.equals(DevHelp.E.parameter) && arg.length == 1) {
 				for (Data<?> d : all_dadas) {
 				d.checkError();
 				}
 			System.out.println("Have a nice day :)");
 			break;
 			}
-			else if (a.equals("-G") && i == 0) {
+			else if (a.equals(DevHelp.G.parameter) && i == 0) {
 			System.out.println("Creating GREP-able file to " + FileNames.gout + " so you can use grep on the results.");
 				try {
 				Print.GSTREAM = new PrintStream(FileNames.gout);
@@ -297,7 +325,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			continue;//this will make sure it continues to the next the loop	
 			}
-			else if ((a.equals("-H")) && arg.length == 2 && i == 0) {
+			else if ((a.equals(DevHelp.H.parameter)) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 				URLConnection c = p.getConnection();
@@ -331,7 +359,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			break;
 			}
-			else if (a.equals("-I") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.I.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);	
 					try {
@@ -369,11 +397,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			break;
 			}
-			else if (a.equals("-HELP") && arg.length == 1) {
+			else if (a.equals(DevHelp.HELP.parameter) && arg.length == 1) {
 			Print.helpMenu(a);
 			break;
 			}
-			else if (a.equals("-K") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.K.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
@@ -406,7 +434,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			break;
 			}
-			else if (a.equals("-L") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.L.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);	
 					try {
@@ -438,7 +466,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.startsWith("-P") && arg.length == 2 && i == 0) {
+			else if (a.startsWith(DevHelp.P.parameter) && arg.length == 2 && i == 0) {
 				try {
 				long pt = System.currentTimeMillis();
 				URL url = new URL(arg[i + 1]);
@@ -464,7 +492,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals("-R") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.R.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = new Page(arg[i + 1]);
 					
@@ -492,7 +520,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;	
 			}
-			else if (a.equals("-S") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.S.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
@@ -520,7 +548,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals("-T") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.T.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);
 					try {
@@ -550,7 +578,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals("-U") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.U.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);	
 					try {	
@@ -578,7 +606,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals("-V") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.V.parameter) && arg.length == 2 && i == 0) {
 				try { 
 				Page p = createFirstPage(arg[i + 1]); 
 				/*if is valid it should naturally continue to the next line*/
@@ -601,7 +629,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals("-W") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.W.parameter) && arg.length == 2 && i == 0) {
 				
 				try {
 				donotusewords.begin();
@@ -620,7 +648,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}			
 			break;
 			}
-			else if (a.equals("-X") && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.X.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);	
 					try {
@@ -663,7 +691,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Print.columnHeaders();//this should be called first to show errors correctly in output columns
 			Debug.time("Print Column Headers");
 			String lastarg = arg[arg.length - 1];
-				if (lastarg.equals("-s")) {
+				if (lastarg.equals(Help.s.parameter)) {
 					try {
 					begcyc = CountFile.get();
 					maxcyc = maxcyc + begcyc;
@@ -677,17 +705,15 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}				
 
 				}
-				else if (lastarg.startsWith("-s=")) {
-				String[] b = a.split("=", 2);
+				else if (lastarg.startsWith(Help.s.parameter + Drudge.sep)) {
 					try {
-					int num = Integer.parseUnsignedInt(b[1]);
+					int num = getNumber(lastarg);
 					begcyc = num - 1;
 					maxcyc = maxcyc + begcyc;
 					dada.begin();
 					}
 					catch (NumberFormatException N) {
 					Print.error(N);
-					break;
 					}
 					catch (Exception E) {
 					Print.error(E);
@@ -928,13 +954,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	return erased;
 	}
 	
-	static private int getInteger(String arg) throws NumberFormatException {
-	String[] ins = arg.split("=", 2);
+	static private int getNumber(String arg) throws NumberFormatException {
+	String[] ins = arg.split(Drudge.sep, 2);
 	return Integer.parseUnsignedInt(ins[1]);
 	}	
 	
 	static private String getString(String arg) {
-	String[] ins = arg.split("=", 2);
+	String[] ins = arg.split(Drudge.sep, 2);
 	return ins[1];
 	}
 }

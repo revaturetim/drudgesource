@@ -65,6 +65,9 @@ nok("-nok", "This will set " + ThisProgram.name + " to accept all webites for fa
 	+ "It is suggested that this be turned off and only turned on for faster crawling.\n"),
 o("-o", "This will write the output to a file called " + FileNames.out, 
 	"This is to send all output to a file called \"" + FileNames.out + "\""),
+output("-output", "This is to write all output to a file you specify", 
+		"This is in case you want to record all output to a file.\n"
+		+ "	Example:  -output=file/you/want/to/use\n"),
 p("-p", "This will let you set a proxy server to use while crawling.", 
 	"This option is used in case you want to use a proxy server\n"
 	+ "	Example: -p=www.proxyserver.com\n"),

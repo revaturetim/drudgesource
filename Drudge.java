@@ -80,9 +80,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			}	
 			else if (a.equals(Help.exc.parameter)) {
 			excluded = true;	
-			String file = exclude.source();
 				try {
-				exclude.setSource(file);
 				exclude.begin();
 				}
 				catch (IOException I) {
@@ -150,9 +148,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			}
 			else if (a.equals(Help.inc.parameter)) {
 			included = true;
-			String file = include.source();
 				try {
-				include.setSource(file);
 				include.begin();
 				}	
 				catch (IOException I) {

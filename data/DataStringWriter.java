@@ -31,10 +31,5 @@ final private StringWriter buffer = new StringWriter();
 	protected StringWriter createWriter() {
 	return buffer;
 	}
-	
-	public boolean add(T page) {
-	
-	return false;
-	}
 
 }

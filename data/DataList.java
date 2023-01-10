@@ -65,7 +65,8 @@ private Object[] objs = new Object[10];
 	return has;
 	}*/
 	
-	/* Do not erase remove, get, set, or add(int T) methods!!!!!!!!!!!!!!!!!!!*/
+	/* Do not erase remove, get, set, or add(T) methods!!!!!!!!!!!!!!!!!!!*/
+	/* Let add(int, T) throw unsupportedoperationexception */
 	public T remove(final int i) {
 	T toberemoved = (T)this.objs[i];
 		for (int j = i; j < this.size - 1; j++) {
@@ -87,40 +88,48 @@ private Object[] objs = new Object[10];
 	return oldt;
 	}
 
-	public void add(final int i, T p) {
-	Object[] newobjs = new Object[this.size + 1];
-		for (int j = 0; j < i; j++) {
-		newobjs[j] = objs[j];
+	public boolean add(T p) {
+	boolean added = false;
+		try {
+		this.put(p);
+		added = true;
 		}
-		newobjs[i] = p;//inserts it right here
-		for (int j = i + 1; j < newobjs.length; j++) {
-		newobjs[j] = objs[j - 1];
+		catch (DuplicateURLException Du) {
+		D.error(Du);
 		}
-	this.size++;
-	objs = newobjs;
+		catch (IllegalArgumentException I) {
+		D.error(I);
+		}
+	return added;
 	}
-
+	
 	public int size() {
 	return this.size;
 	}
 	
 	/*The default assumes that it is working with a page object*/
-	public void begin() throws Exception {
-	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
+	public void begin() throws IOException, Exception {
+	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));//this throws IOException and breaks the method if it can't read from soruce
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 		String[] ns = line.split(CountFile.sep);
 			try {
 			T p = (T)new Page(ns[0]);
-			add(p);
+			this.put(p);
+			}
+			catch (URISyntaxException U) {
+			D.error(U);
 			}
 			catch (MalformedURLException M) {
 			D.error(M);
+			}
+			catch (UselessURLException U) {
+			D.error(U);
 			}
 		}
 	}
 
 	/*The default assumes you are working with a page object.  Subclasses should override*/
-	public void end() throws Exception {
+	public void end() throws IOException, Exception {
 	final BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
 		for (T t : this) {
 		Page page = (Page)t;

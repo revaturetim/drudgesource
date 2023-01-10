@@ -41,9 +41,4 @@ final private StringBuilder builder = new StringBuilder();
 	return true;
 	}
 	
-	public boolean add(T obj) {
-	return false;
-	}
-
-
 }

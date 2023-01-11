@@ -18,6 +18,7 @@ NOCONTENT(9, NoContentURLException.class, "NOCONTENT", "This is when there is no
 REDIRECTED(10, RedirectedURLException.class, "REDIRECTEDURL", "This is when a url request gets redirected to another url"),
 BADENCODE(11, BadEncodingURLException.class, "BADENCODE", "This is when there is a bad encoding"),
 NOROBOTS(12, RobotsExcludedURLException.class, "NOROBOTSALLOWED", "This is when the website doesn't allow robots"),
+EMAIL(13, EmailURLException.class, "EMAIL", "This is when it finds an email link"),
 
 IO(21, IOException.class, "INPUTOUTPUT", "This indicates an IO exception has occurred"),
 MALFORMED(22,  MalformedURLException.class, "MALFORMEDURL", "A malformed url was used"),

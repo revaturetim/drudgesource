@@ -20,9 +20,11 @@ final static String nohed = "You did not call the getHeader() method";
 final static String notitle = "NO TITLE FOUND";
 final static private String nowords = "NO KEYWORDS FOUND";
 final static private String Null = "null";
+final static private String encoding = "UTF-8";
 
 	static void checkHtmlFile(final URL url) throws InvalidURLException, URISyntaxException {
 	//Debug.startWatch();
+	final URI uri = url.toURI();//this throws URISyntaxExeption
 	//final String usr = url.getUserInfo();
 	final String aut = url.getAuthority();
 	//final String pat = url.getPath();
@@ -32,22 +34,19 @@ final static private String Null = "null";
 	//final String pth = url.getPath();
 	//final String file = url.getFile();
 	//final FileNameMap map = URLConnection.getFileNameMap();
-	//final String ftype = map.getContentTypeFor(url.toString());	
+	final String ftype = URLConnection.guessContentTypeFromName(url.toString());
 	final boolean ishttp = schm.equals("http") || schm.equals("https");
-
-		if (ishttp || schm.equals("file")) {
-		final URI uri = url.toURI();//this throws URISyntaxExeption
-		final String ftype = URLConnection.guessContentTypeFromName(url.toString());
-		/* Collapsing this into one line of code instead of nesting if statements is suppose to make it faster
-		 * This is an example of branchless programming
-		 */
-			if (ishttp && (uri.isOpaque() || (aut == null || aut.isEmpty()) || (ftype != null && !ftype.startsWith("text")))) {
-			throw new InvalidURLException(url);
-			}
+	//final boolean isfile = schm.equals("file");
+	final boolean isemail = schm.equals("mailto");
+	//final boolean isimage = ftype == null || ftype.startsWith("image");
+	final boolean istext = ftype == null || ftype.startsWith("text");
+		if (isemail) {
+		throw new EmailURLException(url);
 		}
-		else {	
+		if ((ishttp && (uri.isOpaque() || aut == null || aut.isEmpty())) || isemail || istext == false) {
 		throw new InvalidURLException(url);
 		}
+		
 	}
 
 	//I am assuming that this works.  I have no way to really test it thoroughly. 
@@ -100,17 +99,20 @@ final static private String Null = "null";
 
 	static String decode(String link) {
 		try {
-		link = URLDecoder.decode(link, "UTF-8");
+		link = URLDecoder.decode(link, P.encoding);
 		}
 		catch (UnsupportedEncodingException U) {
 		D.error(U);
+		}
+		catch (IllegalArgumentException I) {
+		D.error(I);
 		}
 	return link;
 	}	
 
 	static String encode(String link) {
 		try {
-		link = URLEncoder.encode(link, "UTF-8");
+		link = URLEncoder.encode(link, P.encoding);
 		}
 		catch (UnsupportedEncodingException U) {
 		D.error(U);
@@ -218,8 +220,19 @@ final static private String Null = "null";
 						|| word.endsWith(".htm") 
 						|| word.startsWith("https://") 
 						|| word.startsWith("../") 
-						|| word.startsWith("/")) {
-					findInPath(word, action);//found absolute link
+						|| word.startsWith("/")
+						|| word.startsWith("./")) {
+					findInPath(word, action);
+					}
+					else if (word.contains("@")/*this is for emails*/) {
+						try {
+						String mailword = URI.create(word).toString();
+						findInPath("mailto:" + mailword, action);
+						}
+						catch (IllegalArgumentException I) {
+						//Debug.here(I);temporary solution to prevent it from find random text in page 
+						}
+					//String mailword = "mailto:" + word;
 					}
 				}
 			}
@@ -569,82 +582,6 @@ final static private String Null = "null";
 		}
 	reader.close();//closes the reader and throws ioexception
 	return chars;
-	}
-
-	/*These methods are used to directly add a page into the dada variable*/
-	static Data add(URL url, String link, Data<Page> data) {
-		try {
-		Page p = new Page(url, link);
-		data.put(p);
-		}
-		catch (MalformedURLException M) {
-		Print.row(M, link);
-		}
-		catch (URISyntaxException U) {
-		Print.row(U, link);
-		}
-		catch (IOException I) {
-		Print.row(I, link);
-		}
-		catch (UselessURLException U) {
-		U.printRow();
-		}
-	return data;
-	}
-
-	static Data<Page> add(URL url, Data<Page> data) {
-		try {
-		Page p = new Page(url);
-		data.put(p);
-		}
-		catch (MalformedURLException M) {
-		Print.row(M, url);
-		}
-		catch (URISyntaxException U) {
-		Print.row(U, url);
-		}
-		catch (IOException I) {
-		Print.row(I, url);
-		}
-		catch (UselessURLException U) {
-		U.printRow();
-		}
-	return data;
-	}
-	
-	static public Data<Page> add(String link, Data<Page> data) {
-		try {
-		Page p = new Page(link);
-		data.put(p);
-		}
-		catch (MalformedURLException M) {
-		Print.row(M, link);
-		}
-		catch (URISyntaxException U) {
-		Print.row(U, link);
-		}
-		catch (IOException I) {
-		Print.row(I, link);
-		}
-		catch (UselessURLException U) {
-		U.printRow();
-		}
-	return data;
-	}
-
-
-	static Data<Page> add(Page[] pages, Data<Page> data) {
-	Debug.check(pages, null);
-	Debug.check(data, null);
-		for (Page page : pages) {
-			try {
-			data.put(page);
-			}
-			catch (DuplicateURLException Du) {
-			Du.printRow();
-			}
-		}
-	return data;
 	}
 	
 	public static boolean sameHost(Page a, Page b) {

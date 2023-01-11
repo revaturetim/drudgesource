@@ -21,18 +21,20 @@ public class DataListEmail<T extends URL> extends DataList<T> {
 		String[] ns = line.split(CountFile.sep);
 			try {
 			final URL e = new URL(ns[0]);
-			add((T)e);
+			this.put((T)e);
 			}
 			catch (MalformedURLException M) {
 			D.error(M);
+			}
+			catch (DuplicateURLException Du) {
+			D.error(Du);
 			}
 		}
 	}
 	
 	public void end() throws IOException {
-	BufferedWriter email_writer = new BufferedWriter(new FileWriter(source(), false));
+	final BufferedWriter email_writer = new BufferedWriter(new FileWriter(source()));
 		for (T t : this) {
-		Debug.check(t, null);
 		URL email = t;
 			for (int i = 0; i < level(); i++) {
 				if (i == 0) {

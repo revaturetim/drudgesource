@@ -15,6 +15,8 @@ import drudge.global.*;
 final public class Page implements Serializable {
 final static private int pagesize = 35_000;
 static public Proxy proxyserver = Proxy.NO_PROXY;
+static public boolean getemails = false;
+static public boolean getimages = false;
 //private variables for info about page itself which are set to the default values
 //The default value for MOST of these should be null
 final private Source content = new Source(pagesize);
@@ -85,7 +87,7 @@ final private Data<String> klist = new DataList<String>();
 		LinkFilter<String> action = new LinkFilter<String>() {
 			
 			public void act(String link) {
-			P.add(url, link, dlist);
+			D.add(url, link, dlist);
 			}
 		};
 	this.getLinks(action);
@@ -229,7 +231,7 @@ final private Data<String> klist = new DataList<String>();
 			DataObjects.norobots.put(roboturl, dr);
 				//this is for add disallowed urls to database
 				for (URL use : dr) {
-				P.add(use, DataObjects.dada);
+				D.add(use, DataObjects.dada);
 				}
 			}
 			catch (IOException I) {

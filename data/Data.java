@@ -25,16 +25,18 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	public void end() throws Exception;
 	public void truncate();
 	
-	default public int size() {
+	public int size();
+	/*default public int size() {
 	int size = 0;
 		for (T p : this) {
 		size++;
 		}	
 	return size;
-	}
-
+	}*/
+	
+	public boolean contains(Object link);
 	/*this is a simple contains method that should be overridden by most Data objects*/
-	default public boolean contains(Object link) {
+	/*default public boolean contains(Object link) {
 	boolean has = false;
 		for (Object page : this) {
 			if (page.equals(link)) {
@@ -43,7 +45,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			}
 		}
 	return has;
-	}
+	}*/
 
 	default public boolean put(Data<T> d) {
 	boolean scs = true;
@@ -81,7 +83,8 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	return scs;
 	}
 
-	default public Iterator<T> iterator() {
+	public Iterator<T> iterator();
+	/*default public Iterator<T> iterator() {
 		Iterator<T> it = new Iterator<T>() {
 		int i = -1;
 			public boolean hasNext() {
@@ -99,10 +102,10 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			}
 		};	
 	return it;
-	}
+	}*/
 	
 	/*this is an internal check to check the data within the data object itself not its source*/
-	default public boolean check() /*throws UselessURLException, IOException, URISyntaxException*/ {
+	/*default public boolean check() throws UselessURLException, IOException, URISyntaxException {
 	Iterator<T> pages = this.iterator();
 
 		for (int linecount = 1; pages.hasNext(); linecount++) {
@@ -131,7 +134,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 			}
 		}
 	return true;
-	}
+	}*/
 
 	
 

@@ -148,76 +148,127 @@ final public class D implements FileNames {
 	writer.append("\n");
 	}
 	
-	static boolean checkErrorFile(String file) {
-	System.out.println("Checking " + file + " file for errors.");
-	boolean duplicate = false;
-	boolean linkerror = false;
-	int linecount = 0;
-		try { 
-		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
-		int firstcolumnlength = 0;
-			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-			linecount = reader.getLineNumber();
-			String[] columns = line.split(CountFile.sep);
-			/*This will see if the total number of columns for each line is the same as the previous one*/
-				if (linecount == 1) {
-				firstcolumnlength = columns.length;
-				}
-				if (columns.length != firstcolumnlength) {
-				System.out.println("...There is a column length error at line " + String.valueOf(linecount));
-				}
-			/*this will check for decoding errors*/
-			String link = columns[0];
-				if (link.contains("%")) {
-				System.out.println("...Possible encoding error at line " + String.valueOf(linecount));
-				}
-				
-			/*This will check for duplicates in the data*/
-				try {
-				Page p = new Page(link);//this throws malformedurlexception
-				p.isValid();//this throws InvalidURLException, URISyntaxException
-				URL u = p.getURL();
-					if (u.getAuthority() == null) {
-					throw new MalformedURLException("No Host");
-					}
-				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(file)));
-					for (String line2 = reader2.readLine(); line2 != null; line2 = reader2.readLine()) {
-					int linecount2 = reader2.getLineNumber();
-						if (linecount2 < linecount) {
-						String[] columns2 = line2.split(CountFile.sep);
-						String link2 = columns2[0];
-							if (link.equals(link2)) {
-							duplicate = true;
-							System.out.print("..." + link + " is a duplicate entry found at ");
-					       	System.out.println(String.valueOf(linecount) 
-					       	+ " and " 
-					       	+ String.valueOf(linecount2));
-							}
-						}
-					}
-				}
-				catch (InvalidURLException N) {
-				linkerror = true;
-				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't an html file: ");
-				System.out.println(link);
-				}
-				catch (URISyntaxException U) {
-				linkerror = true;
-				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
-				}
-				catch (MalformedURLException M) {
-				linkerror = true;
-				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
-				}
-			}
-		System.out.println("...The number of lines in " + file +  " is "  + linecount + ".");
+	/*These methods are used to directly add a page into the dada variable*/
+	static public Data add(URL url, String link, Data<Page> data) {
+		try {
+		Page p = new Page(url, link);
+		data.put(p);
+		}
+		catch (DuplicateURLException Du) {
+		Du.printRow();
+		}
+		catch (MalformedURLException M) {
+		Print.row(M, link);
+		}
+		catch (URISyntaxException U) {
+		Print.row(U, link);
 		}
 		catch (IOException I) {
-		D.error(I);
+		Print.row(I, link);
 		}
-	return (duplicate || linkerror);
+		catch (EmailURLException E) {
+		E.printRow();
+			if (Page.getemails) {
+				try {
+				URL mailurl = new URL(link);
+				DataObjects.dada_emails.put(mailurl);
+				}
+				catch (MalformedURLException M) {
+				Print.row(M, link);
+				}
+				catch (DuplicateURLException Du) {
+				Du.printRow();
+				}
+			}
+			if (Page.getimages) {
+
+			}
+		}
+		catch (InvalidURLException U) {
+		U.printRow();
+		}
+	return data;
+	}
+
+	static public Data<Page> add(URL url, Data<Page> data) {
+		try {
+		Page p = new Page(url);
+		data.put(p);
+		}
+		catch (DuplicateURLException Du) {
+		Du.printRow();
+		}
+		catch (MalformedURLException M) {
+		Print.row(M, url);
+		}
+		catch (URISyntaxException U) {
+		Print.row(U, url);
+		}
+		catch (IOException I) {
+		Print.row(I, url);
+		}
+		catch (EmailURLException E) {
+		E.printRow();
+			if (Page.getemails) {
+				try {
+				DataObjects.dada_emails.put(url);
+				}
+				catch (DuplicateURLException Du) {
+				Du.printRow();
+				}
+			}
+			if (Page.getimages) {
+
+			}
+		}
+		catch (InvalidURLException U) {
+		U.printRow();
+		}
+	return data;
 	}
 	
+	static public Data<Page> add(String link, Data<Page> data) {
+		try {
+		Page p = new Page(link);
+		data.put(p);
+		}
+		catch (DuplicateURLException Du) {
+		Du.printRow();
+		}
+		catch (MalformedURLException M) {
+		Print.row(M, link);
+		}
+		catch (URISyntaxException U) {
+		Print.row(U, link);
+		}
+		catch (IOException I) {
+		Print.row(I, link);
+		}
+		catch (EmailURLException E) {
+		E.printRow();
+			if (Page.getemails) {
+			throw new UnsupportedOperationException("Can't Get Emails");	
+			}
+			if (Page.getimages) {
+			throw new UnsupportedOperationException("Can't Get Images");
+			}
+		}
+		catch (InvalidURLException U) {
+		U.printRow();
+		}
+	return data;
+	}
+
+
+	static public Data<Page> add(Page[] pages, Data<Page> data) {
+		for (Page page : pages) {
+			try {
+			data.put(page);
+			}
+			catch (DuplicateURLException Du) {
+			Du.printRow();
+			}
+		}
+	return data;
+	}
 }

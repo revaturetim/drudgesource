@@ -311,14 +311,20 @@ INNER:					while (true) {
 	}
 
 	public static void here(Object...objs) {
-		
-		Consumer<Object> thing = new Consumer<Object>() {
+		if (on) {		
+			Consumer<Object> thing = new Consumer<Object>() {
 			
-			public void accept(Object obj) {
-			System.out.println("Location=" + obj.toString());
-			}
-		};
-	print(thing, objs);		
+				public void accept(Object obj) {
+					if (obj != null) {
+					System.out.println("Location=" + obj.toString());
+					}
+					else {
+					System.out.println("Location=NULL");
+					}
+				}
+			};
+		print(thing, objs);
+		}
 	}
 		
 	public static void here() {
@@ -369,12 +375,10 @@ INNER:					while (true) {
 	}
 	
 	private static void print(Consumer<Object> con, Object...objs) {
-		if (on) {
-			for (int i = 0; i < objs.length; i++) {
-			String p = getPrompt();
-			System.out.print(p);
-			con.accept(objs[i]);
-			}
+		for (Object obj : objs) {
+		String p = getPrompt();
+		System.out.print(p);
+		con.accept(obj);
 		}
 	}
 	

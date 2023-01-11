@@ -114,7 +114,7 @@ private File dir;
 	}
 	
 	public boolean checkError() {
-	return D.checkErrorFile(FileNames.links);
+	return true;
 	}
 	
 	public void truncate() {

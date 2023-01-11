@@ -20,7 +20,6 @@ private static final String sep = "=";
 	int maxcyc = 1;//default value
 	int crawlmethod = 1;//default value
 	int begcyc = 0;//default starting number for program
-	boolean getemails = false;//default value
 	boolean okays = true;//default value
 	boolean robotsallowed = true;//default value
 	boolean included = false;//defalut behavior
@@ -70,13 +69,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			}
 			else if (a.equals(Help.e.parameter)) {
-			getemails = true;
-				try {	
-				dada_emails.begin();
-				}
-				catch (Exception E) {
-				Print.error(E);
-				}
+			Page.getemails = true;
 			}	
 			else if (a.equals(Help.exc.parameter)) {
 			excluded = true;	
@@ -259,7 +252,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			
 			}
-			else if (a.startsWith("-x=")) {
+			else if (a.startsWith(Help.x.parameter + Drudge.sep)) {
 			Drudge.XFACTOR = getString(a);
 			}
 	
@@ -692,6 +685,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					begcyc = CountFile.get();
 					maxcyc = maxcyc + begcyc;
 					dada.begin();
+					dada_emails.begin();
 					}
 					catch (IOException I) {
 					Print.error(I);
@@ -707,6 +701,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					begcyc = num - 1;
 					maxcyc = maxcyc + begcyc;
 					dada.begin();
+					dada_emails.begin();
 					}
 					catch (NumberFormatException N) {
 					Print.error(N);
@@ -719,6 +714,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				else {
 					try {
 					dada.truncate();//this will delete existing data and start over
+					dada_emails.truncate();
 					Page firstpage = createFirstPage(lastarg);
 					dada.put(firstpage);
 					}
@@ -763,10 +759,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					dada.remove(begcyc);
 					continue;//this skips all of the rest of the loop and restarts it
 					}
-					if (getemails) {
-					Data<URL> emails = p.getEmails();
-					dada_emails.put(emails);
-					}
 				Print.row(p, begcyc);
 				begcyc++;
 				} while (begcyc < maxcyc);
@@ -777,7 +769,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (Exception E) {
 				Print.error(E);
 				}
-				if (getemails) {
+				if (Page.getemails) {
 					try {
 					dada_emails.end();
 					}

@@ -38,12 +38,15 @@ final static private String encoding = "UTF-8";
 	final boolean ishttp = schm.equals("http") || schm.equals("https");
 	//final boolean isfile = schm.equals("file");
 	final boolean isemail = schm.equals("mailto");
-	//final boolean isimage = ftype == null || ftype.startsWith("image");
+	final boolean isimage = ftype != null && ftype.startsWith("image");
 	final boolean istext = ftype == null || ftype.startsWith("text");
 		if (isemail) {
 		throw new EmailURLException(url);
 		}
-		if ((ishttp && (uri.isOpaque() || aut == null || aut.isEmpty())) || isemail || istext == false) {
+		else if (isimage) {
+		throw new ImageURLException(url);
+		}
+		else if ((ishttp && (uri.isOpaque() || aut == null || aut.isEmpty())) || istext == false) {
 		throw new InvalidURLException(url);
 		}
 		
@@ -232,7 +235,6 @@ final static private String encoding = "UTF-8";
 						catch (IllegalArgumentException I) {
 						//Debug.here(I);temporary solution to prevent it from find random text in page 
 						}
-					//String mailword = "mailto:" + word;
 					}
 				}
 			}
@@ -304,7 +306,7 @@ final static private String encoding = "UTF-8";
 	String[] somewords = text.split("<.*>|\\s|<script.*script>|<style.*style>");//this splits and coincidently removes all whitespace characters
 		for (String word : somewords) {
 			if (word.length() > 2) {
-				if (!DataObjects.donotusewords.contains(word)) {	
+				if (!DataObjects.excludedwords.contains(word)) {	
 					try {
 					words.put(word);
 					}
@@ -330,7 +332,7 @@ final static private String encoding = "UTF-8";
 		String[] somewords = sometext.split("\\s");//this splits and coincidently removes all whitespace characters
 			for (String word : somewords) {
 				if (word.length() > 2) {
-					if (!DataObjects.donotusewords.contains(word)) {	
+					if (!DataObjects.excludedwords.contains(word)) {	
 						try {
 						words.put(word);
 						}

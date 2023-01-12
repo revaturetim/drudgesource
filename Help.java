@@ -41,6 +41,8 @@ i("-i", "This will let you store program options in a file called " + FileNames.
 	+ "The first line of the file should be identical to the commands you want to use for this program\n"
 	+ "The file should only have to be one line and is useful in cases where the input commands are long and complicated.\n"
 	+ "You're Welcome!"),
+img("-img", "This will collect images in a file called " + FileNames.images + ".", 
+	"This will collect images and store them in the destination source.\n"),
 inc("-inc", "This will set " + ThisProgram.name + " to only include page from certain websites.", 
 	"This option will set " + ThisProgram.name + " to only include urls listed in the " + FileNames.exclude + " file\n"),
 include("-include", inc.message, 

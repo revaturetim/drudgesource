@@ -170,18 +170,24 @@ final public class D implements FileNames {
 		E.printRow();
 			if (Page.getemails) {
 				try {
-				URL mailurl = new URL(link);
+				URL mailurl = (URL)E.getObject();//must cast to ensure it is correct
 				DataObjects.dada_emails.put(mailurl);
-				}
-				catch (MalformedURLException M) {
-				Print.row(M, link);
 				}
 				catch (DuplicateURLException Du) {
 				Du.printRow();
 				}
 			}
+		}
+		catch (ImageURLException I) {
+		I.printRow();
 			if (Page.getimages) {
-
+				try {
+				URL imageurl = (URL)I.getObject();//must cast to ensure it is correct
+				DataObjects.dada_images.put(imageurl);
+				}
+				catch (DuplicateURLException Du) {
+				Du.printRow();
+				}
 			}
 		}
 		catch (InvalidURLException U) {
@@ -217,8 +223,16 @@ final public class D implements FileNames {
 				Du.printRow();
 				}
 			}
+		}
+		catch (ImageURLException I) {
+		I.printRow();
 			if (Page.getimages) {
-
+				try {
+				DataObjects.dada_images.put(url);
+				}
+				catch (DuplicateURLException Du) {
+				Du.printRow();
+				}
 			}
 		}
 		catch (InvalidURLException U) {
@@ -249,6 +263,9 @@ final public class D implements FileNames {
 			if (Page.getemails) {
 			throw new UnsupportedOperationException("Can't Get Emails");	
 			}
+		}
+		catch (ImageURLException I) {
+		I.printRow();
 			if (Page.getimages) {
 			throw new UnsupportedOperationException("Can't Get Images");
 			}

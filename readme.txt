@@ -17,18 +17,20 @@
 2.  Elimnate unnescessary variables, methods, and classes in programs for efficiency;
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
 4.  Must find broken links in code;
-5.  Make a way to get image files as it crawls and perhaps other types of data.
+5.  Consider a single DataObject method that can beginAll, EndAll, and truncateAll;
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
 7.  Get rid of type variable in Data interface.  Make it all Page objects;
-8.  Replace all help words with Help enum parameters for better consistency;
+8.  Consider using enum for DataObjects so you can treat them all under one enum;
 9.  Make more efficient P.getKeywords method;
 10. Improve respect robots!  It hangs for some reason;
 11. BUG! Why does it store unencoded links?
+12. Consider Using Type for InvalidURLException class and all of its subclasses;
 13. BUG! Must find broken link where there is only one quote quoting it
+14. UslessURLExceptions should have getFirstObject and getSecondObject with type variables;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
-18. BUG! It picks up image files in the sample test page;
+18. DataListImages should have a checkError() method;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
 20. Investigate to see if translating international urls unicode to american ascii will be useful;
 21. Have readrobots find new urls under the "allowed" sections of file;

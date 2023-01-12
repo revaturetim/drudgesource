@@ -30,9 +30,14 @@ final public static Data<URL> include = new DataListExclude<URL>(FileNames.inclu
 final public static Hashtable<URL, Data<URL>> norobots = new Hashtable<URL, Data<URL>>();
 
 /*THIS IS FOR ALL OTHER OBJECTS MISCILANIOUS*/
-final public static Data<String> donotusewords = new DataListExcludeWords<String>(FileNames.words);
+final public static Data<String> excludedwords = new DataListExcludeWords<String>(FileNames.words);
+
+/*This is for image urls*/
+final public static Data<URL> dada_images = new DataListImages<URL>(FileNames.images);
 
 /*This is an array to store all dada obects*/
-final public static Data<?>[] all_dadas = {dada, dada_emails, exclude, include, donotusewords};
+final public static Data<?>[] all_dadas = {dada, dada_emails, exclude, include, excludedwords, dada_images};
+
+
 
 }

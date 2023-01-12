@@ -15,4 +15,5 @@ final static public String emails = "emails";
 final static public String exclude = "exclude";
 final static public String include = "include";
 final static public String words = "words";
+final static public String images = "images";
 }

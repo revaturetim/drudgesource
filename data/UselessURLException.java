@@ -20,12 +20,12 @@ private final static long serialVersionUID = 0;
 	return message;
 	}
 
-	public String getUrl() {
-	return page.toString();
+	public Object getObject() {
+	return page;
 	}
 
 	public void printRow(String...m) {
-	String[] n = {m[0], m[1], m[2], m[3], m[4], getUrl()};
+	String[] n = {m[0], m[1], m[2], m[3], m[4], getObject().toString()};
 		
 		if (Print.UselessClass == UselessURLException.class || Print.UselessClass == this.getClass()) {
 		Print.row(n);

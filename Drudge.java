@@ -53,7 +53,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				dada.setLevel(pagedata);
 					if (pagedata == 3) {
 						try {
-						donotusewords.begin();
+						excludedwords.begin();
 						}
 						catch (IOException I) {
 						Print.error(I);
@@ -138,6 +138,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(I);
 				}
 			break;
+			}
+			else if (a.equals(Help.img.parameter)) {
+			Page.getimages = true;
 			}
 			else if (a.equals(Help.inc.parameter)) {
 			included = true;
@@ -621,8 +624,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals(DevHelp.W.parameter) && arg.length == 2 && i == 0) {
 				
 				try {
-				donotusewords.begin();
-					if (donotusewords.contains(arg[i + 1])) {
+				excludedwords.begin();
+					if (excludedwords.contains(arg[i + 1])) {
 					System.out.println(arg[i + 1] + " is in the " + FileNames.words + " file.");
 					}
 					else {
@@ -715,6 +718,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					dada.truncate();//this will delete existing data and start over
 					dada_emails.truncate();
+					dada_images.truncate();
 					Page firstpage = createFirstPage(lastarg);
 					dada.put(firstpage);
 					}
@@ -772,6 +776,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (Page.getemails) {
 					try {
 					dada_emails.end();
+					}
+					catch (Exception E) {
+					Print.error(E);
+					}
+				}
+				if (Page.getimages) {
+					try {
+					dada_images.end();
 					}
 					catch (Exception E) {
 					Print.error(E);

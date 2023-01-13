@@ -152,10 +152,18 @@ final public class D implements FileNames {
 	static public Data add(URL url, String link, Data<Page> data) {
 		try {
 		Page p = new Page(url, link);
+			/*this should be in this order so that you can use include and exclude at the same time*/
+			if (Page.donotgetexcluded) {
+			p.isExcluded();
+			}
+			if (Page.getincluded) {
+			p.isIncluded();
+			}
+			if (!Page.robotsallowed) {
+			p.isRobotExcluded();//this throws RobotsExcludedURLException	
+			Debug.time("Checking Robot Allowed");
+			}
 		data.put(p);
-		}
-		catch (DuplicateURLException Du) {
-		Du.printRow();
 		}
 		catch (MalformedURLException M) {
 		Print.row(M, link);
@@ -166,6 +174,15 @@ final public class D implements FileNames {
 		catch (IOException I) {
 		Print.row(I, link);
 		}
+		catch (DuplicateURLException Du) {
+		Du.printRow();
+		}
+		catch (RobotsExcludedURLException R) {
+		R.printRow();
+		}
+		catch (ExcludedURLException E) {
+		E.printRow();
+		}
 		catch (EmailURLException E) {
 		E.printRow();
 			if (Page.getemails) {
@@ -174,7 +191,7 @@ final public class D implements FileNames {
 				DataObjects.dada_emails.put(mailurl);
 				}
 				catch (DuplicateURLException Du) {
-				Du.printRow();
+				/*do nothing because I don't need to know if exception is thrown*/
 				}
 			}
 		}
@@ -186,7 +203,7 @@ final public class D implements FileNames {
 				DataObjects.dada_images.put(imageurl);
 				}
 				catch (DuplicateURLException Du) {
-				Du.printRow();
+				/*do nothing because I don't need to know if exception is thrown*/	
 				}
 			}
 		}
@@ -201,9 +218,6 @@ final public class D implements FileNames {
 		Page p = new Page(url);
 		data.put(p);
 		}
-		catch (DuplicateURLException Du) {
-		Du.printRow();
-		}
 		catch (MalformedURLException M) {
 		Print.row(M, url);
 		}
@@ -213,6 +227,9 @@ final public class D implements FileNames {
 		catch (IOException I) {
 		Print.row(I, url);
 		}
+		catch (DuplicateURLException Du) {
+		Du.printRow();
+		}
 		catch (EmailURLException E) {
 		E.printRow();
 			if (Page.getemails) {
@@ -220,7 +237,7 @@ final public class D implements FileNames {
 				DataObjects.dada_emails.put(url);
 				}
 				catch (DuplicateURLException Du) {
-				Du.printRow();
+				/*do nothing because I don't need to know if exception is thrown*/
 				}
 			}
 		}
@@ -231,10 +248,13 @@ final public class D implements FileNames {
 				DataObjects.dada_images.put(url);
 				}
 				catch (DuplicateURLException Du) {
-				Du.printRow();
+				/*do nothing because I don't need to know if exception is thrown*/
 				}
 			}
 		}
+		/*catch (ExcludedURLException Ex) {
+		Ex.printRow();
+		}*/
 		catch (InvalidURLException U) {
 		U.printRow();
 		}
@@ -246,9 +266,6 @@ final public class D implements FileNames {
 		Page p = new Page(link);
 		data.put(p);
 		}
-		catch (DuplicateURLException Du) {
-		Du.printRow();
-		}
 		catch (MalformedURLException M) {
 		Print.row(M, link);
 		}
@@ -257,6 +274,9 @@ final public class D implements FileNames {
 		}
 		catch (IOException I) {
 		Print.row(I, link);
+		}
+		catch (DuplicateURLException Du) {
+		Du.printRow();
 		}
 		catch (EmailURLException E) {
 		E.printRow();
@@ -270,22 +290,13 @@ final public class D implements FileNames {
 			throw new UnsupportedOperationException("Can't Get Images");
 			}
 		}
+		/*catch (ExcludedURLException Ex) {
+		Ex.printRow();
+		}*/
 		catch (InvalidURLException U) {
 		U.printRow();
 		}
 	return data;
 	}
 
-
-	static public Data<Page> add(Page[] pages, Data<Page> data) {
-		for (Page page : pages) {
-			try {
-			data.put(page);
-			}
-			catch (DuplicateURLException Du) {
-			Du.printRow();
-			}
-		}
-	return data;
-	}
 }

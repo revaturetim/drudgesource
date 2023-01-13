@@ -17,6 +17,9 @@ final static private int pagesize = 35_000;
 static public Proxy proxyserver = Proxy.NO_PROXY;
 static public boolean getemails = false;
 static public boolean getimages = false;
+static public boolean getincluded = false;
+static public boolean donotgetexcluded = false;
+static public boolean robotsallowed = true;
 //private variables for info about page itself which are set to the default values
 //The default value for MOST of these should be null
 final private Source content = new Source(pagesize);
@@ -24,9 +27,7 @@ final private Header header = new Header();
 private URL url = null;  
 private URLConnection connection = null;
 private boolean didconnect = false;
-final private Data<Page> dlist = new DataList<Page>();
-final private Data<URL> elist = new DataListEmail<URL>();
-final private Data<String> klist = new DataList<String>();
+private int linkcount = 0;
 
 	public Page(URL u) throws IOException, URISyntaxException, InvalidURLException {
 	this.url = u;
@@ -75,38 +76,30 @@ final private Data<String> klist = new DataList<String>();
 	return toString().hashCode();
 	}
 
-	public Data<Page> getLinks(LinkFilter filter) {
-		if (content.wasFilled() && content.size() > 0) {
-		P.Links.find(content, filter);
-		}
-	Debug.time("Getting Links Filter");
-	return dlist;
-	}
-	
 	public Data<Page> getLinks() {
+	final Data<Page> links = new DataList<Page>();
 		LinkFilter<String> action = new LinkFilter<String>() {
 			
 			public void act(String link) {
-			D.add(url, link, dlist);
+			D.add(url, link, links);
 			}
 		};
-	this.getLinks(action);
+		if (content.wasFilled() && content.size() > 0) {
+		P.Links.find(content, action);
+		}
+	this.linkcount = links.size();
 	Debug.time("Getting Links");
-	return dlist;
-	}
-	
-	public Data<URL> getEmails() {
-	P.getEmails(content, elist);
-	Debug.time("Getting Emails");
-	return elist;
-	}
-
-	public int getEmailCount() {
-	return elist.size();
+	return links;
 	}
 
 	public int getLinkCount() {
-	return dlist.size();
+	return linkcount;
+	}
+
+	public Data<URL> getEmails() {
+	final Data<URL> emails = P.getEmails(content, new DataListEmail<URL>());
+	Debug.time("Getting Emails");
+	return emails;
 	}
 
 	public String getTitle() {
@@ -116,13 +109,9 @@ final private Data<String> klist = new DataList<String>();
 	}
 	
 	public Data<String> getKeywords() {
-	P.getKeywords(content, klist);
+	Data<String> keywords = P.getKeywords(content, new DataList<String>());
 	Debug.time("Getting Keywords");
-	return klist;
-	}
-
-	public int getKeywordCount() {
-	return klist.size();
+	return keywords;
 	}
 
 	//this will essentiallly handle all the prechecking needed before it gets content

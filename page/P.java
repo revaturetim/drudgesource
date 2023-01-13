@@ -79,19 +79,19 @@ final static private String encoding = "UTF-8";
 						URL c = new URL(rcon.getURL(), dir);//this thows exception
 						norob.put(c);
 						}
-						catch (DuplicateURLException Du) {
-						Hashtable<String, Object> h = new Hashtable<String, Object>();
-						h.put("Robot URL", rcon.getURL());
-						h.put("Duplicate", dir);
-						h.put("Exception", Du);
-						D.error(h);
-						}
 						catch (MalformedURLException M) {
 						Hashtable<String, Object> d = new Hashtable<String, Object>();	
 						d.put("Robot URL", rcon.getURL());
 						d.put("Directory", dir);
 						d.put("Exception", M);		
 						D.error(d);
+						}
+						catch (DuplicateURLException Du) {
+						Hashtable<String, Object> h = new Hashtable<String, Object>();
+						h.put("Robot URL", rcon.getURL());
+						h.put("Duplicate", dir);
+						h.put("Exception", Du);
+						D.error(h);
 						}
 					}
 				}
@@ -144,13 +144,13 @@ final static private String encoding = "UTF-8";
 			data.put(email);
 			}
 			catch (MalformedURLException M) {
-			Print.row(M, address);
+			D.error(M);
 			}
 			catch (URISyntaxException U) {
-			Print.row(U, address);
+			D.error(U);	
 			}
 			catch (DuplicateURLException Du) {
-			Du.printRow();
+			
 			}
 		}
 	return data;

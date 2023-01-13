@@ -11,16 +11,13 @@ import java.util.*;
 
 public class Spider {
 protected boolean checkok = true;
-protected boolean robotsallowed = true;
-protected boolean included = false;
-protected boolean excluded = false;
 protected long delay = 0L;
 
 	//a convenience method for handling links and it makes other spiders do different things
 	protected void links(final Page p) {
 	p.getSource();
 	Data<Page> pages = p.getLinks();
-	checkExcluded(pages);
+	DataObjects.dada.put(pages);
 	Debug.time("End Links");
 	}
 	
@@ -61,31 +58,6 @@ protected long delay = 0L;
 		}
 	}
 
-	protected void checkExcluded(Data<Page> pages) {
-		for (Page page : pages) {
-			try {
-			checkExcluded(page);
-			DataObjects.dada.put(page);
-			}
-			catch (DuplicateURLException D) {
-			D.printRow();	
-			}
-			catch (ExcludedURLException E) {
-			E.printRow();
-			}
-		}
-	}
-	
-	protected void checkExcluded(Page p) throws ExcludedURLException {
-
-		if (included) {
-		p.isIncluded();	
-		}
-		if (excluded) {
-		p.isExcluded();
-		}
-	}
-
 	public boolean crawl(Page p) {
 	boolean remove = false;
 	delay();//this will be universal for all crawlers since delay=0 is the same as no delay
@@ -95,22 +67,11 @@ protected long delay = 0L;
 			p.isUseless();//this throws a uselesssurlexception
 			Debug.time("Checing is UseLess");
 			}
-			if (!robotsallowed) {
-			p.isRobotExcluded();//this throws RobotsExcludedURLException	
-			Debug.time("Checking Robot Allowed");
-			}
-		checkExcluded(p);//throws excluded url eception
 		links(p);
 		}
 		catch (RedirectedURLException R) {
 		R.printRow();
-			try {
-			checkExcluded(p);//throws excluded url exception
-			redirect(p);
-			}
-			catch (ExcludedURLException E) {
-			E.printRow();
-			}
+		redirect(p);
 		}
 		//these must be caught here so it can remove it once it is found in data object
 		catch (NotOKURLException N) {
@@ -127,13 +88,6 @@ protected long delay = 0L;
 		catch (BadEncodingURLException B) {
 		B.printRow();
 		}
-		catch (RobotsExcludedURLException N) {
-		N.printRow();
-		}
-		catch (ExcludedURLException E) {
-		remove = true;
-		E.printRow();
-		}
 	return remove;
 	}
 
@@ -141,22 +95,10 @@ protected long delay = 0L;
 	checkok = b;
 	}
 
-	public void setRobotsAllowed(boolean b) {
-	robotsallowed = b;
-	}
-
 	public void setDelay(long l) {
 	delay = l;
 	}
 	
-	public void setExcluded(boolean b) {
-	excluded = b;
-	}
-
-	public void setIncluded(boolean b) {
-	included = b;
-	}
-
 	//I thought that calling issue was humorous like you have a issues
 	protected void spinIssue(String i, Object o, Exception e) {
 	HashMap<String, Object> h = new HashMap<String, Object>();

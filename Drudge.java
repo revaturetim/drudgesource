@@ -22,8 +22,6 @@ private static final String sep = "=";
 	int begcyc = 0;//default starting number for program
 	boolean okays = true;//default value
 	boolean robotsallowed = true;//default value
-	boolean included = false;//defalut behavior
-	boolean excluded = false;//default behavior
 	long delay = 0;//default value
 	Spider spider = null;
 	eraseFile(FileNames.error);
@@ -70,9 +68,18 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			}
 			else if (a.equals(Help.e.parameter)) {
 			Page.getemails = true;
+				try {	
+				dada_emails.begin();
+				}
+				catch (IOException I) {
+				Print.error(I);
+				}
+				catch (Exception E) {
+				Print.error(E);
+				}
 			}	
 			else if (a.equals(Help.exc.parameter)) {
-			excluded = true;	
+			Page.donotgetexcluded = true;
 				try {
 				exclude.begin();
 				}
@@ -84,7 +91,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}	
 			}
 			else if (a.startsWith(Help.exclude.parameter + Drudge.sep)) {
-			excluded = true;	
+			Page.donotgetexcluded = true;
 			String file = getString(a);
 				try {
 				exclude.setSource(file);
@@ -143,7 +150,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page.getimages = true;
 			}
 			else if (a.equals(Help.inc.parameter)) {
-			included = true;
+			Page.getincluded = true;
 				try {
 				include.begin();
 				}	
@@ -155,7 +162,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			}
 			else if (a.startsWith(Help.include.parameter + Drudge.sep)) {
-			included = true;
+			Page.getincluded = true;
 			String file = getString(a);
 				try {
 				include.setSource(file);
@@ -243,7 +250,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		
 			}
 			else if (a.equals(Help.rob.parameter)) {
-			robotsallowed = false;
+			Page.robotsallowed = false;
 			}
 			else if (a.startsWith(Help.w.parameter + Drudge.sep)) {
 				try {
@@ -351,6 +358,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			break;
 			}
+			else if (a.equals(DevHelp.HELP.parameter) && arg.length == 1) {
+			Print.helpMenu(a);
+			break;
+			}
 			else if (a.equals(DevHelp.I.parameter) && arg.length == 2 && i == 0) {
 				try {
 				Page p = createFirstPage(arg[i + 1]);	
@@ -389,9 +400,29 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			break;
 			}
-			else if (a.equals(DevHelp.HELP.parameter) && arg.length == 1) {
-			Print.helpMenu(a);
-			break;
+			else if (a.startsWith(DevHelp.IMG.parameter) && arg.length == 2 && i == 0) {
+				try {
+				Page p = new Page(arg[i + 1]);
+				p.getSource();
+				Page.getimages = true;
+				Data<Page> links = p.getLinks();
+					for (URL image : DataObjects.dada_images) {
+					System.out.println(image);
+					}
+				}
+				catch (InvalidURLException I) {
+				Print.error(I, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
+				}
+				catch (MalformedURLException M) {
+				Print.error(M, arg[i + 1]);
+				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
+				}
+			break;	
 			}
 			else if (a.equals(DevHelp.K.parameter) && arg.length == 2 && i == 0) {
 				try {
@@ -457,6 +488,30 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(I, arg[i + 1]);
 				}
 			break;
+			}
+			else if (a.startsWith(DevHelp.M.parameter) && arg.length == 2 && i == 0) {
+				try {
+				Page p = new Page(arg[i + 1]);
+				p.getSource();
+				Page.getemails = true;
+				Data<Page> links = p.getLinks();
+					for (URL email : DataObjects.dada_emails) {
+					System.out.println(email);
+					}
+				}
+				catch (InvalidURLException I) {
+				Print.error(I, arg[i + 1]);
+				}
+				catch (URISyntaxException U) {
+				Print.error(U, arg[i + 1]);
+				}
+				catch (MalformedURLException M) {
+				Print.error(M, arg[i + 1]);
+				}
+				catch (IOException I) {
+				Print.error(I, arg[i + 1]);
+				}
+			break;	
 			}
 			else if (a.startsWith(DevHelp.P.parameter) && arg.length == 2 && i == 0) {
 				try {
@@ -688,7 +743,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					begcyc = CountFile.get();
 					maxcyc = maxcyc + begcyc;
 					dada.begin();
-					dada_emails.begin();
 					}
 					catch (IOException I) {
 					Print.error(I);
@@ -704,7 +758,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					begcyc = num - 1;
 					maxcyc = maxcyc + begcyc;
 					dada.begin();
-					dada_emails.begin();
 					}
 					catch (NumberFormatException N) {
 					Print.error(N);
@@ -747,10 +800,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			spider = createSpider(crawlmethod);
 			spider.setCheckOK(okays);
-			spider.setRobotsAllowed(robotsallowed);
 			spider.setDelay(delay);
-			spider.setIncluded(included);
-			spider.setExcluded(excluded);
 			
 			final long begintime = System.currentTimeMillis(); 
 				do {

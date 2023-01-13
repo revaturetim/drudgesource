@@ -30,7 +30,6 @@ private Object[] objs = new Object[10];
 	}
 
 	public void put(T page) throws DuplicateURLException, IllegalArgumentException {
-		
 		if (contains(page) == false) {
 			
 			if (this.size >= objs.length - 1) {

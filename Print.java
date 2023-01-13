@@ -198,7 +198,7 @@ final private static String[] H = {
 	}
 
 	static void error(UselessURLException u) {
-	System.out.println(u.getUrl() + " is a useless url for this program");
+	System.out.println(u.getObject().toString() + " is a useless url for this program");
 	System.out.println("Why? " + u.toString());
 	}
 
@@ -208,7 +208,7 @@ final private static String[] H = {
 	}
 
 	static void error(InvalidURLException n) {
-	System.out.println("URL:" + n.getUrl() + " is not a valid html file this program!");
+	System.out.println("URL:" + n.getObject().toString() + " is not a valid html file this program!");
 	}
 	
 	static void totalTime(long time) {

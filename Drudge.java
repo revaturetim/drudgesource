@@ -768,34 +768,16 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			
 				}
 				else {
-					try {
 					dada.truncate();//this will delete existing data and start over
 					dada_emails.truncate();
 					dada_images.truncate();
-					Page firstpage = createFirstPage(lastarg);
-					dada.put(firstpage);
-					}
-					catch (MalformedURLException M) {
-					Print.row(M, lastarg);
-					}
-					catch (UnknownHostException U) {
-					Print.row(U, lastarg);
-					}
-					catch (IOException I) {
-					Print.error(I, lastarg);
-					}
-					catch (URISyntaxException U) {
-					Print.row(U, lastarg);
-					}
-					catch (InvalidURLException N) {
-					N.printRow();
-					}
-					catch (DuplicateURLException D) {
-					D.printRow();
-					}
-					catch (Exception E) {
-					Print.row(E, lastarg);
-					}
+						try {
+						String firststring = createFirstString(lastarg);
+						D.add(firststring, dada);
+						}
+						catch (UnknownHostException U) {
+						Print.error(U, lastarg);
+						}
 				}
 
 			spider = createSpider(crawlmethod);
@@ -865,20 +847,16 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			}//end of lastarg of loop
 		}//end of loop
 	}//end of program
-
-	static Page createFirstPage(String link) throws URISyntaxException, InvalidURLException, MalformedURLException, UnknownHostException, IOException {
-	Page firstpage = null;
+	
+	static String createFirstString(final String link) throws UnknownHostException {
+	String firststring = link;//default 
 		if (link.equals("-t") || link.startsWith("-samp=")) {
 		String file = FileNames.samphtml;
 			if (link.startsWith("-samp=")) {
 			file = getString(link);
 			}
 		File sampfile = new File(file);
-		String samplepage = sampfile.toURI().toString();
-		firstpage = new Page(samplepage);
-		}
-		else if (link.matches("http[s]://.*")) {
-		firstpage = new Page(link);
+		firststring = sampfile.toURI().toString();
 		}
 		else if (
 		link.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}") || 
@@ -888,28 +866,24 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
 		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")
 		) {
-		Debug.here();
 		String[] bites = link.split("\\.");
 		byte[] ip = new byte[bites.length];
 			for (int i = 0; i < bites.length; i++) {
 			ip[i] = Byte.valueOf(bites[i]);
 			}
-		Debug.here(ip);
-		InetAddress address = InetAddress.getByAddress(ip);
-		Debug.here(address);
-		String host = address.getCanonicalHostName();
-		Debug.here(host);
-		firstpage = new Page(host);
+		InetAddress address = InetAddress.getByAddress(ip);//throws unknownhost exception
+		firststring = address.getCanonicalHostName();
 		}
 		else if (link.equals("yourcomputer")) {
-		InetAddress address = InetAddress.getLocalHost();
-		String host = address.getCanonicalHostName();
-		firstpage = new Page(host);
+		InetAddress address = InetAddress.getLocalHost();//throws unknownhost exception
+		firststring = address.getCanonicalHostName();
 		}
-		else {
-		firstpage = new Page(link);
-		}
-	return firstpage;
+	return firststring;
+	}
+
+	static Page createFirstPage(final String link) throws URISyntaxException, InvalidURLException, MalformedURLException, UnknownHostException, IOException {
+	String firstpage = createFirstString(link);
+	return new Page(firstpage);
 	}
 
 	static Spider createSpider(int c) {

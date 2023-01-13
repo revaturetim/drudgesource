@@ -174,15 +174,6 @@ final public class D implements FileNames {
 		catch (IOException I) {
 		Print.row(I, link);
 		}
-		catch (DuplicateURLException Du) {
-		Du.printRow();
-		}
-		catch (RobotsExcludedURLException R) {
-		R.printRow();
-		}
-		catch (ExcludedURLException E) {
-		E.printRow();
-		}
 		catch (EmailURLException E) {
 		E.printRow();
 			if (Page.getemails) {
@@ -210,93 +201,29 @@ final public class D implements FileNames {
 		catch (InvalidURLException U) {
 		U.printRow();
 		}
-	return data;
-	}
-
-	static public Data<Page> add(URL url, Data<Page> data) {
-		try {
-		Page p = new Page(url);
-		data.put(p);
+		catch (RobotsExcludedURLException R) {
+		R.printRow();
 		}
-		catch (MalformedURLException M) {
-		Print.row(M, url);
-		}
-		catch (URISyntaxException U) {
-		Print.row(U, url);
-		}
-		catch (IOException I) {
-		Print.row(I, url);
+		catch (ExcludedURLException E) {
+		E.printRow();
 		}
 		catch (DuplicateURLException Du) {
 		Du.printRow();
-		}
-		catch (EmailURLException E) {
-		E.printRow();
-			if (Page.getemails) {
-				try {
-				DataObjects.dada_emails.put(url);
-				}
-				catch (DuplicateURLException Du) {
-				/*do nothing because I don't need to know if exception is thrown*/
-				}
-			}
-		}
-		catch (ImageURLException I) {
-		I.printRow();
-			if (Page.getimages) {
-				try {
-				DataObjects.dada_images.put(url);
-				}
-				catch (DuplicateURLException Du) {
-				/*do nothing because I don't need to know if exception is thrown*/
-				}
-			}
-		}
-		/*catch (ExcludedURLException Ex) {
-		Ex.printRow();
-		}*/
-		catch (InvalidURLException U) {
-		U.printRow();
 		}
 	return data;
 	}
 	
+	static public Data<Page> add(Page page, Data<Page> data) {
+	URL url = page.getURL();
+	return add(url, data);
+
+	}
+	static public Data<Page> add(URL url, Data<Page> data) {
+	return add(url, new String(), data);//this should work identically as add(url, string, data) because it is using empty string	
+	}
+	
 	static public Data<Page> add(String link, Data<Page> data) {
-		try {
-		Page p = new Page(link);
-		data.put(p);
-		}
-		catch (MalformedURLException M) {
-		Print.row(M, link);
-		}
-		catch (URISyntaxException U) {
-		Print.row(U, link);
-		}
-		catch (IOException I) {
-		Print.row(I, link);
-		}
-		catch (DuplicateURLException Du) {
-		Du.printRow();
-		}
-		catch (EmailURLException E) {
-		E.printRow();
-			if (Page.getemails) {
-			throw new UnsupportedOperationException("Can't Get Emails");	
-			}
-		}
-		catch (ImageURLException I) {
-		I.printRow();
-			if (Page.getimages) {
-			throw new UnsupportedOperationException("Can't Get Images");
-			}
-		}
-		/*catch (ExcludedURLException Ex) {
-		Ex.printRow();
-		}*/
-		catch (InvalidURLException U) {
-		U.printRow();
-		}
-	return data;
+	return add(null, link, data);//this should get identical results because null is passed in as the url argument
 	}
 
 }

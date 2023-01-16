@@ -20,7 +20,6 @@
 5.  Consider a single DataObject method that can beginAll, EndAll, and truncateAll;
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
 7.  Get rid of type variable in Data interface.  Make it all Page objects;
-8.  Consider using enum for DataObjects so you can treat them all under one enum;
 9.  Make more efficient P.getKeywords method;
 10. Improve respect robots!  It hangs for some reason;
 11. BUG! Why does it store unencoded links?
@@ -45,7 +44,6 @@
 35. Fix createPage so that when you put an IP number without protocol that it will either put its own in or tell the user to do so;
 36. Consider getting rid of type variable for Data classes since they create more problems than they solve;
 37. Use proper exceptions in Page.isRobotAllowed() for page constructor;
-40. Explore the idea of having a Page.create() for all page object creations that create and add to data<> object;
 42. Create findlinks using xml api;
 43. Link all the page objects together as a way of storing them;
 

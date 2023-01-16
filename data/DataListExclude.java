@@ -32,10 +32,13 @@ public class DataListExclude<T> extends DataList<T>{
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 			try {
 			T u = (T)new URL(line);
-			put(u);
+			this.put(u);
 			}
 			catch (MalformedURLException M) {
-			D.error(M);
+			D.error(M.getClass(), M);
+			}
+			catch (DuplicateURLException Du) {
+			
 			}
 		}
 	}

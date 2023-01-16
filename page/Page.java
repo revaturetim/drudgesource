@@ -159,7 +159,7 @@ private int linkcount = 0;
 			url = new URL(r.toURI().toString());
 			}
 			catch (IOException I) {
-			D.error(I);
+			D.error(I.getClass().getName(), I, "Location", "Page.getURI(String, String)", "link", "file");
 			}
 		
 		}
@@ -168,7 +168,7 @@ private int linkcount = 0;
 			url = new URL(this.url, real);
 			}
 			catch (IOException I) {
-			D.error(I);
+			D.error(I.getClass().getName(), I, "Location", "Page.getURI(String, String)", "link", real);
 			}
 		}
 	return url;
@@ -192,8 +192,8 @@ private int linkcount = 0;
 
 	public boolean isIncluded() throws ExcludedURLException {
 	boolean included = false;
-		for (URL u : DataObjects.include) {
-		included = this.toString().contains(u.toString());
+		for (Object url : DataEnum.include.data) {
+		included = this.toString().contains(url.toString());
 			if (included) {
 			break;
 			}
@@ -205,7 +205,7 @@ private int linkcount = 0;
 	}
 	
 	public boolean isExcluded() throws ExcludedURLException {
-		if (DataObjects.exclude.contains(this.url)) {
+		if (DataEnum.exclude.data.contains(this.url)) {
 		throw new ExcludedURLException(this.url);
 		}
 	return false;
@@ -213,22 +213,22 @@ private int linkcount = 0;
 
 	public boolean isRobotExcluded() throws RobotsExcludedURLException {
 	final URL roboturl = getURL(FileNames.samprobot, "/robots.txt");
-		if (!DataObjects.norobots.containsKey(roboturl)) {
+		if (!DataEnum.norobots.containsKey(roboturl)) {
 			try {
 			final URLConnection c = roboturl.openConnection(Page.proxyserver);
 			final Data<URL> dr = P.readRobotFile(c);
-			DataObjects.norobots.put(roboturl, dr);
+			DataEnum.norobots.put(roboturl, dr);
 				//this is for add disallowed urls to database
 				for (URL use : dr) {
-				D.add(use, DataObjects.dada);
+				D.add(use, DataEnum.links.data);
 				}
 			}
 			catch (IOException I) {
-			D.error(I);
+			D.error(I.getClass().getName(), I, "Location", "Page.isRobotExcluded()");
 			}
 		}
 		else {
-		Data<URL> urls = DataObjects.norobots.get(roboturl);
+		Data<URL> urls = DataEnum.norobots.get(roboturl);
 			if (urls.contains(this.url)) { 
 			throw new RobotsExcludedURLException(this.url);
 			}
@@ -270,10 +270,10 @@ private int linkcount = 0;
 			code = h.getResponseCode();
 			}
 			catch (ClassCastException C) {
-			D.error(C);
+			D.error("ClassCastException", C, "Location", "Page.getResponseCode()");
 			}
 			catch (IOException I) {
-			D.error(I);
+			D.error("IOException", I, "Location", "Page.getResponseCode()");
 			}
 		return code;
 		}
@@ -288,7 +288,7 @@ private int linkcount = 0;
 				l = I.intValue();
 				}
 				catch (NumberFormatException N) {
-				D.error(N);
+				D.error("Exception", N, "Location", "Page.getContentLength()", "r is not a number", Integer.valueOf(r));
 				}
 			}
 		return l;

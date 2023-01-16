@@ -13,24 +13,30 @@ import java.sql.*;
 final public class D implements FileNames {
 
 
-	public static void error(Map<String, Object> M) {
+	public static  void error(Object...errors) {
+			if (errors.length % 2 != 0) {
+			throw new IllegalArgumentException("D.error() arguments must be in pairs!");
+			}
 	final String beg = "!-----";
 	final String end = "-----!";	
 		try {
-		final BufferedWriter err = new BufferedWriter(new FileWriter(error, true));
+		final BufferedWriter err = new BufferedWriter(new FileWriter(FileNames.error, true));
 		err.write(beg);	
 		final String time = getDate();
 		err.write(time);
 		err.write(end);
 		err.write("\n");
-
-			for (String k : M.keySet()) {
-			Object v = M.get(k);
-				if (v == null) v = "NULL VALUE";
+			
+			for (int i = 0; i < errors.length; i += 2) {
+			String message = errors[i].toString();
+			Object the_error = errors[i + 1];
+				if (the_error == null) {
+				the_error = "NULL VALUE";
+				}
 			err.append("[");
-			err.append(k);
+			err.append(message);
 			err.append("]-[");
-			err.append(v.toString());
+			err.append(the_error.toString());
 			err.append("]\n");
 			}
 
@@ -55,33 +61,10 @@ final public class D implements FileNames {
 				}
 			}
 		err.write("\n\n");
-		err.close();//this should append errors to file
+		err.close();//this should append _errors to file
 		}
 		catch (IOException I) {
 
-		}
-	}
-
-	public static void error(Exception E) {
-	error(E.getClass().getName(), E.toString());
-	}
-
-	public static void error(String...errors) {
-	
-		if (errors.length % 2 == 0) {
-		Hashtable<String, Object> t = new Hashtable<String, Object>();
-		int i = 0;
-			while (i < errors.length) {
-			String err = errors[i];
-			i++;
-			String msg = errors[i];
-			t.put(err, msg);
-			i++;
-			}
-		error(t);
-		}
-		else {
-		throw new IllegalArgumentException("D.error() arguments must be in pairs!");
 		}
 	}
 
@@ -110,16 +93,16 @@ final public class D implements FileNames {
 		page = new Page(entries[0]);
 		}
 		catch (URISyntaxException U) {
-		D.error(U);
+		D.error("Exception", U, "Location", "D.getPageFromEntry(String)");
 		}
 		catch (InvalidURLException I) {
-		D.error(I);
+		D.error("Exception", I, "Location", "D.getPageFromEntry(String)");
 		}
 		catch (MalformedURLException M) {
-		D.error(M);
+		D.error("Exception", M, "Location", "D.getPageFromEntry(String)");
 		}
 		catch (IOException I) {
-		D.error(I);
+		D.error("Exception", I, "Location", "D.getPageFromEntry(String)");
 		}
 	return page;
 	}
@@ -136,13 +119,13 @@ final public class D implements FileNames {
 	static void writeEntry(Page page, Writer writer, int level) throws IOException {
 		for (int r = 0; r < level; r++) {
 			if (r < 1) {//link
-			writer.append(page.toString() + CountFile.sep);
+			writer.append(page.toString());
 			}
 			else if (r < 2) {//title
-			writer.append(page.getTitle() + CountFile.sep);
+			writer.append(CountFile.sep + page.getTitle());
 			}				
 			else if (r < 3) {//keywords
-			writer.append(rawString(page.getKeywords()));
+			writer.append(CountFile.sep + rawString(page.getKeywords()));
 			}
 		}
 	writer.append("\n");
@@ -178,8 +161,8 @@ final public class D implements FileNames {
 		E.printRow();
 			if (Page.getemails) {
 				try {
-				URL mailurl = (URL)E.getObject();//must cast to ensure it is correct
-				DataObjects.dada_emails.put(mailurl);
+				URL mailurl = (URL)E.getFirstObject();//must cast to ensure it is correct
+				DataEnum.emails.data.put(mailurl);
 				}
 				catch (DuplicateURLException Du) {
 				/*do nothing because I don't need to know if exception is thrown*/
@@ -190,8 +173,8 @@ final public class D implements FileNames {
 		I.printRow();
 			if (Page.getimages) {
 				try {
-				URL imageurl = (URL)I.getObject();//must cast to ensure it is correct
-				DataObjects.dada_images.put(imageurl);
+				URL imageurl = (URL)I.getFirstObject();//must cast to ensure it is correct
+				DataEnum.images.data.put(imageurl);
 				}
 				catch (DuplicateURLException Du) {
 				/*do nothing because I don't need to know if exception is thrown*/	

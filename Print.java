@@ -41,7 +41,7 @@ final private static String[] H = {
 	Page.Header h = p.header();
 	String[] fields = new String[6];
 	fields[0] = String.valueOf(c + 1);
-	fields[1] = String.valueOf(DataObjects.dada.size());
+	fields[1] = String.valueOf(DataEnum.links.data.size());
 	fields[2] = nump;
 	fields[3] = h.getResponse();
 	fields[4] = h.getContentType();
@@ -162,30 +162,14 @@ final private static String[] H = {
 	}
 	
 //these are error methods used when an error occurs
-	static void error(Object aba) {
-	System.out.println(aba.toString());
+	static void error(Exception except) {
+	error(except, except.getMessage());
 	}
 
-	static void error(Exception aba) {
-	System.out.println(aba.toString());
+	static void error(Exception except, Object url) {
+	System.out.println("A " + except.getClass().getName() + " has occured at " + url.toString());
 	}		
 	
-	static void error(IOException aba, Object uri) {
-	System.out.println("An IO exception occurred at " + uri.toString());
-	}
-
-	static void error(IllegalArgumentException aba, Object uri) {
-	System.out.println("An IllegalArgument Exception has occurrred for " + uri.toString());
-	}
-
-	static void error(MalformedURLException M, Object url) {
-	System.out.println("A MalformedURLException occurred at " + url.toString());
-	}
-
-	static void error(URISyntaxException u, Object uri) {
-	System.out.println(uri.toString() + " did not conform to RFC2396 standard");
-	}
-
 	static void error(Integer aba) {
 	System.out.println("You have to use a positive number greater than zero! Ex: 1,2,3...");
 	System.out.println(aba.toString());
@@ -196,21 +180,16 @@ final private static String[] H = {
 	System.out.println(" is not a number!");
 	System.out.println(n.toString());
 	}
-
+	
 	static void error(UselessURLException u) {
-	System.out.println(u.getObject().toString() + " is a useless url for this program");
-	System.out.println("Why? " + u.toString());
+	error(u, u.getFirstObject());
 	}
 
 	static void error(UselessURLException u, Object url) {
-	System.out.println("URL: " + url.toString());
-	error(u);
+	System.out.println(url.toString() + " is a useless url for this program");
+	System.out.println("Why? " + u.getClass().getName());
 	}
 
-	static void error(InvalidURLException n) {
-	System.out.println("URL:" + n.getObject().toString() + " is not a valid html file this program!");
-	}
-	
 	static void totalTime(long time) {
 	if (time < 60_000) {
 		double tsec = (double)time / 1000.0;

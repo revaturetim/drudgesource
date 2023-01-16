@@ -16,16 +16,13 @@ final static public String sep = ", ";
 
 	static void set(int c) throws IOException {
 		
-		if (c > 0) {	
+		if (c > -1) {	
 		DataOutputStream out = new DataOutputStream(new FileOutputStream(FileNames.cycle));
 		out.writeInt(c);
 		out.close();
 		}
 		else {
-		Hashtable<String, Object> t = new Hashtable<String, Object>();
-		t.put("Location", "Connector.Countfile(int)");
-		t.put("The value of c was ", String.valueOf(c));
-		D.error(t);
+		D.error("Location", "Countfile(int).set(int)", "The value of c was ", String.valueOf(c));
 		}
 	}
 	

@@ -20,7 +20,7 @@ private Comparator<Page> compare = new TopComparator<Page>();
 	p.getSource();
 	DataList<Page> pages = (DataList<Page>)p.getLinks();
 	Collections.sort(pages, compare);//this sorts it the way it should be sorted for this spider	
-	DataObjects.dada.put(pages);
+	DataEnum.links.data.put(pages);
 	Debug.time("End Links");
 	}
 

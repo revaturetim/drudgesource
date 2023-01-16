@@ -12,9 +12,9 @@ public class EmailURLException extends InvalidURLException {
 	message = UselessMessages.EMAIL.mes;
 	}
 
-	public EmailURLException(Object o, String s) {
+	public EmailURLException(Object o, Object s) {
 	super(o, s);
-
+	message = UselessMessages.EMAIL.mes;
 	}
 
 }

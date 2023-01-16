@@ -80,18 +80,10 @@ final static private String encoding = "UTF-8";
 						norob.put(c);
 						}
 						catch (MalformedURLException M) {
-						Hashtable<String, Object> d = new Hashtable<String, Object>();	
-						d.put("Robot URL", rcon.getURL());
-						d.put("Directory", dir);
-						d.put("Exception", M);		
-						D.error(d);
+						D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", M);		
 						}
 						catch (DuplicateURLException Du) {
-						Hashtable<String, Object> h = new Hashtable<String, Object>();
-						h.put("Robot URL", rcon.getURL());
-						h.put("Duplicate", dir);
-						h.put("Exception", Du);
-						D.error(h);
+						D.error("Robot URL", rcon.getURL(), "Duplicate", dir, "Exception", Du);
 						}
 					}
 				}
@@ -105,10 +97,10 @@ final static private String encoding = "UTF-8";
 		link = URLDecoder.decode(link, P.encoding);
 		}
 		catch (UnsupportedEncodingException U) {
-		D.error(U);
+		D.error(U.getClass(), U, "Location", "P.decode(string)");
 		}
 		catch (IllegalArgumentException I) {
-		D.error(I);
+		D.error(I.getClass(), I, "Location", "P.decode(string)");
 		}
 	return link;
 	}	
@@ -118,7 +110,7 @@ final static private String encoding = "UTF-8";
 		link = URLEncoder.encode(link, P.encoding);
 		}
 		catch (UnsupportedEncodingException U) {
-		D.error(U);
+		D.error(U.getClass(), U, "Location", "P.encode(string)");
 		}
 	return link;
 	}
@@ -144,10 +136,10 @@ final static private String encoding = "UTF-8";
 			data.put(email);
 			}
 			catch (MalformedURLException M) {
-			D.error(M);
+			D.error(M.getClass(), M, "Location", "P.getEmails(charsequence, data)", "url", address);
 			}
 			catch (URISyntaxException U) {
-			D.error(U);	
+			D.error(U.getClass(), U, "Location", "P.getEmails(Charsequence, data)", "url", address);	
 			}
 			catch (DuplicateURLException Du) {
 			
@@ -176,7 +168,7 @@ final static private String encoding = "UTF-8";
 			for (int b = html.indexOf("<"); b != -1; b = html.indexOf("<", b + 1)) {
 			final int e = html.indexOf(">", b);
 				if (e == -1) {
-				continue;//this skips in case there is an error in the html
+				continue;//this skips in case there is an _error in the html
 				}
 			final String tag = html.substring(b, e);
 			int r = tag.indexOf("href=");
@@ -306,7 +298,7 @@ final static private String encoding = "UTF-8";
 	String[] somewords = text.split("<.*>|\\s|<script.*script>|<style.*style>");//this splits and coincidently removes all whitespace characters
 		for (String word : somewords) {
 			if (word.length() > 2) {
-				if (!DataObjects.excludedwords.contains(word)) {	
+				if (!DataEnum.words.data.contains(word)) {	
 					try {
 					words.put(word);
 					}
@@ -332,7 +324,7 @@ final static private String encoding = "UTF-8";
 		String[] somewords = sometext.split("\\s");//this splits and coincidently removes all whitespace characters
 			for (String word : somewords) {
 				if (word.length() > 2) {
-					if (!DataObjects.excludedwords.contains(word)) {	
+					if (!DataEnum.words.data.contains(word)) {	
 						try {
 						words.put(word);
 						}
@@ -394,7 +386,7 @@ final static private String encoding = "UTF-8";
 		throw new RedirectedURLException(page);
 		}
 		else {
-		throw new NotOKURLException(page, String.valueOf(response));
+		throw new NotOKURLException(page, Integer.valueOf(response));
 		}
 		
 	Debug.time("...Response-Code");		
@@ -410,7 +402,7 @@ final static private String encoding = "UTF-8";
 				checkResponse(code, page);
 				}
 				catch (NumberFormatException N) {
-				D.error(N);	
+				D.error(N.getClass(), N, "Location", "P.checkResponse(string, string)");	
 				}
 			}	
 		}
@@ -463,10 +455,10 @@ final static private String encoding = "UTF-8";
 		checkResponse(response, u);
 		}
 		catch (IOException I) {
-		D.error(I);
+		D.error(I.getClass(), I, "Location", "P.checkHeaders(URLConnection)");
 		}
 		catch (ClassCastException C) {
-		D.error(C);
+		D.error(C.getClass(), C, "Location", "P.checkHeaders(URLConnection)");
 		}
 
 	final String contype = con.getContentType();
@@ -512,8 +504,8 @@ final static private String encoding = "UTF-8";
 			source.append((char)n, i);
 			}
 			catch (IOException I) {
-			D.error(I);
-			reader.reset();
+			D.error(I.getClass().getName(), I, "Location", "Page.getSource(Page.source, URLConnection");
+			reader.reset();//this eliminates the need to have errorwrite boolean to avoid repeat thrown exceptions
 			}
 		}
 	reader.close();//closes the reader and throws ioexception
@@ -537,14 +529,9 @@ final static private String encoding = "UTF-8";
 				}
 			}
 			catch (IOException I) {
-				//this will make sure i only writes to the error log once!
+				//this will make sure i only writes to the _error log once!
 				if (errorwrite == false) {
-				Hashtable<String, Object> t = new Hashtable<String, Object>();
-				t.put("Exception", I);
-				t.put("Location", "P.getSouce(Souce, URLConnection)");
-				t.put("Message", "How often does this occur?");
-				t.put("Link", con.toString());
-				D.error(t);
+				D.error("Exception", I, "Location", "P.getSouce(Souce, URLConnection)", "Message", "How often does this occur?", "Link", con);
 				errorwrite = true; 
 				}
 			}
@@ -570,14 +557,9 @@ final static private String encoding = "UTF-8";
 				}
 			}
 			catch (IOException I) {
-				//this will make sure i only writes to the error log once!
+				//this will make sure i only writes to the _error log once!
 				if (errorwrite == false) {
-				Hashtable<String, Object> t = new Hashtable<String, Object>();
-				t.put("Exception", I);
-				t.put("Location", "P.getSouce(char[], URLConnection)");
-				t.put("Message", "How often does this occur?");
-				t.put("Link", con.toString());
-				D.error(t);
+				D.error("Exception", I, "Location", "P.getSouce(char[], URLConnection)", "Message", "How often does this occur?", "Link", con);
 				errorwrite = true; 
 				}
 			}
@@ -598,13 +580,13 @@ final static private String encoding = "UTF-8";
 		p = new Page(url);
 		}
 		catch (IOException I) {
-		D.error(I);
+		D.error(I.getClass().getName(), I);
 		}
 		catch (URISyntaxException U) {
-		D.error(U);
+		D.error(U.getClass().getName(), U);
 		}
 		catch (InvalidURLException I) {
-		D.error(I);
+		D.error(I.getClass().getName(), I);
 		}
 	return p;
 	}

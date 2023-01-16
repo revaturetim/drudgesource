@@ -14,7 +14,7 @@ public class ImageURLException extends InvalidURLException {
 
 	public ImageURLException(Object o, String s) {
 	super(o, s);
-
+	message = UselessMessages.IMAGE.mes;
 	}
 
 }

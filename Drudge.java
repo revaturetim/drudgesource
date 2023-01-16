@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.*;
 import java.nio.file.*;
 
-public class Drudge implements DataObjects {
+public class Drudge {
 public static String XFACTOR = null;
 private static final String sep = "=";
 
@@ -47,10 +47,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.startsWith(Help.d.parameter + Drudge.sep)) {
 				try {
 				int pagedata = getNumber(a);
-				dada.setLevel(pagedata);
+				DataEnum.links.data.setLevel(pagedata);
 					if (pagedata == 3) {
 						try {
-						excludedwords.begin();
+						DataEnum.words.data.begin();
 						}
 						catch (IOException I) {
 						Print.error(I);
@@ -68,7 +68,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals(Help.e.parameter)) {
 			Page.getemails = true;
 				try {	
-				dada_emails.begin();
+				DataEnum.emails.data.begin();
 				}
 				catch (IOException I) {
 				Print.error(I);
@@ -80,7 +80,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals(Help.exc.parameter)) {
 			Page.donotgetexcluded = true;
 				try {
-				exclude.begin();
+				DataEnum.exclude.data.begin();
 				}
 				catch (IOException I) {
 				Print.error(I);
@@ -93,8 +93,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page.donotgetexcluded = true;
 			String file = getString(a);
 				try {
-				exclude.setSource(file);
-				exclude.begin();
+				DataEnum.exclude.data.setSource(file);
+				DataEnum.exclude.data.begin();
 				}
 				catch (IOException I) {
 				Print.error(I);
@@ -142,7 +142,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals(Help.inc.parameter)) {
 			Page.getincluded = true;
 				try {
-				include.begin();
+				DataEnum.include.data.begin();
 				}	
 				catch (IOException I) {
 				Print.error(I);
@@ -155,8 +155,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page.getincluded = true;
 			String file = getString(a);
 				try {
-				include.setSource(file);
-				include.begin();
+				DataEnum.include.data.setSource(file);
+				DataEnum.include.data.begin();
 				}	
 				catch (IOException I) {
 				Print.error(I);
@@ -275,8 +275,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			continue;
 			}
 			else if (a.equals(DevHelp.E.parameter) && arg.length == 1) {
-				for (Data<?> d : all_dadas) {
-				d.checkError();
+				for (DataEnum d : DataEnum.values()) {
+				d.data.checkError();
 				}
 			System.out.println("Have a nice day :)");
 			break;
@@ -318,7 +318,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page p = createTestPage(arg[i + 1]);	
 				if (p != null) {
 					try {
-					include.begin();
+					DataEnum.include.data.begin();
 						try {
 						p.isIncluded();
 						System.out.println(p.toString() + " is in the " + FileNames.include + " file.");	
@@ -341,12 +341,46 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (p != null) {
 				p.getSource();
 				Page.getimages = true;
-				Data<Page> links = p.getLinks();
-					for (URL image : DataObjects.dada_images) {
+				p.getLinks();//collects emails as well as links
+					for (Object image : DataEnum.images.data) {
 					System.out.println(image);
 					}
 				}
 			break;	
+			}
+			else if (a.equals(DevHelp.IP.parameter) && arg.length == 2 && i == 0) {
+			URI uri = URI.create(arg[i + 1]);
+				try {
+				String host = uri.getHost();
+					//this is so it can go backwards 
+					if (host == null) {
+					host = arg[i + 1];
+					}
+				InetAddress[] addresses = InetAddress.getAllByName(host);
+					for (InetAddress address : addresses) {
+					System.out.println("The inet address is:		" + address.toString());
+					System.out.print("The signed byte address is:	");
+						for (byte b : address.getAddress()) {
+						System.out.print(b);
+						System.out.print(" ");
+						}
+					System.out.println();
+					System.out.println("The inet host is:		" + address.getHostName());
+					System.out.println("The inet host address is:	" + address.getHostAddress());
+					System.out.println("The inet canonical host is:	" + address.getCanonicalHostName());
+					System.out.println();
+					}
+				InetAddress localaddress = InetAddress.getLocalHost();
+				System.out.println("The local inet host is:		" + localaddress.getLocalHost());
+				System.out.println("The local inet address is:	" + localaddress.getHostAddress());
+				InetAddress loopbackaddress = InetAddress.getLoopbackAddress();
+				System.out.println("The loopback inet host is:	" + loopbackaddress.getLocalHost());
+				System.out.println("The loopback inet address is:	" + loopbackaddress.getHostAddress());
+				}
+				catch (UnknownHostException U) {
+				Print.error(U, arg[i + 1]);
+				}
+			break;
 			}
 			else if (a.equals(DevHelp.K.parameter) && arg.length == 2 && i == 0) {
 			Page p = createTestPage(arg[i + 1]);
@@ -375,8 +409,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (p != null) {
 				p.getSource();
 				Page.getemails = true;
-				Data<Page> links = p.getLinks();
-					for (URL email : DataObjects.dada_emails) {
+				p.getLinks();//called because getlinks also collects emails
+					for (Object email : DataEnum.emails.data) {
 					System.out.println(email);
 					}
 				}
@@ -453,8 +487,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals(DevHelp.W.parameter) && arg.length == 2 && i == 0) {
 				
 				try {
-				excludedwords.begin();
-					if (excludedwords.contains(arg[i + 1])) {
+				DataEnum.words.data.begin();
+					if (DataEnum.words.data.contains(arg[i + 1])) {
 					System.out.println(arg[i + 1] + " is in the " + FileNames.words + " file.");
 					}
 					else {
@@ -473,7 +507,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page p = createTestPage(arg[i + 1]);
 				if (p != null) {
 					try {
-					exclude.begin();
+					DataEnum.include.data.begin();
 						try {
 						p.isExcluded();
 						System.out.println(p.toString() + " is NOT in the " + FileNames.exclude + " file.");	
@@ -500,7 +534,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					begcyc = CountFile.get();
 					maxcyc = maxcyc + begcyc;
-					dada.begin();
+					DataEnum.links.data.begin();
 					}
 					catch (IOException I) {
 					Print.error(I);
@@ -515,7 +549,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					int num = getNumber(lastarg);
 					begcyc = num - 1;
 					maxcyc = maxcyc + begcyc;
-					dada.begin();
+					DataEnum.links.data.begin();
 					}
 					catch (NumberFormatException N) {
 					Print.error(N);
@@ -526,12 +560,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			
 				}
 				else {
-					dada.truncate();//this will delete existing data and start over
-					dada_emails.truncate();
-					dada_images.truncate();
+					DataEnum.truncateAll();	
 						try {
 						String firststring = createFirstString(lastarg);
-						D.add(firststring, dada);
+						D.add(firststring, DataEnum.links.data);
 						}
 						catch (UnknownHostException U) {
 						Print.error(U, lastarg);
@@ -544,13 +576,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			
 			final long begintime = System.currentTimeMillis(); 
 				do {
-				Page p = dada.get(begcyc);
+				Page p = (Page)DataEnum.links.data.get(begcyc);
 					if (p == null) {
 					break;
 					}
 				boolean remove = spider.crawl(p);
 					if (remove == true) {
-					dada.remove(begcyc);
+					DataEnum.links.data.remove(begcyc);
 					continue;//this skips all of the rest of the loop and restarts it
 					}
 				Print.row(p, begcyc);
@@ -558,14 +590,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				} while (begcyc < maxcyc);
 			Debug.time("Spider Crawl");
 				try {
-				dada.end();
+				DataEnum.links.data.end();
 				}
 				catch (Exception E) {
 				Print.error(E);
 				}
 				if (Page.getemails) {
 					try {
-					dada_emails.end();
+					DataEnum.emails.data.end();
 					}
 					catch (Exception E) {
 					Print.error(E);
@@ -573,7 +605,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				if (Page.getimages) {
 					try {
-					dada_images.end();
+					DataEnum.images.data.end();
 					}
 					catch (Exception E) {
 					Print.error(E);
@@ -590,7 +622,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Debug.time("Writing Countfile");
 				
 			//this is to print out last stats of progam	
-			System.out.printf("Links:\t\t%d\n",  dada.size());
+			System.out.printf("Links:\t\t%d\n",  DataEnum.links.data.size());
 			System.out.print("Time:\t\t");
 			Print.totalTime(endtime - begintime);
 			long MemoryNow = Runtime.getRuntime().freeMemory();
@@ -624,16 +656,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
 		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")
 		) {
-		String[] bites = link.split("\\.");
-		byte[] ip = new byte[bites.length];
-			for (int i = 0; i < bites.length; i++) {
-			ip[i] = Byte.valueOf(bites[i]);
-			}
-		InetAddress address = InetAddress.getByAddress(ip);//throws unknownhost exception
+		InetAddress address = InetAddress.getByName(link);//throws unknownhost exception
 		firststring = address.getCanonicalHostName();
 		}
-		else if (link.equals("yourcomputer")) {
-		InetAddress address = InetAddress.getLocalHost();//throws unknownhost exception
+		else if (link.equals("loopback")) {
+		InetAddress address = InetAddress.getLoopbackAddress();//throws unknownhost exception
 		firststring = address.getCanonicalHostName();
 		}
 	return firststring;
@@ -709,10 +736,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 						}	
 					}
 					catch (IOException I) {
-					Hashtable<String, Object> h = new Hashtable<String, Object>();
-					h.put("Exception", I);
-					h.put("Location", "Drudge.main()");
-					Print.error(h);
+					D.error("Exception", I, "Location", "Drudge.createSpider(int)");
 					}
 				}
 			break;
@@ -742,7 +766,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 
 			default:
 			System.out.println("There is no spider option for " + String.valueOf(c));
-			Print.helpMenu("-c");	
+			Print.helpMenu(Help.c.parameter);	
 			break;
 		}
 		

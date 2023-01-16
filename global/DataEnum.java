@@ -6,6 +6,51 @@ import java.net.URL;
 import java.util.*;
 
 public enum DataEnum {
+links(new DataList<Page>(FileNames.links)), 
+emails(new DataListEmail<URL>(FileNames.emails)),
+exclude(new DataListExclude<URL>(FileNames.exclude)),
+include(new DataListExclude<URL>(FileNames.include)),
+words(new DataListExcludeWords<String>(FileNames.words)),
+images(new DataListImages<URL>(FileNames.images));
+
+public Data data;
+
+	private DataEnum(Data d) {
+	data = d;
+	}
+	
+	public static void truncateAll() {
+		for (DataEnum thing : values()) {
+		thing.data.truncate();
+		}
+	}
+
+	public static void beginAll() {
+		for (DataEnum thing : values()) {
+			try {
+			thing.data.begin();
+			}
+			catch (Exception E) {
+			D.error(E.getClass(), E);
+			}
+		}
+	}
+
+	public static void endAll() {
+		for (DataEnum thing : values()) {
+			try {
+			thing.data.end();
+			}
+			catch (Exception E) {
+			D.error(E.getClass(), E);
+			}
+		}
+	}
+
+/*THIS IS FOR NOROBOT OBJECTS*/
+final public static Hashtable<URL, Data<URL>> norobots = new Hashtable<URL, Data<URL>>();
+
+/*This is a record of past objects I have tried and I keep them in case I want to use them again*/
 /*THIS IS FOR DADA OBJECT*/
 //final public static Data<Page> dada = (Data<Page>)new DataBase<Page>("jdbc:default:/home/time/java/db;");
 //final public static Data<Page> dada = (Data<Page>)new DataBase<Page>("jdbc:MySQL://localhost/home/time/java/db;");
@@ -21,53 +66,10 @@ public enum DataEnum {
 
 /*THIS IS FOR EXCLUDE/INCLUDE OBJECTS*/
 
-/*THIS IS FOR NOROBOT OBJECTS*/
-//final public static Data<URL> norobots = (Data<URL>)new DataList<URL>();
-//final public static Hashtable<URL, Data<URL>> norobots = new Hashtable<URL, Data<URL>>();
 
 /*THIS IS FOR ALL OTHER OBJECTS MISCILANIOUS*/
 
 /*This is for image urls*/
 
-links(new DataList<Page>(FileNames.links)), 
-emails(new DataListEmail<URL>(FileNames.emails)),
-exclude(new DataListExclude<URL>(FileNames.exclude)),
-include(new DataListExclude<URL>(FileNames.include)),
-words(new DataListExcludeWords<String>(FileNames.words)),
-images(new DataListImages<URL>(FileNames.images));
-
-Data<?> data;
-
-	private DataEnum(Data<?> d) {
-	data = d;
-	}
-	
-	public static void truncateAll() {
-		for (Data<?> d : this) {
-		d.truncate();
-		}
-	}
-
-	public static void beginAll() {
-		for (Data<?> d : this) {
-			try {
-			d.begin();
-			}
-			catch (Exception E) {
-			D.error(E.getClass(), E);
-			}
-		}
-	}
-
-	public static void endAll() {
-		for (Data<?> d : this) {
-			try {
-			d.end();
-			}
-			catch (Exception E) {
-			D.error(E.getClass(), E);
-			}
-		}
-	}
 
 }

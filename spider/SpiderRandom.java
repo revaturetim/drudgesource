@@ -19,7 +19,7 @@ private Random random = new Random();
 	p.getSource();
 	DataList<Page> pages = (DataList<Page>)p.getLinks();
 	Collections.shuffle(pages, random);
-	DataObjects.dada.put(pages);
+	DataEnum.links.data.put(pages);
 	Debug.time("End Links");
 	}
 

@@ -24,10 +24,10 @@ public class DataListEmail<T extends URL> extends DataList<T> {
 			this.put((T)e);
 			}
 			catch (MalformedURLException M) {
-			D.error(M);
+			D.error(M.getClass(), M);
 			}
 			catch (DuplicateURLException Du) {
-			D.error(Du);
+			D.error(Du.getClass(), Du);
 			}
 		}
 	}
@@ -36,11 +36,7 @@ public class DataListEmail<T extends URL> extends DataList<T> {
 	final BufferedWriter email_writer = new BufferedWriter(new FileWriter(source()));
 		for (T t : this) {
 		URL email = t;
-			for (int i = 0; i < level(); i++) {
-				if (i == 0) {
-				email_writer.append(email.toString() + CountFile.sep);
-				}
-			}
+		email_writer.append(email.toString());
 		email_writer.append("\n");
 		}
 	email_writer.close();

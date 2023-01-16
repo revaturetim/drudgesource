@@ -17,7 +17,7 @@ protected long delay = 0L;
 	protected void links(final Page p) {
 	p.getSource();
 	Data<Page> pages = p.getLinks();
-	DataObjects.dada.put(pages);
+	DataEnum.links.data.put(pages);
 	Debug.time("End Links");
 	}
 	
@@ -27,7 +27,7 @@ protected long delay = 0L;
 		Thread.sleep(delay);
 		}
 		catch (InterruptedException I) {
-		D.error(I);
+		D.error(I.getClass(), I, "Location", "Spider.delay()");
 		}
 	}
 
@@ -37,7 +37,7 @@ protected long delay = 0L;
 		try {
 		Page rediruri = new Page(redloc);
 			try {
-			DataObjects.dada.put(rediruri);
+			DataEnum.links.data.put(rediruri);
 			Debug.time("Redirected");
 			}
 			catch (DuplicateURLException Du) {
@@ -97,15 +97,6 @@ protected long delay = 0L;
 
 	public void setDelay(long l) {
 	delay = l;
-	}
-	
-	//I thought that calling issue was humorous like you have a issues
-	protected void spinIssue(String i, Object o, Exception e) {
-	HashMap<String, Object> h = new HashMap<String, Object>();
-	h.put(i + " Issue", o);
-	h.put("Exception", e);
-	h.put("location", "Spider.spin(int)");
-	D.error(h);		
 	}
 
 }

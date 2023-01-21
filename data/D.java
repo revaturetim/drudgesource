@@ -142,10 +142,6 @@ final public class D implements FileNames {
 			if (Page.getincluded) {
 			p.isIncluded();
 			}
-			if (!Page.robotsallowed) {
-			p.isRobotExcluded();//this throws RobotsExcludedURLException	
-			Debug.time("Checking Robot Allowed");
-			}
 		data.put(p);
 		}
 		catch (MalformedURLException M) {
@@ -184,9 +180,6 @@ final public class D implements FileNames {
 		catch (InvalidURLException U) {
 		U.printRow();
 		}
-		catch (RobotsExcludedURLException R) {
-		R.printRow();
-		}
 		catch (ExcludedURLException E) {
 		E.printRow();
 		}
@@ -196,17 +189,62 @@ final public class D implements FileNames {
 	return data;
 	}
 	
-	static public Data<Page> add(Page page, Data<Page> data) {
-	URL url = page.getURL();
-	return add(url, data);
-
+	static public Data<Page> add(String link, Data<Page> data) {
+	return add(null, link, data);//this should get identical results because null is passed in as the url argument
 	}
+	
+	static public Data<Page> add(Page page, Data<Page> data) {
+		try {
+		data.put(page);
+		}
+		catch (DuplicateURLException Du) {
+		Du.printRow();
+		}
+	return data;
+	}
+
 	static public Data<Page> add(URL url, Data<Page> data) {
 	return add(url, new String(), data);//this should work identically as add(url, string, data) because it is using empty string	
 	}
 	
-	static public Data<Page> add(String link, Data<Page> data) {
-	return add(null, link, data);//this should get identical results because null is passed in as the url argument
+	static public Page createPage(final String link) {
+	Page page = null;
+		try {
+		page = new Page(link);
+		}
+		catch (InvalidURLException I) {
+		I.printRow();
+		}
+		catch (URISyntaxException U) {
+		Print.row(U, link);
+		}
+		catch (MalformedURLException M) {
+		Print.row(M, link);
+		}
+		catch (IOException I) {
+		Print.row(I, link);
+		}
+	return page;
+	}
+
+	static public Page createPage(final URL url) {
+	Page page = null;
+		try {
+		page = new Page(url);
+		}
+		catch (InvalidURLException I) {
+		I.printRow();
+		}
+		catch (URISyntaxException U) {
+		Print.row(U, url);
+		}
+		catch (MalformedURLException M) {
+		Print.row(M, url);
+		}
+		catch (IOException I) {
+		Print.row(I, url);
+		}
+	return page;
 	}
 
 }

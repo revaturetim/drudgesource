@@ -1,3 +1,10 @@
 user-agent: *
-Disallow: ./sample.html
+#Disallow: sample.html
+disallow: /noacccess.html
+Disallow:/null.html 
+Allow:all
+user-agent: another-damn-robot
+disallow: *
 #these are comments and should be ignored
+sitemap: sitemap.html
+this is some random shit:hello fucking world

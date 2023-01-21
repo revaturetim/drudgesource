@@ -39,6 +39,8 @@ private final static String spaceregex = "[\t\n\\x0B\f\r]";
 private final static String mspaceregex = "[ ]{2,}";
 private final static String unimpregex =  "\\p{Space}((and)|(also)|(all)|(where)|(when)|(who)|(how)|(the)|(from)|(more)|(her)|(him)|(for)|(not)|(that)|(she))\\p{Space}";
 
+/*This is for P.getTitle()*/
+final static String keywordfilter = "<.*>|\\s|<script.*script>|<style.*style>";
 
 	enum Keywords {
 	SCRIPT(scriptregex), 
@@ -48,8 +50,9 @@ private final static String unimpregex =  "\\p{Space}((and)|(also)|(all)|(where)
 	DIGIT(digitregex),
 	SPACE(spaceregex),
 	UNIMP(unimpregex),
-	MSPACE(mspaceregex);
-
+	MSPACE(mspaceregex),
+	KEYWORDFILTER(keywordfilter);
+	
 	private Pattern p;
 
 		private Keywords(String regex) {

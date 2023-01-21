@@ -39,7 +39,7 @@ final static private String encoding = "UTF-8";
 	//final boolean isfile = schm.equals("file");
 	final boolean isemail = schm.equals("mailto");
 	final boolean isimage = ftype != null && ftype.startsWith("image");
-	final boolean istext = ftype == null || ftype.startsWith("text");
+	final boolean istext = ftype == null || ftype.equals("text/html") || ftype.equals("text/plain");
 		if (isemail) {
 		throw new EmailURLException(url);
 		}
@@ -55,36 +55,52 @@ final static private String encoding = "UTF-8";
 	//I am assuming that this works.  I have no way to really test it thoroughly. 
 	static Data<URL> readRobotFile(final URLConnection rcon) throws IOException {
 	final LineNumberReader reader = new LineNumberReader(new BufferedReader(new InputStreamReader(rcon.getInputStream())));
-	final String useragent = "User-agent:";
-	final String disallow = "Disallow:";
+	final String useragent = "user-agent:";
+	final String disallow = "disallow";
+	final String allow = "allow";
 	final String comment = "#";
+	final String star = "*";
+	final String colon = ":";
+	final String sitemap = "sitemap";
+
 	final Data<URL> norob = new DataList<URL>();
 	String user = null;
 	
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 			
+			//Debug.here(line);
 			if (line.startsWith(comment)) {
 			continue;
 			}
-		String[] spaces = line.split(" ", 2);
+		String[] spaces = line.split(colon, 2);
 			if (spaces.length == 2) {
-			String action = spaces[0];
-				if (action.equalsIgnoreCase(useragent)) {
+			final String action = spaces[0];
+				if (action != null && action.equalsIgnoreCase(useragent)) {
 				user = spaces[1];//this could throw an exception 
 				}
-				else if (action.equalsIgnoreCase(disallow)) {
-					if (user.equals("*") | user.equalsIgnoreCase(ThisProgram.useragent)) {
-					String dir = spaces[1];
-						try {
-						URL c = new URL(rcon.getURL(), dir);//this thows exception
-						norob.put(c);
+				else if (action != null && (action.equalsIgnoreCase(sitemap) || action.equalsIgnoreCase(allow) || action.equalsIgnoreCase(disallow))) {
+				final String dir = spaces[1];
+					try {
+					final Page p = new Page(rcon.getURL(), dir);//this throws malformedurlexception, urisyntaxexception, ioexception, invalidurlexception
+					DataEnum.links.data.put(p);//this will add robotexcluded link to data and throw duplicateurlexception
+						if (user != null && !action.equalsIgnoreCase(sitemap) && (user.equals(star) || user.equalsIgnoreCase(ThisProgram.useragent))) {
+						norob.put(p.getURL());//this throws duplicatedurlexception
 						}
-						catch (MalformedURLException M) {
-						D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", M);		
-						}
-						catch (DuplicateURLException Du) {
-						D.error("Robot URL", rcon.getURL(), "Duplicate", dir, "Exception", Du);
-						}
+					}
+					catch (MalformedURLException M) {
+					D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", M);		
+					}
+					catch (URISyntaxException U) {
+					D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", U);		
+					}
+					catch (IOException I) {
+					D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", I);		
+					}
+					catch (InvalidURLException I) {
+					D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", I);		
+					}
+					catch (DuplicateURLException Du) {
+					D.error("Robot URL", rcon.getURL(), "Duplicate", dir, "Exception", Du);
 					}
 				}
 			}	
@@ -295,47 +311,59 @@ final static private String encoding = "UTF-8";
 
 	static Data<String> getKeywords(final CharSequence source, Data<String> words) {
 	final String text = source.toString().toLowerCase();
-	String[] somewords = text.split("<.*>|\\s|<script.*script>|<style.*style>");//this splits and coincidently removes all whitespace characters
+	String[] somewords = text.split(Patterns.keywordfilter);//this splits and coincidently removes all whitespace characters
 		for (String word : somewords) {
-			if (word.length() > 2) {
-				if (!DataEnum.words.data.contains(word)) {	
-					try {
-					words.put(word);
-					}
-					catch (DuplicateURLException D) {
+			if (word.length() > 2 && !DataEnum.words.data.contains(word)) {	
+				try {
+				words.put(word);
+				}
+				catch (DuplicateURLException D) {
 
-					}
 				}
 			}
 		}
 	return words;
 	}
 	
-	static Data<String> getKeywords_old(final CharSequence source, Data<String> words) {
-	final String text = source.toString().toLowerCase();
-	int e = 0;
-		for (int b = 0; b != -1; b = text.indexOf(">", b + 1)) {
-		e = text.indexOf("<", b);
-			if (e == -1) {
-			e = text.length();
-			}
-		String sometext = text.substring(b, e);
-		sometext = sometext.replace('>', ' ');//I don't know why I need this
-		String[] somewords = sometext.split("\\s");//this splits and coincidently removes all whitespace characters
-			for (String word : somewords) {
-				if (word.length() > 2) {
-					if (!DataEnum.words.data.contains(word)) {	
-						try {
-						words.put(word);
-						}
-						catch (DuplicateURLException D) {
-
-						}
+	static Data<String> getKeywordsByBuffer(final CharSequence source, final Data<String> keywords) {
+	final BufferedReader reader = new BufferedReader(new StringReader(source.toString().toLowerCase()));
+	final StringBuffer buffer = new StringBuffer();
+		try {
+		boolean inbracket = false;
+			for (int i = reader.read(); i != -1; i = reader.read()) {
+			char c = (char)i;
+				if (c == '<' || c == '>') {
+				inbracket = !inbracket;
+				continue;
+				}
+				if (inbracket) {
+				continue;
+				}
+				else {
+					if (Character.isWhitespace(c) == false) {
+					buffer.append(c);
+					}
+					else {
+					buffer.append(' ');
 					}
 				}
 			}
 		}
-	return words;
+		catch (IOException I) {
+		D.error(I, I.getMessage());
+		}
+	String[] texts = buffer.toString().split(" ");
+		for (String text : texts) {
+			if (text.length() > 2 && !DataEnum.words.data.contains(text)) {	
+				try {
+				keywords.put(text);
+				}
+				catch (DuplicateURLException D) {
+
+				}
+			}
+		}
+	return keywords;
 	}
 	
 
@@ -355,7 +383,8 @@ final static private String encoding = "UTF-8";
 		}
 	return words;
 	}
-    	
+
+	
 	static URLConnection createConnection(final URL url, final Proxy proxyserver) throws IOException {
 	/*For some reason this won't work if the scheme is a mailto link
 	 * so either isValid() has to be called or checkHTMLFile does
@@ -374,7 +403,17 @@ final static private String encoding = "UTF-8";
 	return connection;
 	}
 
-
+	static URL createURL(URL parent, String file) {
+	URL url = null;//default value
+		try {
+		url = new URL(parent, file);
+		}
+		catch (IOException I) {
+		D.error(I.getClass().getName(), I, "Location", "P.getCreateURL(URL, String)", "link", file);
+		}
+	return url;
+	}
+	
 
 	static void checkResponse(final int response, String page) throws NoContentURLException, RedirectedURLException, NotOKURLException {
 		if (response >= 200 && response < 300) {//does the most common first 
@@ -574,20 +613,4 @@ final static private String encoding = "UTF-8";
 	return hosta.equals(hostb);
 	}
 	
-	static Page createPage(String url) {
-	Page p = null;
-		try {
-		p = new Page(url);
-		}
-		catch (IOException I) {
-		D.error(I.getClass().getName(), I);
-		}
-		catch (URISyntaxException U) {
-		D.error(U.getClass().getName(), U);
-		}
-		catch (InvalidURLException I) {
-		D.error(I.getClass().getName(), I);
-		}
-	return p;
-	}
 }

@@ -24,7 +24,7 @@ final private static String[] H = {
 	"Actual Link                                                "
 };
 
-	static void row(final Page p, final int c) {
+	static public void row(final Page p, final int c) {
 	final int n = p.getLinkCount();
 	String nump = String.valueOf(n);
 		if (p.didConnect()) {

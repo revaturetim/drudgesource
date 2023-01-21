@@ -17,33 +17,24 @@
 2.  Elimnate unnescessary variables, methods, and classes in programs for efficiency;
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
 4.  Must find broken links in code;
-5.  Consider a single DataObject method that can beginAll, EndAll, and truncateAll;
+5.  Have alternate commands for help options like -nok and -skp;
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
-7.  Get rid of type variable in Data interface.  Make it all Page objects;
-9.  Make more efficient P.getKeywords method;
-10. Improve respect robots!  It hangs for some reason;
 11. BUG! Why does it store unencoded links?
+12. Develop SpiderSpam some more;
 13. BUG! Must find broken link where there is only one quote quoting it
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
-16. BUG! On SpiderTop it will throw null pointer exception if the page in question has no external links;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
 20. Investigate to see if translating international urls unicode to american ascii will be useful;
-21. Have readrobots find new urls under the "allowed" sections of file;
 22. Have Page find sitmap files to find extra urls;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
-24. BUG! Getting by IP address in Drudge.createFirstPage doesn't work properly because I don't fully understand how byteps work in java;
 25. Consider have Help enums have own object that can execute the help command;
-26. BUG! IP address throws malformedurlexception because there is no http: protocol in url string.
 27. See if Debug should be its own independent package instead of something attached to Drudge project;
 28. Sample.html should have delibertly broken links
 29. Create sample robot.txt file and sample sitemap file for testing purposes;
 31. Page.isIncluded(), Page.isExcluded(), and Page.isRobotAllowed() should be condensed more for efficiency reasons;
 32. Update license option to make sure license printed is up to date and can't be used to undo the license in readme.txt;
-34. See if simplying adding robot disallowed to excluded data would be better in terms of program efficiency;
-35. Fix createPage so that when you put an IP number without protocol that it will either put its own in or tell the user to do so;
-36. Consider getting rid of type variable for Data classes since they create more problems than they solve;
-37. Use proper exceptions in Page.isRobotAllowed() for page constructor;
+33. Consider establising a factory method to create pages;
 42. Create findlinks using xml api;
 43. Link all the page objects together as a way of storing them;
 

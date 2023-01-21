@@ -48,25 +48,10 @@ private Object[] objs = new Object[10];
 		}
 	}
 		
-	/*public boolean contains(Object page) {
-	boolean has = false; 
-	List<T> newlist = new DataList<T>();
-	
-	Collections.copy(newlist, this);
-	//Arrays.sort(NewObjects, new NaturalComparator());
-		try {	
-		int f = Collections.binarySearch(newlist, (Page)page, new NaturalComparator());
-		if (f > -1) has = true;
-		}
-		catch (Exception E) {
-		System.out.println(E);
-		}
-	return has;
-	}*/
-	
 	/* Do not erase remove, get, set, or add(T) methods!!!!!!!!!!!!!!!!!!!*/
 	/* Let add(int, T) throw unsupportedoperationexception */
 	public T remove(final int i) {
+	Debug.here();
 	T toberemoved = (T)this.objs[i];
 		for (int j = i; j < this.size - 1; j++) {
 		this.objs[j] = this.objs[j + 1];

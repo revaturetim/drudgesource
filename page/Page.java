@@ -19,32 +19,42 @@ static public boolean getemails = false;
 static public boolean getimages = false;
 static public boolean getincluded = false;
 static public boolean donotgetexcluded = false;
-static public boolean robotsallowed = true;
 //private variables for info about page itself which are set to the default values
 //The default value for MOST of these should be null
 final private Source content = new Source(pagesize);
 final private Header header = new Header();
-private URL url = null;  
+private URL url = null; 
+private URL roboturl = null;
 private URLConnection connection = null;
 private boolean didconnect = false;
 private int linkcount = 0;
+
+	/*This will be the sample page constructor*/
+	public Page() throws MalformedURLException, IOException {
+	this.url = new File(FileNames.samphtml).toURI().toURL();//this will throw malformedurlexception
+	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
+	this.roboturl = new File(FileNames.samprobot).toURI().toURL();//this will throw a malformedurlexception
+	}
 
 	public Page(URL u) throws IOException, URISyntaxException, InvalidURLException {
 	this.url = u;
 	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
+	roboturl = P.createURL(this.url, "/robots.txt");// /robots.txt denotes top level directory
 	}
 	
 	public Page(URL p, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
 	this.url = new URL(p, P.decode(l));//this throws malformedurlexception
 	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
+	roboturl = P.createURL(this.url, "/robots.txt");
 	}
 
 	public Page(String u) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
 	this.url = new URL(P.decode(u));//this will throw malformedurlexception
 	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
+	roboturl = P.createURL(this.url, "/robots.txt");
 	}
 	
 	public Page(String u, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
@@ -52,6 +62,7 @@ private int linkcount = 0;
 	this.url = new URL(purl, P.decode(l));//this will throw malformedurlexception
 	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
+	roboturl = P.createURL(this.url, "/robots.txt");
 	}
 	
 	public Page(Page op, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException  {
@@ -59,6 +70,7 @@ private int linkcount = 0;
 	this.url = new URL(oldurl, P.decode(l));//this will throw malformedurlexception
 	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
+	roboturl = P.createURL(this.url, "/robots.txt");
 	}
 	
 	public boolean equals(Object obj) {
@@ -96,6 +108,10 @@ private int linkcount = 0;
 	return linkcount;
 	}
 
+	public URLConnection getConnection() {
+	return connection;
+	}
+
 	public Data<URL> getEmails() {
 	final Data<URL> emails = P.getEmails(content, new DataListEmail<URL>());
 	Debug.time("Getting Emails");
@@ -109,7 +125,7 @@ private int linkcount = 0;
 	}
 	
 	public Data<String> getKeywords() {
-	Data<String> keywords = P.getKeywords(content, new DataList<String>());
+	Data<String> keywords = P.getKeywordsByBuffer(content, new DataList<String>());
 	Debug.time("Getting Keywords");
 	return keywords;
 	}
@@ -146,34 +162,11 @@ private int linkcount = 0;
 	public URL getURL() {
 	return url;
 	}
-	
-	public URLConnection getConnection() {
-	return connection;
+
+	public URL getRobotURL() {
+	return roboturl;
 	}
 
-	public URL getURL(final String sample, final String real) {
-	URL url = null;//default value
-		if (this.url.getProtocol().equals("file")) {	
-			try {
-			File r = new File(sample);
-			url = new URL(r.toURI().toString());
-			}
-			catch (IOException I) {
-			D.error(I.getClass().getName(), I, "Location", "Page.getURI(String, String)", "link", "file");
-			}
-		
-		}
-		else {
-			try {
-			url = new URL(this.url, real);
-			}
-			catch (IOException I) {
-			D.error(I.getClass().getName(), I, "Location", "Page.getURI(String, String)", "link", real);
-			}
-		}
-	return url;
-	}
-	
 	public Header header() {
 	return header;
 	}
@@ -192,7 +185,7 @@ private int linkcount = 0;
 
 	public boolean isIncluded() throws ExcludedURLException {
 	boolean included = false;
-		for (Object url : DataEnum.include.data) {
+		for (URL url : (Data<URL>)DataEnum.include.data) {
 		included = this.toString().contains(url.toString());
 			if (included) {
 			break;
@@ -212,26 +205,19 @@ private int linkcount = 0;
 	}
 
 	public boolean isRobotExcluded() throws RobotsExcludedURLException {
-	final URL roboturl = getURL(FileNames.samprobot, "/robots.txt");
-		if (!DataEnum.norobots.containsKey(roboturl)) {
-			try {
-			final URLConnection c = roboturl.openConnection(Page.proxyserver);
-			final Data<URL> dr = P.readRobotFile(c);
-			DataEnum.norobots.put(roboturl, dr);
-				//this is for add disallowed urls to database
-				for (URL use : dr) {
-				D.add(use, DataEnum.links.data);
+		try {
+		final URLConnection c = roboturl.openConnection(Page.proxyserver);
+			for (Data<URL> disallowed = DataEnum.norobots.get(roboturl); disallowed == null; disallowed = DataEnum.norobots.get(roboturl)) {
+			disallowed = P.readRobotFile(c);
+			DataEnum.norobots.put(roboturl, disallowed);
+			}
+			Data<URL> urls = DataEnum.norobots.get(roboturl);
+				if (urls.contains(this.url)) { 
+				throw new RobotsExcludedURLException(this.url);
 				}
 			}
-			catch (IOException I) {
-			D.error(I.getClass().getName(), I, "Location", "Page.isRobotExcluded()");
-			}
-		}
-		else {
-		Data<URL> urls = DataEnum.norobots.get(roboturl);
-			if (urls.contains(this.url)) { 
-			throw new RobotsExcludedURLException(this.url);
-			}
+		catch (IOException I) {
+		D.error(I.getClass().getName(), I, "Location", "Page.isRobotExcluded()");
 		}
 	return true;
 	}

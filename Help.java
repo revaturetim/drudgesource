@@ -16,6 +16,7 @@ c("-c", "This will tell you about the different crawl methods available.",
 		"Option c is used for the different crawl methods that are available to this program.\n"
 		+ "Method 1 is the basic web spider of this program.  It spiders links in the order that it finds them.\n"
 		+ "Method 2 is meant to be a website overload tool and not to be used by nice people.\n"
+		+ "Method 4 will place long links at the top to be crawled first to get subdirectories first.\n"
 		+ "Method 5 randomizes the order of the links so that it doesn't spiders them in the order that they are found.\n"
 		+ "Method 6 searches links that are not a not from the same domain first.\n"
 		+ "Method 7 crawls redirected links as they are found.\n"
@@ -62,9 +63,10 @@ n("-n", "This will set the maximum number of cycles.",
 	+ "If this option is not used the default value will be set to one cycle\n"),
 nok("-nok", "This will set " + ThisProgram.name + " to accept all webites for faster crawling.", 
 	"When this option is turned on " + ThisProgram.name + " will accept all HTTP server responses.\n"
-	+ "This option will greatly speed up crawling but it will collect all non-200 http server responses.\n"
-	+ "Having this option on will capture redirects which can lead to better quality results.\n"
-	+ "It is suggested that this be turned off and only turned on for faster crawling.\n"),
+	+ "This option will greatly speed up crawling because it will not physically check HTTP responses.\n"
+	+ "Having this option on will still capture redirects.\n"
+	+ "It is suggested that this be turned off and only turned on for faster crawling.\n"
+	+ "This option has the effect of skipping non-200 urls.\n"),
 o("-o", "This will write the output to a file called " + FileNames.out, 
 	"This is to send all output to a file called \"" + FileNames.out + "\""),
 output("-output", "This is to write all output to a file you specify", 
@@ -90,6 +92,10 @@ samp("-samp", "This is to use a custom sample file.",
 	"This is use a custom sample file you may want to use instead of the standard one.\n"
 	+ "It is used just like the -t option except you have to name a custom html file.\n"
 	+ "	Example:  -samp=your/sample.html\n"),
+skp("-skp", "This is to tell the crawler to skip rather than remove non-OK urls from database as it crawls", 
+		"The default behavior of this crawler is to remove links from the data that give a not OK HTTP response from the server.\n" 
+		+ "Turning on this option tells the crawler to skip these versus removing them from the data as it collects it.\n"
+		+ "This works identically to " + Help.nok.parameter + " !\n"),
 u("-u"),
 v("-v"),
 w("-w", "This will slow your crawler down so you don't overload a website.", 

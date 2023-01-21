@@ -22,6 +22,8 @@ private static final String sep = "=";
 	int begcyc = 0;//default starting number for program
 	boolean okays = true;//default value
 	long delay = 0;//default value
+	boolean skip = false;
+	boolean norobotsallowed = false;//default value
 	Spider spider = null;
 	eraseFile(FileNames.error);
 	
@@ -189,7 +191,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				break;
 				}
 			}
-			else if (a.equals(Help.nok.parameter)) {
+			else if (a.equals(Help.nok.parameter) || a.equals(Help.skp.parameter)) {
 			okays = false;//this means it won't check for ok responses in spider
 			}
 			else if (a.equals(Help.o.parameter)) {
@@ -240,7 +242,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		
 			}
 			else if (a.equals(Help.rob.parameter)) {
-			Page.robotsallowed = false;
+			norobotsallowed = true;
 			}
 			else if (a.startsWith(Help.w.parameter + Drudge.sep)) {
 				try {
@@ -275,9 +277,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			continue;
 			}
 			else if (a.equals(DevHelp.E.parameter) && arg.length == 1) {
-				for (DataEnum d : DataEnum.values()) {
-				d.data.checkError();
-				}
+			DataEnum.checkErrorAll();
 			System.out.println("Have a nice day :)");
 			break;
 			}
@@ -342,7 +342,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				p.getSource();
 				Page.getimages = true;
 				p.getLinks();//collects emails as well as links
-					for (Object image : DataEnum.images.data) {
+					for (URL image : (Data<URL>)DataEnum.images.data) {
 					System.out.println(image);
 					}
 				}
@@ -404,16 +404,21 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.startsWith(DevHelp.M.parameter) && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.M.parameter) && arg.length == 2 && i == 0) {
 			Page p = createTestPage(arg[i + 1]);
 				if (p != null) {
 				p.getSource();
 				Page.getemails = true;
 				p.getLinks();//called because getlinks also collects emails
-					for (Object email : DataEnum.emails.data) {
+					for (URL email : (Data<URL>)DataEnum.emails.data) {
 					System.out.println(email);
 					}
 				}
+			break;	
+			}
+			else if (a.equals(DevHelp.MIME.parameter) && arg.length == 2 && i == 0) {
+			FileNameMap mimefile = URLConnection.getFileNameMap();
+			System.out.println("The mime type for " + arg[i + 1] + " is " + mimefile.getContentTypeFor(arg[i + 1]));
 			break;	
 			}
 			else if (a.startsWith(DevHelp.P.parameter) && arg.length == 2 && i == 0) {
@@ -441,9 +446,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			}
 			else if (a.equals(DevHelp.R.parameter) && arg.length == 2 && i == 0) {
 			Page p = createTestPage(arg[i + 1]);
-				if (p != null) {		
-				final URL roboturl = p.getURL(FileNames.samprobot, "/robots.txt");
-				Page robotpage = createTestPage(roboturl.toString());
+				if (p != null) {
+				URL roboturl = p.getRobotURL();
+				Page robotpage = D.createPage(roboturl);
 				System.out.println(robotpage.getSource());
 				}
 			break;	
@@ -529,7 +534,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (i == arg.length - 1) {
 			Print.columnHeaders();//this should be called first to show errors correctly in output columns
 			Debug.time("Print Column Headers");
-			String lastarg = arg[arg.length - 1];
+			String lastarg = a;//this exist only as a naming convention
 				if (lastarg.equals(Help.s.parameter)) {
 					try {
 					begcyc = CountFile.get();
@@ -559,35 +564,54 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}
 			
 				}
+				else if (lastarg.equals(Help.t.parameter) || lastarg.equals(Help.samp.parameter)) {
+				DataEnum.truncateAll();
+					try {
+					Page testpage = new Page();
+					D.add(testpage, DataEnum.links.data);
+					}
+					catch (MalformedURLException M) {
+					D.error(M);
+					}
+					catch (IOException I) {
+					D.error(I);
+					}
+				}
+				else if (lastarg.startsWith(Help.samp.parameter + Drudge.sep)) {
+				DataEnum.truncateAll();	
+				String file = getString(lastarg);
+				File sampfile = new File(file);
+				D.add(sampfile.toURI().toString(), DataEnum.links.data);
+				}
+				else if (
+				lastarg.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}") || 
+				lastarg.matches(
+				"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
+				"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." +
+				"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
+				"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")
+				) {
+				DataEnum.truncateAll();
+				D.add("http://" + lastarg, DataEnum.links.data);//program assumes it is going to make an http connection
+				}
+				else if (lastarg.equals("loopback")) {
+				DataEnum.truncateAll();	
+				InetAddress address = InetAddress.getLoopbackAddress();//throws unknownhost exception
+				D.add(address.getCanonicalHostName(), DataEnum.links.data);
+				}
 				else {
-					DataEnum.truncateAll();	
-						try {
-						String firststring = createFirstString(lastarg);
-						D.add(firststring, DataEnum.links.data);
-						}
-						catch (UnknownHostException U) {
-						Print.error(U, lastarg);
-						}
+				DataEnum.truncateAll();	
+				D.add(lastarg, DataEnum.links.data);
 				}
 
 			spider = createSpider(crawlmethod);
 			spider.setCheckOK(okays);
 			spider.setDelay(delay);
+			spider.setNoRobotsAllowed(norobotsallowed);
+
+			final long begintime = System.currentTimeMillis();
+			begcyc = spider.crawl(begcyc, maxcyc);
 			
-			final long begintime = System.currentTimeMillis(); 
-				do {
-				Page p = (Page)DataEnum.links.data.get(begcyc);
-					if (p == null) {
-					break;
-					}
-				boolean remove = spider.crawl(p);
-					if (remove == true) {
-					DataEnum.links.data.remove(begcyc);
-					continue;//this skips all of the rest of the loop and restarts it
-					}
-				Print.row(p, begcyc);
-				begcyc++;
-				} while (begcyc < maxcyc);
 			Debug.time("Spider Crawl");
 				try {
 				DataEnum.links.data.end();
@@ -638,43 +662,15 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		}//end of loop
 	}//end of program
 	
-	static String createFirstString(final String link) throws UnknownHostException {
-	String firststring = link;//default 
-		if (link.equals("-t") || link.startsWith("-samp=")) {
-		String file = FileNames.samphtml;
-			if (link.startsWith("-samp=")) {
-			file = getString(link);
-			}
-		File sampfile = new File(file);
-		firststring = sampfile.toURI().toString();
-		}
-		else if (
-		link.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}") || 
-		link.matches(
-		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
-		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." +
-		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
-		"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")
-		) {
-		InetAddress address = InetAddress.getByName(link);//throws unknownhost exception
-		firststring = address.getCanonicalHostName();
-		}
-		else if (link.equals("loopback")) {
-		InetAddress address = InetAddress.getLoopbackAddress();//throws unknownhost exception
-		firststring = address.getCanonicalHostName();
-		}
-	return firststring;
-	}
-
-	static Page createFirstPage(final String link) throws URISyntaxException, InvalidURLException, MalformedURLException, UnknownHostException, IOException {
-	String firstpage = createFirstString(link);
-	return new Page(firstpage);
-	}
-	
 	static Page createTestPage(final String link) {
 	Page testpage = null;
 		try {
-		testpage = createFirstPage(link);
+			if (link.equals(Help.t.parameter) || link.equals(Help.samp.parameter)) {
+			testpage = new Page();
+			}
+			else {
+			testpage = new Page(link);
+			}
 		}
 		catch (InvalidURLException I) {
 		Print.error(I, link);
@@ -685,14 +681,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		catch (MalformedURLException M) {
 		Print.error(M, link);
 		}
-		catch (UnknownHostException U) {
-		Print.error(U, link);
-		}
 		catch (IOException I) {
 		Print.error(I, link);
 		}
 	return testpage;
 	}
+
 
 	static Spider createSpider(int c) {
 	Debug.time("Creating Spider");//this starts cycle time for entire thing
@@ -704,41 +698,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 
 			case 2:
-			BEGIN:	while (true) {
-				System.out.println("WARNING: You are going to the dark side of this program!");
-				System.out.print("This is overloading website.  Are you sure you want to continue? Y|N ");
-					try {
-					char answer = (char)System.in.read();
-					System.in.skip(1);//this is for the return value
-						if (answer == 'Y' || answer == 'y') {
-							if (Drudge.XFACTOR == null) {
-							System.out.print("How many times do you want to spam? ");
-							Drudge.XFACTOR = "";
-								for (char h = (char)System.in.read(); h != '\n'; h = (char)System.in.read()) {
-									if (Character.isDigit(h)) {
-									Drudge.XFACTOR += String.valueOf(h);
-									}
-								}
-							}
-							try {
-							int times = Integer.parseUnsignedInt(Drudge.XFACTOR);
-							spider = new SpiderSpam(times);
-							break BEGIN;
-							}
-							catch (NumberFormatException N) {
-							System.out.println("You did not enter a number.");	
-							}
-						}
-						else if (answer == 'N' || answer == 'n') {
-						System.out.println("That is good to know.  Goodbye.");
-						System.exit(0);
-						break BEGIN;
-						}	
-					}
-					catch (IOException I) {
-					D.error("Exception", I, "Location", "Drudge.createSpider(int)");
-					}
-				}
+			spider = new SpiderSpam();
+			break;
+
+			case 4:
+			spider = new SpiderComp(new LinkComparator<Page>());
 			break;
 
 			case 5:

@@ -47,6 +47,13 @@ public Data data;
 		}
 	}
 
+	public static void checkErrorAll() {
+
+		for (DataEnum thing : values()) {
+		thing.data.checkError();
+		}			
+	}
+
 /*THIS IS FOR NOROBOT OBJECTS*/
 final public static Hashtable<URL, Data<URL>> norobots = new Hashtable<URL, Data<URL>>();
 

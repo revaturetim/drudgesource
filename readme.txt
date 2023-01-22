@@ -34,9 +34,9 @@
 29. Create sample robot.txt file and sample sitemap file for testing purposes;
 31. Page.isIncluded(), Page.isExcluded(), and Page.isRobotAllowed() should be condensed more for efficiency reasons;
 32. Update license option to make sure license printed is up to date and can't be used to undo the license in readme.txt;
-33. Consider establising a factory method to create pages;
 42. Create findlinks using xml api;
 43. Link all the page objects together as a way of storing them;
+44. Make Data.checkError methods more efficient as in eliminating repeat code in them;
 
 *************************OFFICIAL FORMAT OF THIS FILE*********************************************************
 1. All sections of this file must have ******Section title********** to seperate it from the rest of the file;

@@ -52,6 +52,31 @@ final static private String encoding = "UTF-8";
 		
 	}
 
+	static void checkIncluded(final URL url) throws ExcludedURLException {
+	final String urlstring = url.toString();
+	boolean in = false;
+		for (String includedurl : (Data<String>)DataEnum.include.data) {
+		in = urlstring.contains(includedurl); 
+			if (in) {
+			break;
+			}
+		}
+		if (in == false) {
+		throw new ExcludedURLException(url);
+		}
+
+	}
+
+	static void checkExcluded(final URL url) throws ExcludedURLException {
+		checkIE(url, DataEnum.exclude.data, true);
+	}
+	
+	static private void checkIE(final URL url, final Data<String> data, boolean ix) throws ExcludedURLException {//if ix variable is true then it checkexcluded otherwise it checksincluded
+		if (data.contains(url.toString()) == ix) {
+		throw new ExcludedURLException(url);
+		}
+	}
+
 	//I am assuming that this works.  I have no way to really test it thoroughly. 
 	static Data<URL> readRobotFile(final URLConnection rcon) throws IOException {
 	final LineNumberReader reader = new LineNumberReader(new BufferedReader(new InputStreamReader(rcon.getInputStream())));
@@ -80,27 +105,15 @@ final static private String encoding = "UTF-8";
 				}
 				else if (action != null && (action.equalsIgnoreCase(sitemap) || action.equalsIgnoreCase(allow) || action.equalsIgnoreCase(disallow))) {
 				final String dir = spaces[1];
+				final Page p = PageFactory.create(rcon.getURL(), dir);
 					try {
-					final Page p = new Page(rcon.getURL(), dir);//this throws malformedurlexception, urisyntaxexception, ioexception, invalidurlexception
-					DataEnum.links.data.put(p);//this will add robotexcluded link to data and throw duplicateurlexception
+					DataEnum.links.data.add(p);//this will add robotexcluded link to data and throw duplicateurlexception
 						if (user != null && !action.equalsIgnoreCase(sitemap) && (user.equals(star) || user.equalsIgnoreCase(ThisProgram.useragent))) {
-						norob.put(p.getURL());//this throws duplicatedurlexception
+						norob.add(p.getURL());//this throws duplicatedurlexception
 						}
 					}
-					catch (MalformedURLException M) {
-					D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", M);		
-					}
-					catch (URISyntaxException U) {
-					D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", U);		
-					}
-					catch (IOException I) {
-					D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", I);		
-					}
-					catch (InvalidURLException I) {
-					D.error("Robot URL", rcon.getURL(), "Directory", dir, "Exception", I);		
-					}
-					catch (DuplicateURLException Du) {
-					D.error("Robot URL", rcon.getURL(), "Duplicate", dir, "Exception", Du);
+					catch (IllegalArgumentException I) {
+					D.error("Exception", I);
 					}
 				}
 			}	
@@ -131,28 +144,23 @@ final static private String encoding = "UTF-8";
 	return link;
 	}
 
-	static Data<URL> getEmails(CharSequence src, Data<URL> data) {
+	static Data<String> getEmails(CharSequence src, Data<String> data) {
 	final String s = src.toString().toLowerCase();
 		
 		for (int b = s.indexOf("\"mailto:"); b != -1; b = s.indexOf("\"mailto:", b + 1)) {
 		int e = s.indexOf("\"", b + 1);
 		String address = s.substring(b + 1, e);
 			try {
-			URL email = new URL(address);
+			URI email = new URI(address);
 			String query = "?" + email.getQuery();
-			String frag = "#" + email.getRef();
+			/*String frag = "#" + email.getRef();
 				if (query != null) {
 				address = address.replace(query, "");
 				}
 				if (frag != null) {
 				address = address.replace(frag, "");
-				}
-			email = new URL(address);
-			email = email.toURI().toURL();//this handles encoding of special escape charaters 
-			data.put(email);
-			}
-			catch (MalformedURLException M) {
-			D.error(M.getClass(), M, "Location", "P.getEmails(charsequence, data)", "url", address);
+				}*/
+			data.put(address);
 			}
 			catch (URISyntaxException U) {
 			D.error(U.getClass(), U, "Location", "P.getEmails(Charsequence, data)", "url", address);	
@@ -236,13 +244,7 @@ final static private String encoding = "UTF-8";
 					findInPath(word, action);
 					}
 					else if (word.contains("@")/*this is for emails*/) {
-						try {
-						String mailword = URI.create(word).toString();
-						findInPath("mailto:" + mailword, action);
-						}
-						catch (IllegalArgumentException I) {
-						//Debug.here(I);temporary solution to prevent it from find random text in page 
-						}
+					findInPath("mailto:" + word, action);
 					}
 				}
 			}

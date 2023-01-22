@@ -10,7 +10,7 @@ import drudge.global.*;
 /*this class is a superclass of objects that use an array as the storage device*/
 /*T has to be assumed to be an object so it retains is general behavior for all types*/
 /*This is the default Data object for this program when not using database object*/
-public class DataListExclude<T> extends DataList<T>{
+public class DataListExclude<T extends String> extends DataList<T>{
 
 	public DataListExclude() {
 
@@ -30,94 +30,73 @@ public class DataListExclude<T> extends DataList<T>{
 	public void begin() throws Exception {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-			try {
-			T u = (T)new URL(line);
-			this.put(u);
-			}
-			catch (MalformedURLException M) {
-			D.error(M.getClass(), M);
-			}
-			catch (DuplicateURLException Du) {
-			
-			}
+		this.add((T)line);
 		}
 	}
 
 	/*The default assumes you are working with a page object.  Subclasses should override*/
-	final public void end() throws Exception {
+	public void end() throws Exception {
 	//empty since it is going to be a read only object
 	}
 	
-	final public void truncate() {
+	public void truncate() {
 	//empty since it is going to be a read only object
+	}
+	
+	/*since these values can't be changed they alwasy return a default value*/
+	final public int level() {
+	return 1;
 	}
 	
 	public boolean checkError() {
-	System.out.println("Checking " + source() + " file for errors.");
+	D.writeBeginningResponse(source());
 	boolean duplicate = false;
 	boolean linkerror = false;
-	int linecount = 0;
 		try { 
 		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
-		int firstcolumnlength = 0;
-			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-			linecount = reader.getLineNumber();
-			String[] columns = line.split("\n");
-			/*This will see if the total number of columns for each line is the same as the previous one*/
-				if (linecount == 1) {
-				firstcolumnlength = columns.length;
-				}
-				if (columns.length != firstcolumnlength) {
-				System.out.println("...There is a column length error at line " + String.valueOf(linecount));
-				}
-			/*this will check for decoding errors*/
-				for (String col : columns) {
-					if (col.contains("%")) {
-					System.out.println("...Possible encoding error at line " + String.valueOf(linecount));
-					}
+			for (String link1 = reader.readLine(); link1 != null; link1 = reader.readLine()) {
+				/*this will check for decoding errors*/
+				if (link1.contains("%")) {
+				D.writeEncodingResponse(reader.getLineNumber());
 				}
 			/*This will check for duplicates in the data*/
-			String link = columns[0];
 				try {
-				Page p = new Page(link);//this throws malformedurlexception
+				URL url = new URL(link1);//this throws malformedurlexception
+				url.toURI();//throws urisyntaxexception
+				Page p = new Page(url);//this throws ioexception
 				p.isValid();//this throws InvalidURLException, URISyntaxException
-				URL u = p.getURL();
-					if (u.getAuthority() == null) {
+					if (url.getAuthority() == null) {
 					throw new MalformedURLException("No Host");
 					}
-				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));
-					for (String line2 = reader2.readLine(); line2 != null; line2 = reader2.readLine()) {
-					int linecount2 = reader2.getLineNumber();
-						if (linecount2 < linecount) {
-						String[] columns2 = line2.split(CountFile.sep);
-						String link2 = columns2[0];
-							if (link.equals(link2)) {
-							duplicate = true;
-							System.out.print("..." + link + " is a duplicate entry found at ");
-					       	System.out.println(String.valueOf(linecount) 
-					       	+ " and " 
-					       	+ String.valueOf(linecount2));
-							}
+				final LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));
+					for (String link2 = reader2.readLine(); reader2.getLineNumber() < reader.getLineNumber(); link2 = reader2.readLine()) {
+						if (link1.equals(link2)) {
+						duplicate = true;
+						D.writeDuplicateResponse(String.valueOf(reader.getLineNumber()), link1, link2);
 						}
 					}
 				}
-				catch (InvalidURLException N) {
+				catch (InvalidURLException I) {
 				linkerror = true;
-				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't an html file: ");
-				System.out.println(link);
+				D.writeResponse(String.valueOf(reader.getLineNumber()), link1, I.toString());
 				}
 				catch (URISyntaxException U) {
 				linkerror = true;
-				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
+				D.writeResponse(String.valueOf(reader.getLineNumber()), link1, U.toString());
 				}
 				catch (MalformedURLException M) {
 				linkerror = true;
-				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
+				D.writeResponse(String.valueOf(reader.getLineNumber()), link1, M.toString());
+				}
+				catch (IOException I) {
+				linkerror = true;
+				D.writeResponse(String.valueOf(reader.getLineNumber()), link1, I.toString());
 				}
 			}
-		System.out.println("...The number of lines in " + source() +  " is "  + linecount);
+		D.writeFinalResponse(reader.getLineNumber());
+		}
+		catch (FileNotFoundException F) {
+		
 		}
 		catch (IOException I) {
 		System.out.println(I);

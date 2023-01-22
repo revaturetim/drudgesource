@@ -86,27 +86,6 @@ final public class D implements FileNames {
 	return time;
 	}
 	
-	static Page getPageFromEntry(String line) {
-	Page page = null;
-		try {
-		String[] entries = line.split(CountFile.sep);
-		page = new Page(entries[0]);
-		}
-		catch (URISyntaxException U) {
-		D.error("Exception", U, "Location", "D.getPageFromEntry(String)");
-		}
-		catch (InvalidURLException I) {
-		D.error("Exception", I, "Location", "D.getPageFromEntry(String)");
-		}
-		catch (MalformedURLException M) {
-		D.error("Exception", M, "Location", "D.getPageFromEntry(String)");
-		}
-		catch (IOException I) {
-		D.error("Exception", I, "Location", "D.getPageFromEntry(String)");
-		}
-	return page;
-	}
-	
 	static <T> String rawString(Data<T> data) {
 	StringBuilder builder = new StringBuilder();
 		for (T t : data) {
@@ -116,6 +95,7 @@ final public class D implements FileNames {
 	return builder.toString();
 	}
 	
+
 	static void writeEntry(Page page, Writer writer, int level) throws IOException {
 		for (int r = 0; r < level; r++) {
 			if (r < 1) {//link
@@ -130,121 +110,29 @@ final public class D implements FileNames {
 		}
 	writer.append("\n");
 	}
-	
-	/*These methods are used to directly add a page into the dada variable*/
-	static public Data add(URL url, String link, Data<Page> data) {
-		try {
-		Page p = new Page(url, link);
-			/*this should be in this order so that you can use include and exclude at the same time*/
-			if (Page.donotgetexcluded) {
-			p.isExcluded();
-			}
-			if (Page.getincluded) {
-			p.isIncluded();
-			}
-		data.put(p);
-		}
-		catch (MalformedURLException M) {
-		Print.row(M, link);
-		}
-		catch (URISyntaxException U) {
-		Print.row(U, link);
-		}
-		catch (IOException I) {
-		Print.row(I, link);
-		}
-		catch (EmailURLException E) {
-		E.printRow();
-			if (Page.getemails) {
-				try {
-				URL mailurl = (URL)E.getFirstObject();//must cast to ensure it is correct
-				DataEnum.emails.data.put(mailurl);
-				}
-				catch (DuplicateURLException Du) {
-				/*do nothing because I don't need to know if exception is thrown*/
-				}
-			}
-		}
-		catch (ImageURLException I) {
-		I.printRow();
-			if (Page.getimages) {
-				try {
-				URL imageurl = (URL)I.getFirstObject();//must cast to ensure it is correct
-				DataEnum.images.data.put(imageurl);
-				}
-				catch (DuplicateURLException Du) {
-				/*do nothing because I don't need to know if exception is thrown*/	
-				}
-			}
-		}
-		catch (InvalidURLException U) {
-		U.printRow();
-		}
-		catch (ExcludedURLException E) {
-		E.printRow();
-		}
-		catch (DuplicateURLException Du) {
-		Du.printRow();
-		}
-	return data;
-	}
-	
-	static public Data<Page> add(String link, Data<Page> data) {
-	return add(null, link, data);//this should get identical results because null is passed in as the url argument
-	}
-	
-	static public Data<Page> add(Page page, Data<Page> data) {
-		try {
-		data.put(page);
-		}
-		catch (DuplicateURLException Du) {
-		Du.printRow();
-		}
-	return data;
+
+	static void writeResponse(String...responses ) {
+	System.out.print("\tLINE:\t" + responses[0] + " : " + responses[1]);
+	System.out.println("\t" + responses[2]);
 	}
 
-	static public Data<Page> add(URL url, Data<Page> data) {
-	return add(url, new String(), data);//this should work identically as add(url, string, data) because it is using empty string	
+	static void writeBeginningResponse(String source) {
+	System.out.println("Checking " + source + " for errors......................");
+	}
+
+	static void writeDuplicateResponse(String...responses) {
+	System.out.println("\tLINE:\t" + responses[0] + " : " + responses[1] + " is a duplicate entry");
+	}
+
+	static void writeEncodingResponse(int linecount) {
+	System.out.println("\tLINE:\t" + String.valueOf(linecount) + " Possible Encoding Error!");
 	}
 	
-	static public Page createPage(final String link) {
-	Page page = null;
-		try {
-		page = new Page(link);
-		}
-		catch (InvalidURLException I) {
-		I.printRow();
-		}
-		catch (URISyntaxException U) {
-		Print.row(U, link);
-		}
-		catch (MalformedURLException M) {
-		Print.row(M, link);
-		}
-		catch (IOException I) {
-		Print.row(I, link);
-		}
-	return page;
+	static void writeColumnLengthResponse(int linecount) {
+	System.out.println("\tLINE:\t" + String.valueOf(linecount) + " Columan Length Doesn't Match!");
 	}
 
-	static public Page createPage(final URL url) {
-	Page page = null;
-		try {
-		page = new Page(url);
-		}
-		catch (InvalidURLException I) {
-		I.printRow();
-		}
-		catch (URISyntaxException U) {
-		Print.row(U, url);
-		}
-		catch (MalformedURLException M) {
-		Print.row(M, url);
-		}
-		catch (IOException I) {
-		Print.row(I, url);
-		}
-	return page;
+	static void writeFinalResponse(int linecount) {
+	System.out.println("\tTOTAL LINES:\tis "  + String.valueOf(linecount));
 	}
-
 }

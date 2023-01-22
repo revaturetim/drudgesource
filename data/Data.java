@@ -42,4 +42,20 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 		}
 	}
 
+
+
+	default public boolean add(T page) {
+	boolean added = false;
+		if (page != null) {
+			try {
+			this.put(page);
+			added = true;
+			}
+			catch (DuplicateURLException Du) {
+			Du.printRow();
+			}
+		}
+	return false;
+	}
+
 }

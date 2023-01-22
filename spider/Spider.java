@@ -36,28 +36,8 @@ protected boolean skip = false;
 	protected void redirect(final Page p) {
 	final Page.Header h = p.header();
 	final String redloc = h.getRedirectLocation();
-		try {
-		Page rediruri = new Page(redloc);
-			try {
-			DataEnum.links.data.put(rediruri);
-			Debug.time("Redirected");
-			}
-			catch (DuplicateURLException Du) {
-			Du.printRow();
-			}
-		}	
-		catch (URISyntaxException U) {
-		Print.row(U, redloc);
-		}
-		catch (InvalidURLException I) {
-		I.printRow();
-		}
-		catch (MalformedURLException M) {
-		Print.row(M, redloc);
-		}
-		catch (IOException I) {
-		Print.row(I, redloc);
-		}
+	final Page redirect = PageFactory.create(redloc);
+	DataEnum.links.data.add(redirect);
 	}
 
 	public int crawl(int beg, int max) {

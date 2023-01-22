@@ -68,7 +68,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			}
 			else if (a.equals(Help.e.parameter)) {
-			Page.getemails = true;
+			PageFactory.getemails = true;
 				try {	
 				DataEnum.emails.data.begin();
 				}
@@ -80,7 +80,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			}	
 			else if (a.equals(Help.exc.parameter)) {
-			Page.donotgetexcluded = true;
+			PageFactory.donotgetexcluded = true;
 				try {
 				DataEnum.exclude.data.begin();
 				}
@@ -92,7 +92,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}	
 			}
 			else if (a.startsWith(Help.exclude.parameter + Drudge.sep)) {
-			Page.donotgetexcluded = true;
+			PageFactory.donotgetexcluded = true;
 			String file = getString(a);
 				try {
 				DataEnum.exclude.data.setSource(file);
@@ -139,10 +139,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(Help.img.parameter)) {
-			Page.getimages = true;
+			PageFactory.getimages = true;
 			}
 			else if (a.equals(Help.inc.parameter)) {
-			Page.getincluded = true;
+			PageFactory.getincluded = true;
 				try {
 				DataEnum.include.data.begin();
 				}	
@@ -154,7 +154,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			}
 			else if (a.startsWith(Help.include.parameter + Drudge.sep)) {
-			Page.getincluded = true;
+			PageFactory.getincluded = true;
 			String file = getString(a);
 				try {
 				DataEnum.include.data.setSource(file);
@@ -260,7 +260,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	
 			//secret debugger options down here
 			else if (a.equals(DevHelp.A.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 					try {
 					p.isRobotExcluded();
@@ -293,7 +293,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			continue;//this will make sure it continues to the next the loop	
 			}
 			else if ((a.equals(DevHelp.H.parameter)) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				URLConnection c = p.getConnection();
 				System.out.println("----------------Request-Fields------------------");
@@ -315,7 +315,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.I.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);	
+			Page p = PageFactory.createTestPage(arg[i + 1]);	
 				if (p != null) {
 					try {
 					DataEnum.include.data.begin();
@@ -337,10 +337,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.startsWith(DevHelp.IMG.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				p.getSource();
-				Page.getimages = true;
+				PageFactory.getimages = true;
 				p.getLinks();//collects emails as well as links
 					for (URL image : (Data<URL>)DataEnum.images.data) {
 					System.out.println(image);
@@ -383,7 +383,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.K.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				p.getSource();
 				Data<String> keywords = p.getKeywords();
@@ -394,7 +394,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.L.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				p.getSource();
 				Data<Page> pages = p.getLinks();
@@ -405,10 +405,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.M.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				p.getSource();
-				Page.getemails = true;
+				PageFactory.getemails = true;
 				p.getLinks();//called because getlinks also collects emails
 					for (URL email : (Data<URL>)DataEnum.emails.data) {
 					System.out.println(email);
@@ -422,7 +422,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;	
 			}
 			else if (a.startsWith(DevHelp.P.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 					try {
 					final long pt = System.currentTimeMillis();
@@ -445,23 +445,23 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.R.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				URL roboturl = p.getRobotURL();
-				Page robotpage = D.createPage(roboturl);
+				Page robotpage = PageFactory.create(roboturl);
 				System.out.println(robotpage.getSource());
 				}
 			break;	
 			}
 			else if (a.equals(DevHelp.S.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				System.out.println(p.getSource());
 				}
 			break;
 			}
 			else if (a.equals(DevHelp.T.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				p.getSource(); 
 				String title = p.getTitle();
@@ -470,7 +470,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.U.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 					try {	
 					p.isUseless();
@@ -483,7 +483,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.V.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				System.out.println(p.toString() + " is a valid html file for " + ThisProgram.name);
 				}
@@ -509,7 +509,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.X.parameter) && arg.length == 2 && i == 0) {
-			Page p = createTestPage(arg[i + 1]);
+			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 					try {
 					DataEnum.include.data.begin();
@@ -534,7 +534,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (i == arg.length - 1) {
 			Print.columnHeaders();//this should be called first to show errors correctly in output columns
 			Debug.time("Print Column Headers");
-			String lastarg = a;//this exist only as a naming convention
+			final String lastarg = a;//this exist only as a naming convention
 				if (lastarg.equals(Help.s.parameter)) {
 					try {
 					begcyc = CountFile.get();
@@ -564,47 +564,46 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}
 			
 				}
-				else if (lastarg.equals(Help.t.parameter) || lastarg.equals(Help.samp.parameter)) {
-				DataEnum.truncateAll();
-					try {
-					Page testpage = new Page();
-					D.add(testpage, DataEnum.links.data);
-					}
-					catch (MalformedURLException M) {
-					D.error(M);
-					}
-					catch (IOException I) {
-					D.error(I);
-					}
-				}
-				else if (lastarg.startsWith(Help.samp.parameter + Drudge.sep)) {
-				DataEnum.truncateAll();	
-				String file = getString(lastarg);
-				File sampfile = new File(file);
-				D.add(sampfile.toURI().toString(), DataEnum.links.data);
-				}
-				else if (
-				lastarg.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}") || 
-				lastarg.matches(
-				"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
-				"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." +
-				"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
-				"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")
-				) {
-				DataEnum.truncateAll();
-				D.add("http://" + lastarg, DataEnum.links.data);//program assumes it is going to make an http connection
-				}
-				else if (lastarg.equals("loopback")) {
-				DataEnum.truncateAll();	
-				InetAddress address = InetAddress.getLoopbackAddress();//throws unknownhost exception
-				D.add(address.getCanonicalHostName(), DataEnum.links.data);
-				}
 				else {
-				DataEnum.truncateAll();	
-				D.add(lastarg, DataEnum.links.data);
+				DataEnum.truncateAll();
+				Page page = null;
+					if (lastarg.equals(Help.t.parameter) || lastarg.equals(Help.samp.parameter)) {
+						try {
+						page = new Page();//creates default sample page
+						}
+						catch (MalformedURLException M) {
+						D.error(M);
+						}
+						catch (IOException I) {
+						D.error(I);
+						}
+					}
+					else if (lastarg.startsWith(Help.samp.parameter + Drudge.sep)) {
+					String file = getString(lastarg);
+					File sampfile = new File(file);
+					page = PageFactory.create(sampfile.toURI().toString());
+					}
+					else if (
+					lastarg.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}") || 
+					lastarg.matches(
+					"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
+					"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." +
+					"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\." + 
+					"\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")
+					) {
+					page = PageFactory.create("http://" + lastarg);
+					}
+					else if (lastarg.equals("loopback")) {
+					InetAddress address = InetAddress.getLoopbackAddress();//throws unknownhost exception
+					page = PageFactory.create(address.getCanonicalHostName());
+					}
+					else {
+					page = PageFactory.create(lastarg);
+					}
+				DataEnum.links.data.add(page);
 				}
 
-			spider = createSpider(crawlmethod);
+			spider = SpiderFactory.create(crawlmethod);
 			spider.setCheckOK(okays);
 			spider.setDelay(delay);
 			spider.setNoRobotsAllowed(norobotsallowed);
@@ -619,7 +618,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				catch (Exception E) {
 				Print.error(E);
 				}
-				if (Page.getemails) {
+				if (PageFactory.getemails) {
 					try {
 					DataEnum.emails.data.end();
 					}
@@ -627,7 +626,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					Print.error(E);
 					}
 				}
-				if (Page.getimages) {
+				if (PageFactory.getimages) {
 					try {
 					DataEnum.images.data.end();
 					}
@@ -662,82 +661,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 		}//end of loop
 	}//end of program
 	
-	static Page createTestPage(final String link) {
-	Page testpage = null;
-		try {
-			if (link.equals(Help.t.parameter) || link.equals(Help.samp.parameter)) {
-			testpage = new Page();
-			}
-			else {
-			testpage = new Page(link);
-			}
-		}
-		catch (InvalidURLException I) {
-		Print.error(I, link);
-		}
-		catch (URISyntaxException U) {
-		Print.error(U, link);
-		}
-		catch (MalformedURLException M) {
-		Print.error(M, link);
-		}
-		catch (IOException I) {
-		Print.error(I, link);
-		}
-	return testpage;
-	}
 
-
-	static Spider createSpider(int c) {
-	Debug.time("Creating Spider");//this starts cycle time for entire thing
-	Spider spider = null;
-		switch (c) {
-			
-			case 1:  
-			spider = new Spider();
-			break;
-
-			case 2:
-			spider = new SpiderSpam();
-			break;
-
-			case 4:
-			spider = new SpiderComp(new LinkComparator<Page>());
-			break;
-
-			case 5:
-				try {
-				Integer I = Integer.valueOf(Drudge.XFACTOR);
-				int s = I.intValue();
-				spider = new SpiderRandom(s);	
-				}
-				catch (NumberFormatException N) {
-				spider = new SpiderRandom((int)System.currentTimeMillis());
-				}
-			break;
-
-			case 6:
-			spider = new SpiderComp(new TopComparator<Page>()); 
-			break;
-
-			case 7:
-			spider = new SpiderCrawlRedirects();
-			break;
-
-			case 8:
-			spider = new SpiderComp(new NaturalComparator<Page>());
-			break;
-
-			default:
-			System.out.println("There is no spider option for " + String.valueOf(c));
-			Print.helpMenu(Help.c.parameter);	
-			break;
-		}
-		
-	Debug.time("Create Spider Object");
-	return spider;
-	}
-	
 	static boolean eraseFile(String filename) {
 	boolean erased = false;
 	File efile = new File(filename);

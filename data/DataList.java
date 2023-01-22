@@ -30,7 +30,10 @@ private Object[] objs = new Object[10];
 	}
 
 	public void put(T page) throws DuplicateURLException, IllegalArgumentException {
-		if (contains(page) == false) {
+		if (page == null) {
+		throw new IllegalArgumentException("Attempting to add a null object to " + this.getClass().getName());
+		}
+		else if (contains(page) == false) {
 			
 			if (this.size >= objs.length - 1) {
 			this.objs = Arrays.copyOf(objs, objs.length * 2);
@@ -51,7 +54,6 @@ private Object[] objs = new Object[10];
 	/* Do not erase remove, get, set, or add(T) methods!!!!!!!!!!!!!!!!!!!*/
 	/* Let add(int, T) throw unsupportedoperationexception */
 	public T remove(final int i) {
-	Debug.here();
 	T toberemoved = (T)this.objs[i];
 		for (int j = i; j < this.size - 1; j++) {
 		this.objs[j] = this.objs[j + 1];
@@ -74,15 +76,14 @@ private Object[] objs = new Object[10];
 
 	public boolean add(T p) {
 	boolean added = false;
-		try {
-		this.put(p);
-		added = true;
-		}
-		catch (DuplicateURLException Du) {
-		D.error(Du);
-		}
-		catch (IllegalArgumentException I) {
-		D.error(I);
+		if (p != null) {
+			try {
+			this.put(p);
+			added = true;
+			}
+			catch (DuplicateURLException Du) {
+			Du.printRow();
+			}
 		}
 	return added;
 	}
@@ -95,20 +96,9 @@ private Object[] objs = new Object[10];
 	public void begin() throws IOException, Exception {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));//this throws IOException and breaks the method if it can't read from soruce
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-		String[] ns = line.split(CountFile.sep);
-			try {
-			T p = (T)new Page(ns[0]);
-			this.put(p);
-			}
-			catch (URISyntaxException U) {
-			D.error(U);
-			}
-			catch (MalformedURLException M) {
-			D.error(M);
-			}
-			catch (UselessURLException U) {
-			D.error(U);
-			}
+		String[] alink = line.split(CountFile.sep);
+		T page = (T)PageFactory.createFromString(alink[0]);
+		this.add(page);
 		}
 	}
 
@@ -134,13 +124,12 @@ private Object[] objs = new Object[10];
 	}
 	
 	public boolean checkError() {
-	String file = this.source();
-	System.out.println("Checking " + file + " file for errors.");
+	D.writeBeginningResponse(source());
 	boolean duplicate = false;
 	boolean linkerror = false;
 	int linecount = 0;
 		try { 
-		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(file)));
+		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		int firstcolumnlength = 0;
 			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 			linecount = reader.getLineNumber();
@@ -150,55 +139,56 @@ private Object[] objs = new Object[10];
 				firstcolumnlength = columns.length;
 				}
 				if (columns.length != firstcolumnlength) {
-				System.out.println("...There is a column length error at line " + String.valueOf(linecount));
+				D.writeColumnLengthResponse(linecount);
 				}
 			/*this will check for decoding errors*/
-			String link = columns[0];
-				if (link.contains("%")) {
-				System.out.println("...Possible encoding error at line " + String.valueOf(linecount));
+			String link1 = columns[0];
+				if (link1.contains("%")) {
+				D.writeEncodingResponse(linecount);
 				}
 				
 			/*This will check for duplicates in the data*/
 				try {
-				Page p = new Page(link);//this throws malformedurlexception
+				URL url = new URL(link1);//this throws malformedurlexception
+				Page p = new Page(url);//this throws ioexception
 				p.isValid();//this throws InvalidURLException, URISyntaxException
-				URL u = p.getURL();
-					if (u.getAuthority() == null) {
+					if (url.getAuthority() == null) {
 					throw new MalformedURLException("No Host");
 					}
-				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(file)));
+				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));
 					for (String line2 = reader2.readLine(); line2 != null; line2 = reader2.readLine()) {
 					int linecount2 = reader2.getLineNumber();
 						if (linecount2 < linecount) {
 						String[] columns2 = line2.split(CountFile.sep);
 						String link2 = columns2[0];
-							if (link.equals(link2)) {
+							if (link1.equals(link2)) {
 							duplicate = true;
-							System.out.print("..." + link + " is a duplicate entry found at ");
-					       	System.out.println(String.valueOf(linecount) 
-					       	+ " and " 
-					       	+ String.valueOf(linecount2));
+							D.writeDuplicateResponse(String.valueOf(linecount), link1, link2);	
 							}
 						}
 					}
 				}
-				catch (InvalidURLException N) {
+				catch (InvalidURLException I) {
 				linkerror = true;
-				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't an html file: ");
-				System.out.println(link);
+				D.writeResponse(String.valueOf(linecount), link1, I.toString());
 				}
 				catch (URISyntaxException U) {
 				linkerror = true;
-				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
+				D.writeResponse(String.valueOf(linecount), link1, U.toString());
 				}
 				catch (MalformedURLException M) {
 				linkerror = true;
-				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
-				System.out.println(link);
+				D.writeResponse(String.valueOf(linecount), link1, M.toString());
+				}
+				catch (IOException I) {
+				linkerror = true;
+				D.writeResponse(String.valueOf(linecount), link1, I.toString());
 				}
 			}
-		System.out.println("...The number of lines in " + file +  " is "  + linecount + ".");
+		D.writeFinalResponse(linecount);
+		}
+		catch (FileNotFoundException F) {
+		
 		}
 		catch (IOException I) {
 		D.error(I);

@@ -45,7 +45,7 @@ abstract class DataWriter<T> extends AbstractData<T> {
 			for (String line = READER.readLine(); line != null; line = READER.readLine()) {
 			final int c = READER.getLineNumber();
 				if (c == n) {
-				entry = (T)D.getPageFromEntry(line);
+				entry = (T)PageFactory.createFromString(line);
 				break;
 				}
 			}
@@ -70,7 +70,7 @@ abstract class DataWriter<T> extends AbstractData<T> {
 				buff.append("\n");
 				}
 				else {
-				p = (T)D.getPageFromEntry(line);			
+				p = (T)PageFactory.createFromString(line);			
 				}
 			} 
 		reader.close();

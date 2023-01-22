@@ -2,16 +2,16 @@ package drudge.global;
 
 import drudge.data.*;
 import drudge.page.*;
-import java.net.URL;
+import java.net.*;
 import java.util.*;
 
 public enum DataEnum {
 links(new DataList<Page>(FileNames.links)), 
-emails(new DataListEmail<URL>(FileNames.emails)),
-exclude(new DataListExclude<URL>(FileNames.exclude)),
-include(new DataListExclude<URL>(FileNames.include)),
-words(new DataListExcludeWords<String>(FileNames.words)),
-images(new DataListImages<URL>(FileNames.images));
+emails(new DataListEmail<String>(FileNames.emails)),
+exclude(new DataListExclude<String>(FileNames.exclude)),
+include(new DataListExclude<String>(FileNames.include)),
+words(new DataListWord<String>(FileNames.words)),
+images(new DataListImage<String>(FileNames.images));
 
 public Data data;
 

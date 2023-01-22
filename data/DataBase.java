@@ -57,21 +57,7 @@ insert into drudge values (link, title, keywords);
 
 			if (result.absolute(i + 1)) {
 			String s = result.getString(link);
-				try {
-				page = (T)new Page(s);
-				}
-				catch (URISyntaxException U) {
-				D.error(U);
-				}
-				catch (InvalidURLException I) {
-				D.error(I);
-				}
-				catch (MalformedURLException U) {
-				D.error(U);
-				}
-				catch (IOException I) {
-				D.error(I);
-				}
+			page = (T)PageFactory.createFromString(s);
 			}
 		}
 		catch (SQLException S) {
@@ -198,7 +184,8 @@ insert into drudge values (link, title, keywords);
 				}
 				
 				try {
-				Page p = new Page(pagelink);//this throws malformedurlexception
+				URL url = new URL(pagelink);//this throws malformedurlexception
+				Page p = new Page(url);//this throws IOException
 				p.isValid();//this throws InvalidURLException, URISyntaxException
 				URL u = p.getURL();
 					if (u.getAuthority() == null) {

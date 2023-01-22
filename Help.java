@@ -3,7 +3,7 @@ package drudge;
 import drudge.global.*;
 import drudge.data.UselessMessages;
 
-enum Help {
+public enum Help {
 help("-help", "<--------------Help Options-------------->"),
 about("-about", "About this program.", 
 	"------About------\n" 
@@ -105,7 +105,7 @@ x("-x", "This will let you pass in extra options for " + ThisProgram.name + ".",
 y("-y"),
 z("-z");
 
-String parameter;
+public String parameter;
 String message =  "";
 String submessage = "";
 

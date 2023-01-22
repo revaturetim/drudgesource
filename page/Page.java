@@ -15,10 +15,6 @@ import drudge.global.*;
 final public class Page implements Serializable {
 final static private int pagesize = 35_000;
 static public Proxy proxyserver = Proxy.NO_PROXY;
-static public boolean getemails = false;
-static public boolean getimages = false;
-static public boolean getincluded = false;
-static public boolean donotgetexcluded = false;
 //private variables for info about page itself which are set to the default values
 //The default value for MOST of these should be null
 final private Source content = new Source(pagesize);
@@ -36,14 +32,13 @@ private int linkcount = 0;
 	this.roboturl = new File(FileNames.samprobot).toURI().toURL();//this will throw a malformedurlexception
 	}
 
-	public Page(URL u) throws IOException, URISyntaxException, InvalidURLException {
+	public Page(URL u) throws IOException {
 	this.url = u;
-	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	roboturl = P.createURL(this.url, "/robots.txt");// /robots.txt denotes top level directory
 	}
 	
-	public Page(URL p, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
+	/*public Page(URL p, String l) throws MalformedURLException, IOException, URISyntaxException, InvalidURLException {
 	this.url = new URL(p, P.decode(l));//this throws malformedurlexception
 	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
@@ -71,7 +66,7 @@ private int linkcount = 0;
 	P.checkHtmlFile(this.url);//this throws InvalidURLException and URISyntaxException
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	roboturl = P.createURL(this.url, "/robots.txt");
-	}
+	}*/
 	
 	public boolean equals(Object obj) {
 	boolean isequal = false;
@@ -93,7 +88,8 @@ private int linkcount = 0;
 		LinkFilter<String> action = new LinkFilter<String>() {
 			
 			public void act(String link) {
-			D.add(url, link, links);
+			Page p = PageFactory.create(url, link);
+			links.add(p);
 			}
 		};
 		if (content.wasFilled() && content.size() > 0) {
@@ -112,8 +108,8 @@ private int linkcount = 0;
 	return connection;
 	}
 
-	public Data<URL> getEmails() {
-	final Data<URL> emails = P.getEmails(content, new DataListEmail<URL>());
+	public Data<String> getEmails() {
+	final Data<String> emails = P.getEmails(content, new DataListEmail<String>());
 	Debug.time("Getting Emails");
 	return emails;
 	}
@@ -184,23 +180,12 @@ private int linkcount = 0;
 	}
 
 	public boolean isIncluded() throws ExcludedURLException {
-	boolean included = false;
-		for (URL url : (Data<URL>)DataEnum.include.data) {
-		included = this.toString().contains(url.toString());
-			if (included) {
-			break;
-			}
-		}
-		if (included == false) {
-		throw new ExcludedURLException(this.url);
-		}	
+	P.checkIncluded(this.url);
 	return true;
 	}
 	
 	public boolean isExcluded() throws ExcludedURLException {
-		if (DataEnum.exclude.data.contains(this.url)) {
-		throw new ExcludedURLException(this.url);
-		}
+	P.checkExcluded(this.url);
 	return false;
 	}
 

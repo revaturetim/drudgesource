@@ -7,7 +7,7 @@ import drudge.page.*;
 import drudge.*;
 
 /*This uses MySQL as its query language*/
-public class DataBase<T> extends AbstractData<T> {
+public class DataBase extends AbstractData {
 private final String table = "drudge";
 /*data column headers will be url, title, keywords*/
 private final String link = "link";
@@ -49,15 +49,15 @@ insert into drudge values (link, title, keywords);
 	}
 
 	@SuppressWarnings("unchecked")	
-	public T get(final int i) {
-	T page = null;
+	public Object get(final int i) {
+	Object page = null;
 	final String query = "SELECT " + link + " FROM " + table;
 		try {
 		ResultSet result = query(query);
 
 			if (result.absolute(i + 1)) {
 			String s = result.getString(link);
-			page = (T)PageFactory.createFromString(s);
+			page = PageFactory.createFromString(s);
 			}
 		}
 		catch (SQLException S) {
@@ -66,8 +66,8 @@ insert into drudge values (link, title, keywords);
 	return page; 
 	}
 
-	public T remove(int i) {
-	T page = null;	
+	public Object remove(int i) {
+	Object page = null;	
 	final String query = "SELECT * FROM " + table;
 		try {
 		ResultSet result = query(query);
@@ -81,7 +81,7 @@ insert into drudge values (link, title, keywords);
 	return page;
 	}
 
-	public void put(T page) {
+	public void put(Object page) {
 	final Page p = (Page)page;
 	final String pagelink = p.toString();
 	String pagetitle = "null";

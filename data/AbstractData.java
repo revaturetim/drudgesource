@@ -4,10 +4,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-abstract class AbstractData<T> extends AbstractList<T> implements Data<T>, Serializable {
+abstract class AbstractData extends AbstractList implements Data, Serializable {
 protected String source;
 protected int level = 1;
-
 	
 	public void setSource(String s) {
 	source = s;
@@ -24,4 +23,5 @@ protected int level = 1;
 	public int level() {
 	return level;
 	}
+
 }

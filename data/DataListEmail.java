@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import drudge.Debug;
 
-public class DataListEmail<T extends String> extends DataListExclude<T> {
+public class DataListEmail extends DataListExclude {
 
 	public DataListEmail() {
 	super();
@@ -16,8 +16,8 @@ public class DataListEmail<T extends String> extends DataListExclude<T> {
 
 	public void end() throws IOException {
 	final BufferedWriter email_writer = new BufferedWriter(new FileWriter(source()));
-		for (String line : this) {
-		email_writer.append(line);
+		for (Object line : this) {
+		email_writer.append(line.toString());
 		email_writer.append("\n");
 		}
 	email_writer.close();

@@ -55,8 +55,8 @@ final static private String encoding = "UTF-8";
 	static void checkIncluded(final URL url) throws ExcludedURLException {
 	final String urlstring = url.toString();
 	boolean in = false;
-		for (String includedurl : (Data<String>)DataEnum.include.data) {
-		in = urlstring.contains(includedurl); 
+		for (Object includedurl : DataEnum.include.data) {
+		in = urlstring.contains((String)includedurl); 
 			if (in) {
 			break;
 			}
@@ -71,14 +71,14 @@ final static private String encoding = "UTF-8";
 		checkIE(url, DataEnum.exclude.data, true);
 	}
 	
-	static private void checkIE(final URL url, final Data<String> data, boolean ix) throws ExcludedURLException {//if ix variable is true then it checkexcluded otherwise it checksincluded
-		if (data.contains(url.toString()) == ix) {
+	static private void checkIE(final URL url, final Data data, boolean ix) throws ExcludedURLException {//if ix variable is true then it checkexcluded otherwise it checksincluded
+		if (data.contains(url) == ix) {
 		throw new ExcludedURLException(url);
 		}
 	}
 
 	//I am assuming that this works.  I have no way to really test it thoroughly. 
-	static Data<URL> readRobotFile(final URLConnection rcon) throws IOException {
+	static Data readRobotFile(final URLConnection rcon) throws IOException {
 	final LineNumberReader reader = new LineNumberReader(new BufferedReader(new InputStreamReader(rcon.getInputStream())));
 	final String useragent = "user-agent:";
 	final String disallow = "disallow";
@@ -88,7 +88,7 @@ final static private String encoding = "UTF-8";
 	final String colon = ":";
 	final String sitemap = "sitemap";
 
-	final Data<URL> norob = new DataList<URL>();
+	final Data norob = new DataList();
 	String user = null;
 	
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
@@ -144,7 +144,7 @@ final static private String encoding = "UTF-8";
 	return link;
 	}
 
-	static Data<String> getEmails(CharSequence src, Data<String> data) {
+	static Data getEmails(CharSequence src, Data data) {
 	final String s = src.toString().toLowerCase();
 		
 		for (int b = s.indexOf("\"mailto:"); b != -1; b = s.indexOf("\"mailto:", b + 1)) {
@@ -244,7 +244,7 @@ final static private String encoding = "UTF-8";
 					findInPath(word, action);
 					}
 					else if (word.contains("@")/*this is for emails*/) {
-					findInPath("mailto:" + word, action);
+					//findInPath("mailto:" + word, action);
 					}
 				}
 			}
@@ -311,7 +311,7 @@ final static private String encoding = "UTF-8";
 	return title;
 	}
 
-	static Data<String> getKeywords(final CharSequence source, Data<String> words) {
+	static Data getKeywords(final CharSequence source, Data words) {
 	final String text = source.toString().toLowerCase();
 	String[] somewords = text.split(Patterns.keywordfilter);//this splits and coincidently removes all whitespace characters
 		for (String word : somewords) {
@@ -327,7 +327,7 @@ final static private String encoding = "UTF-8";
 	return words;
 	}
 	
-	static Data<String> getKeywordsByBuffer(final CharSequence source, final Data<String> keywords) {
+	static Data getKeywordsByBuffer(final CharSequence source, final Data keywords) {
 	final BufferedReader reader = new BufferedReader(new StringReader(source.toString().toLowerCase()));
 	final StringBuffer buffer = new StringBuffer();
 		try {
@@ -369,7 +369,7 @@ final static private String encoding = "UTF-8";
 	}
 	
 
-	static Data<String> getKeywordsByRegex(final CharSequence source, Data<String> words) {
+	static Data getKeywordsByRegex(final CharSequence source, Data words) {
 	String text = source.toString().toLowerCase();
 		for (Patterns.Keywords p : Patterns.Keywords.values()) {
 		text = p.replace(text, " ");

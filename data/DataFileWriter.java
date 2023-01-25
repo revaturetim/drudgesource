@@ -8,23 +8,23 @@ import drudge.page.*;
 import drudge.*;
 /*This class is for the data storage of the links it finds*/
 
-public class DataFileWriter<T> extends DataWriter<T> {
+public class DataFileWriter extends DataWriter {
 
 	public DataFileWriter(String f) {
 	source = f;
 	}
 
 	protected LineNumberReader createReader() {
-	LineNumberReader reader = null;
 		try {
-		reader = new LineNumberReader(new BufferedReader(new FileReader(source)));
+		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source)));
 		reader.setLineNumber(0);
 		reader.mark(0);
+		return reader;
 		}
 		catch (IOException I) {
 		D.error(I);
+		return null;
 		}
-	return reader;
 	}
 	
 	protected PrintWriter createWriter() {

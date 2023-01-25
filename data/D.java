@@ -86,10 +86,10 @@ final public class D implements FileNames {
 	return time;
 	}
 	
-	static <T> String rawString(Data<T> data) {
+	static String rawString(Data data) {
 	StringBuilder builder = new StringBuilder();
-		for (T t : data) {
-		builder.append(t.toString());
+		for (Object obj : data) {
+		builder.append((String)obj);
 		builder.append(" ");
 		}
 	return builder.toString();

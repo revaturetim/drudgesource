@@ -8,7 +8,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class DataStringBuilder<T> extends DataWriter<T> {
+public class DataStringBuilder extends DataWriter {
 final private StringBuilder builder = new StringBuilder();
 
 	public PrintWriter createWriter() {
@@ -19,7 +19,7 @@ final private StringBuilder builder = new StringBuilder();
 	return new LineNumberReader(new BufferedReader(new StringReader(builder.toString())));	
 	}
 	
-	public T delete(int l) {
+	public Object delete(int l) {
 	int L = 1;
 		for (int i = 0; i != -1; i = builder.indexOf("\n", i + 1)) {
 			if (L == l) {

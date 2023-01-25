@@ -6,12 +6,12 @@ import java.net.*;
 import java.util.*;
 
 public enum DataEnum {
-links(new DataList<Page>(FileNames.links)), 
-emails(new DataListEmail<String>(FileNames.emails)),
-exclude(new DataListExclude<String>(FileNames.exclude)),
-include(new DataListExclude<String>(FileNames.include)),
-words(new DataListWord<String>(FileNames.words)),
-images(new DataListImage<String>(FileNames.images));
+links(new DataList(FileNames.links)), 
+emails(new DataListEmail(FileNames.emails)),
+exclude(new DataListExclude(FileNames.exclude)),
+include(new DataListExclude(FileNames.include)),
+words(new DataListWord(FileNames.words)),
+images(new DataListImage(FileNames.images));
 
 public Data data;
 
@@ -55,7 +55,7 @@ public Data data;
 	}
 
 /*THIS IS FOR NOROBOT OBJECTS*/
-final public static Hashtable<URL, Data<URL>> norobots = new Hashtable<URL, Data<URL>>();
+final public static Hashtable<URL, Data> norobots = new Hashtable<URL, Data>();
 
 /*This is a record of past objects I have tried and I keep them in case I want to use them again*/
 /*THIS IS FOR DADA OBJECT*/

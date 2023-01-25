@@ -10,12 +10,12 @@ import drudge.global.*;
 
 
 /*This interface has the methods that this program will use*/
-public interface Data<T> extends Iterable<T>, RandomAccess {
+public interface Data extends Iterable, RandomAccess {
 
 	/*These are important methods because they interface with the rest of the program*/
-	public T remove(int cycle);
-	public void put(T page) throws DuplicateURLException, IllegalArgumentException;
-	public T get(int cycle);
+	public Object remove(int cycle);
+	public void put(Object page) throws DuplicateURLException, IllegalArgumentException;
+	public Object get(int cycle);
 	public void setSource(String s);
 	public String source();
 	public void setLevel(int l);
@@ -26,10 +26,10 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 	public void truncate();
 	public int size();
 	public boolean contains(Object link);
-	public Iterator<T> iterator();
+	public Iterator iterator();
 
-	default public void put(Data<T> links) {
-		for (T link : links) {
+	default public void put(Data links) {
+		for (Object link : links) {
 			try {
 			put(link);
 			}
@@ -44,7 +44,7 @@ public interface Data<T> extends Iterable<T>, RandomAccess {
 
 
 
-	default public boolean add(T page) {
+	default public boolean add(Object page) {
 	boolean added = false;
 		if (page != null) {
 			try {

@@ -5,7 +5,7 @@ import java.io.*;
 
 
 
-public class DataListImage<T extends String> extends DataListEmail<T> {
+public class DataListImage extends DataListEmail {
 
 
 

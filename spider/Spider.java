@@ -18,7 +18,7 @@ protected boolean skip = false;
 	//a convenience method for handling links and it makes other spiders do different things
 	protected void links(final Page p) {
 	p.getSource();
-	Data<Page> pages = p.getLinks();
+	Data pages = p.getLinks();
 	DataEnum.links.data.put(pages);
 	Debug.time("End Links");
 	}
@@ -41,11 +41,7 @@ protected boolean skip = false;
 	}
 
 	public int crawl(int beg, int max) {
-		do {
-		final Page p = ((Data<Page>)DataEnum.links.data).get(beg);
-			if (p == null) {
-			break;
-			}
+		for (Page p = (Page)DataEnum.links.data.get(beg); p != null && beg < max; p = (Page)DataEnum.links.data.get(beg)) {
 		boolean notok = this.crawl(p);
 			/* This has the same effect as skipping since when -nok option is on it 
 			 * sees all urls as acceptables since the default return value in crawls
@@ -58,7 +54,7 @@ protected boolean skip = false;
 			drudge.Print.row(p, beg);
 			beg++;
 			}
-		} while (beg < max);
+		}
 	return beg;
 	}
 

@@ -9,7 +9,7 @@ import drudge.global.FileNames;
  *I thought it was clever to write up
  */
 
-public class DataStringWriter<T> extends DataWriter<T> {
+public class DataStringWriter extends DataWriter {
 final private StringWriter buffer = new StringWriter();
 
 	public DataStringWriter() {
@@ -28,8 +28,8 @@ final private StringWriter buffer = new StringWriter();
 	return reader;
 	}
 
-	protected StringWriter createWriter() {
-	return buffer;
+	protected PrintWriter createWriter() {
+	return new PrintWriter(buffer);
 	}
 
 }

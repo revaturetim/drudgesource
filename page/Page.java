@@ -83,8 +83,8 @@ private int linkcount = 0;
 	return toString().hashCode();
 	}
 
-	public Data<Page> getLinks() {
-	final Data<Page> links = new DataList<Page>();
+	public Data getLinks() {
+	final Data links = new DataList();
 		LinkFilter<String> action = new LinkFilter<String>() {
 			
 			public void act(String link) {
@@ -108,8 +108,8 @@ private int linkcount = 0;
 	return connection;
 	}
 
-	public Data<String> getEmails() {
-	final Data<String> emails = P.getEmails(content, new DataListEmail<String>());
+	public Data getEmails() {
+	final Data emails = P.getEmails(content, new DataListEmail());
 	Debug.time("Getting Emails");
 	return emails;
 	}
@@ -120,8 +120,8 @@ private int linkcount = 0;
 	return title;
 	}
 	
-	public Data<String> getKeywords() {
-	Data<String> keywords = P.getKeywordsByBuffer(content, new DataList<String>());
+	public Data getKeywords() {
+	Data keywords = P.getKeywordsByBuffer(content, new DataList());
 	Debug.time("Getting Keywords");
 	return keywords;
 	}
@@ -192,11 +192,11 @@ private int linkcount = 0;
 	public boolean isRobotExcluded() throws RobotsExcludedURLException {
 		try {
 		final URLConnection c = roboturl.openConnection(Page.proxyserver);
-			for (Data<URL> disallowed = DataEnum.norobots.get(roboturl); disallowed == null; disallowed = DataEnum.norobots.get(roboturl)) {
+			for (Data disallowed = DataEnum.norobots.get(roboturl); disallowed == null; disallowed = DataEnum.norobots.get(roboturl)) {
 			disallowed = P.readRobotFile(c);
 			DataEnum.norobots.put(roboturl, disallowed);
 			}
-			Data<URL> urls = DataEnum.norobots.get(roboturl);
+			Data urls = DataEnum.norobots.get(roboturl);
 				if (urls.contains(this.url)) { 
 				throw new RobotsExcludedURLException(this.url);
 				}

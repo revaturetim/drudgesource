@@ -10,7 +10,7 @@ import drudge.global.*;
 /*this class is a superclass of objects that use an array as the storage device*/
 /*T has to be assumed to be an object so it retains is general behavior for all types*/
 /*This is the default Data object for this program when not using database object*/
-public class DataListExclude<T extends String> extends DataList<T>{
+public class DataListExclude extends DataList {
 
 	public DataListExclude() {
 
@@ -20,17 +20,16 @@ public class DataListExclude<T extends String> extends DataList<T>{
 	super(s);
 	}
 	
-	final public T remove(final int i) {
+	final public Object remove(final int i) {
 	//empty since it is going to be a read only object
 	return null;
 	}
 	
-	@SuppressWarnings("unchecked")	
 	/*The default assumes that it is working with a page object*/
 	public void begin() throws Exception {
 	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-		this.add((T)line);
+		this.add(line);
 		}
 	}
 

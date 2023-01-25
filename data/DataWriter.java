@@ -10,23 +10,21 @@ import drudge.global.*;
 /*This class is for the data storage of the links it finds using streams
  *I thought it was clever to write up
  */
-abstract class DataWriter<T> extends AbstractData<T> {
+abstract class DataWriter extends AbstractData {
 
-	//this has to be filled with something in order for subclass works.
-	abstract <R extends Reader> R createReader();
-	abstract <W extends Writer> W createWriter();
+	abstract LineNumberReader createReader();
+	abstract PrintWriter createWriter();
 	
-	
-	public void put(T page) throws DuplicateURLException, IllegalArgumentException {
+	public void put(Object page) throws DuplicateURLException, IllegalArgumentException {
 		if (page == null) {
 		throw new IllegalArgumentException("Attempting to add a null object into the database");
 		}
 		if (contains(page) == false) {
 		Page tp = (Page)page;
-		PrintWriter PRINTER = createWriter();
+		PrintWriter writer = createWriter();
 			try {
-			D.writeEntry(tp, PRINTER, level());
-			PRINTER.close();
+			D.writeEntry(tp, writer, level());
+			writer.close();
 			}
 			catch (IOException I) {
 			D.error(I);
@@ -37,15 +35,15 @@ abstract class DataWriter<T> extends AbstractData<T> {
 		}
 	}
 
-	public T get(final int n) {
-	T entry = null;
+	public Object get(final int n) {
+	Object entry = null;
 		try {
 		LineNumberReader READER = createReader();
 		READER.setLineNumber(-1);
 			for (String line = READER.readLine(); line != null; line = READER.readLine()) {
 			final int c = READER.getLineNumber();
 				if (c == n) {
-				entry = (T)PageFactory.createFromString(line);
+				entry = PageFactory.createFromString(line);
 				break;
 				}
 			}
@@ -58,8 +56,8 @@ abstract class DataWriter<T> extends AbstractData<T> {
 	}
 
 
-	public T remove(final int l) {
-	T p = null;
+	public Object remove(final int l) {
+	Object p = null;
 	StringBuffer buff = new StringBuffer();
 		try {
 		LineNumberReader reader = createReader();
@@ -70,7 +68,7 @@ abstract class DataWriter<T> extends AbstractData<T> {
 				buff.append("\n");
 				}
 				else {
-				p = (T)PageFactory.createFromString(line);			
+				p = PageFactory.createFromString(line);			
 				}
 			} 
 		reader.close();

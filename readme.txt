@@ -19,9 +19,13 @@
 4.  Must find broken links in code;
 5.  Have alternate commands for help options like -nok and -skp;
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
+7.  Must find url with 'single quotes';
+8.  Data objects should have setBeginningIndex method so that we can start on any fargin number we want;
+9.  BUG! Make sure you truncate email and image files along with link file;
 11. BUG! Why does it store unencoded links?
 12. Develop SpiderSpam some more;
 13. BUG! Must find broken link where there is only one quote quoting it
+14. Make a DevHelp option to decode strings to help me understand them better;
 15. BUG! Figure out a better way to write error file so we don't have exepected nullpointer issues in the future;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
 19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
@@ -32,6 +36,7 @@
 27. See if Debug should be its own independent package instead of something attached to Drudge project;
 28. Sample.html should have delibertly broken links
 29. Create sample robot.txt file and sample sitemap file for testing purposes;
+30. Have beginAll, truncateAll work consistently with different start option.  -s should continue in emails just like it does for links;
 31. Page.isIncluded(), Page.isExcluded(), and Page.isRobotAllowed() should be condensed more for efficiency reasons;
 32. Update license option to make sure license printed is up to date and can't be used to undo the license in readme.txt;
 42. Create findlinks using xml api;

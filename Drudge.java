@@ -342,7 +342,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				p.getSource();
 				PageFactory.getimages = true;
 				p.getLinks();//collects emails as well as links
-					for (URL image : (Data<URL>)DataEnum.images.data) {
+					for (Object image : DataEnum.images.data) {
 					System.out.println(image);
 					}
 				}
@@ -386,8 +386,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				p.getSource();
-				Data<String> keywords = p.getKeywords();
-					for (String keyword : keywords) {
+				Data keywords = p.getKeywords();
+					for (Object keyword : keywords) {
 					System.out.println(keyword);
 					}	
 				}
@@ -397,8 +397,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 				p.getSource();
-				Data<Page> pages = p.getLinks();
-					for (Page page : pages) {
+				Data pages = p.getLinks();
+					for (Object page : pages) {
 					System.out.println(page.toString());
 					}
 				}
@@ -410,7 +410,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				p.getSource();
 				PageFactory.getemails = true;
 				p.getLinks();//called because getlinks also collects emails
-					for (URL email : (Data<URL>)DataEnum.emails.data) {
+					for (Object email : DataEnum.emails.data) {
 					System.out.println(email);
 					}
 				}

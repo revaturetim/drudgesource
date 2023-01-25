@@ -7,7 +7,7 @@ import drudge.page.Page;
 import drudge.Debug;
 import drudge.global.*;
 
-public class DataObject<T> extends AbstractData<T> {
+public class DataObject extends AbstractData {
 private File dir;
 
 	public DataObject(String s) {
@@ -21,16 +21,16 @@ private File dir;
 	return dir.list().length;
  	}
 	
-	public T remove(int cycle) {
-	T obj = get(cycle);
+	public Object remove(int cycle) {
+	Object obj = get(cycle);
 	File d = new File(dir, String.valueOf(obj.hashCode()));
 	d.delete();	
 	return obj;
 	}
 	
-	public T get(int cycle) {
+	public Object get(int cycle) {
 	File[] files = dir.listFiles();
-	T obj = null;
+	Object obj = null;
 	Arrays.sort	(files, (A, B) -> {	File a = (File)A; 
 						File b = (File)B; 
 						long al = a.lastModified(); 
@@ -42,7 +42,7 @@ private File dir;
 			);
 		try {
 		ObjectInputStream in = new ObjectInputStream(new FileInputStream(files[cycle]));
-		obj = (T)in.readObject();
+		obj = in.readObject();
 		//in.readFields();
 		in.close();
 		}
@@ -58,7 +58,7 @@ private File dir;
 	return obj;
 	}
 	
-	public void put(T obj) {
+	public void put(Object obj) {
 	Page p = (Page)obj;
 	File f = new File(dir, String.valueOf(p.hashCode()));
 	

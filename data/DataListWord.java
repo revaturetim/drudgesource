@@ -10,7 +10,7 @@ import drudge.global.*;
 /*this class is a superclass of objects that use an array as the storage device*/
 /*T has to be assumed to be an object so it retains is general behavior for all types*/
 /*This is the default Data object for this program when not using database object*/
-public class DataListWord<T extends String> extends DataListEmail<T>{
+public class DataListWord extends DataListEmail {
 
 	public DataListWord() {
 

@@ -13,7 +13,7 @@ HELP("-HELP", "<-------------------------!!!SPECIAL DEVELOPER OPTIONS!!!--------
 A("-A", "This will see if http://your.url.here robot.txt policy will let you crawl their website"), 
 B("-B"),
 C("-C", "This will list out specific times in the cycle"),
-D("-D"),
+D("-D", "This will Decode/Encode strings"),
 E("-E", "This will check to see if there are any errors in the data storage"),
 F("-F"),
 G("-G", "This will send output to a lind by line grep-able file called " + FileNames.out),

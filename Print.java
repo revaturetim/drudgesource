@@ -9,7 +9,7 @@ import java.net.*;
 final public class Print {
 static PrintStream GSTREAM = System.out; 
 static public Class<?> UselessClass = null;  
-	
+static public int cycle = 1;	
 final private static int LEFT = 0;
 final private static int CENTER = 1;
 final private static int RIGHT = 2;
@@ -24,7 +24,7 @@ final private static String[] H = {
 	"Actual Link                                                "
 };
 
-	static public void row(final Page p, final int c) {
+	static public void row(final Page p) {
 	final int n = p.getLinkCount();
 	String nump = String.valueOf(n);
 		if (p.didConnect()) {
@@ -40,13 +40,14 @@ final private static String[] H = {
 		}
 	Page.Header h = p.header();
 	String[] fields = new String[6];
-	fields[0] = String.valueOf(c + 1);
+	fields[0] = String.valueOf(Print.cycle);
 	fields[1] = String.valueOf(DataEnum.links.data.size());
 	fields[2] = nump;
-	fields[3] = h.getResponse();
-	fields[4] = h.getContentType();
+	fields[3] = h.response;
+	fields[4] = h.contenttype;
 	fields[5] = p.toString();
 	Print.row(fields);
+	Print.cycle++;//must increment to get correct cyclecount
 	}
 
 	public static void columnHeaders() {

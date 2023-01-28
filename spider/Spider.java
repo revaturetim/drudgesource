@@ -17,7 +17,7 @@ protected boolean skip = false;
 
 	//a convenience method for handling links and it makes other spiders do different things
 	protected void links(final Page p) {
-	p.getSource();
+	p.source().fill();
 	Data pages = p.getLinks();
 	DataEnum.links.data.put(pages);
 	Debug.time("End Links");
@@ -35,27 +35,25 @@ protected boolean skip = false;
 
 	protected void redirect(final Page p) {
 	final Page.Header h = p.header();
-	final String redloc = h.getRedirectLocation();
-	final Page redirect = PageFactory.create(redloc);
+	final Page redirect = PageFactory.create(h.redirectlocation);
 	DataEnum.links.data.add(redirect);
 	}
 
-	public int crawl(int beg, int max) {
-		for (Page p = (Page)DataEnum.links.data.get(beg); p != null && beg < max; p = (Page)DataEnum.links.data.get(beg)) {
-		boolean notok = this.crawl(p);
+	public int crawl(final int max) {
+		for (Page p = (Page)DataEnum.links.data.get(Print.cycle - 1); p != null && Print.cycle < max; p = (Page)DataEnum.links.data.get(Print.cycle - 1)) {
+			boolean notok = this.crawl(p);
 			/* This has the same effect as skipping since when -nok option is on it 
 			 * sees all urls as acceptables since the default return value in crawls
 			 * is false.
 			 */
 			if (notok == true) {
-			DataEnum.links.data.remove(beg);
+			DataEnum.links.data.remove(Print.cycle - 1);
 			}
 			else {
-			drudge.Print.row(p, beg);
-			beg++;
+			Print.row(p);
 			}
 		}
-	return beg;
+	return Print.cycle;//Print.cycle is incremented inside of Print.row which is why we have Print.cycle - 1 everywere
 	}
 
 	public boolean crawl(Page p) {
@@ -70,7 +68,7 @@ protected boolean skip = false;
 			 * but it won't crawl it.  The same is true for checkok
 			 */
 			if (checkok) {
-			p.isUseless();//this throws a uselesssurlexception
+			p.header().checkUseless();//throws uselessurlexceptions
 			Debug.time("Checing is UseLess");
 			}
 			if (norobotsallowed) {
@@ -86,7 +84,7 @@ protected boolean skip = false;
 		//these must be caught here so it can remove it once it is found in data object
 		catch (NotOKURLException N) {
 		notok = true;
-		N.printRow("", "", "", p.header().getResponse(), N.toString(), p.toString());	
+		N.printRow();
 		}
 		catch (InvalidURLException I) {
 		notok = true;
@@ -114,6 +112,10 @@ protected boolean skip = false;
 
 	public void setNoRobotsAllowed(boolean b) {
 	norobotsallowed = b;
+	}
+
+	public void setSkip(boolean b) {
+	skip = b;
 	}
 
 }

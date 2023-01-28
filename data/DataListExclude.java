@@ -27,9 +27,14 @@ public class DataListExclude extends DataList {
 	
 	/*The default assumes that it is working with a page object*/
 	public void begin() throws Exception {
-	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
-		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-		this.add(line);
+		try {
+		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
+			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+			this.add(line);
+			}
+		}
+		catch (IOException I) {
+		D.error("Exception", I);
 		}
 	}
 

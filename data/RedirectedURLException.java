@@ -5,7 +5,7 @@ import drudge.page.Page;
 
 
 
-public class RedirectedURLException extends UselessURLException {
+public class RedirectedURLException extends NotOKURLException {
 private final static long serialVersionUID = 0;
 
 	public RedirectedURLException(Object p) {

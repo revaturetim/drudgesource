@@ -68,6 +68,16 @@ final public class D implements FileNames {
 		}
 	}
 
+	static public void flush(String filename) {
+		try {
+		FileWriter writer = new FileWriter(filename);
+		writer.close();//removes contents of file
+		}
+		catch (IOException I) {
+		D.error(I);
+		}
+	}
+	
 	public static String getDate() {
 	GregorianCalendar G = new GregorianCalendar();
 	Locale L = Locale.getDefault();

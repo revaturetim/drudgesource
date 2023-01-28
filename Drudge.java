@@ -19,13 +19,12 @@ private static final String sep = "=";
 	//these are for method wide variables other helper metheds will use
 	int maxcyc = 1;//default value
 	int crawlmethod = 1;//default value
-	int begcyc = 0;//default starting number for program
 	boolean okays = true;//default value
 	long delay = 0;//default value
 	boolean skip = false;
 	boolean norobotsallowed = false;//default value
 	Spider spider = null;
-	eraseFile(FileNames.error);
+	D.flush(FileNames.error);//ensures error file is clean on start
 	
 		//this is the main program loop
 LOOP:		for (int i = 0; i < arg.length; i++) {
@@ -171,6 +170,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			System.out.println(ThisProgram.license);
 			break;
 			}
+			else if (a.equals(Help.m.parameter)) {
+			Print.UselessClass = UselessMessages.getClass(1);
+			}
 			else if (a.startsWith(Help.m.parameter + Drudge.sep)) {
 				try {
 				final int c = getNumber(a);
@@ -276,6 +278,22 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Debug.cycletimeon = true;
 			continue;
 			}
+			else if (a.equals(DevHelp.D.parameter) && arg.length == 2 && i == 0) {
+				try {
+				System.out.println(arg[i + 1] + " decoded : " + URLDecoder.decode(arg[i + 1], "UTF-8"));
+				System.out.println(arg[i + 1] + " encoded : " + URLEncoder.encode(arg[i + 1], "UTF-8"));		
+				System.out.println(arg[i + 1] + " ASCII   : " + IDN.toASCII(arg[i + 1]));
+				System.out.println(arg[i + 1] + " UNICODE : " + IDN.toUnicode(arg[i + 1]));
+				}
+				catch (IllegalArgumentException I) {
+				Print.error(I);
+
+				}
+				catch (UnsupportedEncodingException U) {
+				Print.error(U);
+				}
+			break;
+			}
 			else if (a.equals(DevHelp.E.parameter) && arg.length == 1) {
 			DataEnum.checkErrorAll();
 			System.out.println("Have a nice day :)");
@@ -339,7 +357,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.startsWith(DevHelp.IMG.parameter) && arg.length == 2 && i == 0) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
-				p.getSource();
+				p.source().fill();
 				PageFactory.getimages = true;
 				p.getLinks();//collects emails as well as links
 					for (Object image : DataEnum.images.data) {
@@ -385,7 +403,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals(DevHelp.K.parameter) && arg.length == 2 && i == 0) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
-				p.getSource();
+				p.source().fill();
 				Data keywords = p.getKeywords();
 					for (Object keyword : keywords) {
 					System.out.println(keyword);
@@ -396,7 +414,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals(DevHelp.L.parameter) && arg.length == 2 && i == 0) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
-				p.getSource();
+				p.source().fill();
 				Data pages = p.getLinks();
 					for (Object page : pages) {
 					System.out.println(page.toString());
@@ -407,7 +425,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals(DevHelp.M.parameter) && arg.length == 2 && i == 0) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
-				p.getSource();
+				p.source().fill();
 				PageFactory.getemails = true;
 				p.getLinks();//called because getlinks also collects emails
 					for (Object email : DataEnum.emails.data) {
@@ -449,21 +467,21 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (p != null) {
 				URL roboturl = p.getRobotURL();
 				Page robotpage = PageFactory.create(roboturl);
-				System.out.println(robotpage.getSource());
+				System.out.println(robotpage.source().fill());
 				}
 			break;	
 			}
 			else if (a.equals(DevHelp.S.parameter) && arg.length == 2 && i == 0) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
-				System.out.println(p.getSource());
+				System.out.println(p.source().fill());
 				}
 			break;
 			}
 			else if (a.equals(DevHelp.T.parameter) && arg.length == 2 && i == 0) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
-				p.getSource(); 
+				p.source().fill(); 
 				String title = p.getTitle();
 				System.out.println(title);
 				}
@@ -473,7 +491,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 					try {	
-					p.isUseless();
+					p.header().checkUseless();
 					System.out.println(p.toString() + " is not a useless url for this program");	
 					}
 					catch (UselessURLException U) {
@@ -537,9 +555,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			final String lastarg = a;//this exist only as a naming convention
 				if (lastarg.equals(Help.s.parameter)) {
 					try {
-					begcyc = CountFile.get();
-					maxcyc = maxcyc + begcyc;
-					DataEnum.links.data.begin();
+					Print.cycle = CountFile.get();
+					DataEnum.beginAll();
 					}
 					catch (IOException I) {
 					Print.error(I);
@@ -551,10 +568,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 				else if (lastarg.startsWith(Help.s.parameter + Drudge.sep)) {
 					try {
-					int num = getNumber(lastarg);
-					begcyc = num - 1;
-					maxcyc = maxcyc + begcyc;
-					DataEnum.links.data.begin();
+					Print.cycle = getNumber(lastarg);
+					DataEnum.beginAll();
 					}
 					catch (NumberFormatException N) {
 					Print.error(N);
@@ -609,7 +624,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			spider.setNoRobotsAllowed(norobotsallowed);
 
 			final long begintime = System.currentTimeMillis();
-			begcyc = spider.crawl(begcyc, maxcyc);
+			Print.cycle = spider.crawl(Print.cycle + maxcyc);
 			
 			Debug.time("Spider Crawl");
 				try {
@@ -637,7 +652,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			final long endtime = System.currentTimeMillis();
 			Debug.time("DataBase disconnect");
 				try {
-				CountFile.set(begcyc);
+				CountFile.set(Print.cycle);
 				}
 				catch (IOException I) {
 				Print.error(I);
@@ -662,15 +677,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	}//end of program
 	
 
-	static boolean eraseFile(String filename) {
-	boolean erased = false;
-	File efile = new File(filename);
-		if (efile.exists()) {
-		erased = efile.delete();
-		}
-	return erased;
-	}
-	
 	static private int getNumber(String arg) throws NumberFormatException {
 	String[] ins = arg.split(Drudge.sep, 2);
 	return Integer.parseUnsignedInt(ins[1]);

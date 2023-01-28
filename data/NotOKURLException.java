@@ -2,11 +2,10 @@ package drudge.data;
 
 import java.net.*;
 import drudge.page.Page;
-
+import drudge.Print;
 
 public class NotOKURLException extends UselessURLException {
 private final static long serialVersionUID = 0;
-private Object responsemessage = "";
 
 	public NotOKURLException(Object p) {
 	super(p);
@@ -19,7 +18,10 @@ private Object responsemessage = "";
 	}
 	
 	public void printRow() {
-	printRow("", "", "", getSecondObject().toString(), this.message);
+		
+		if (Print.UselessClass == UselessURLException.class || Print.UselessClass == this.getClass()) {
+		String[] n = {"", "", "", this.getSecondObject().toString(), this.message, this.getFirstObject().toString()};
+		Print.row(n);
+		}
 	}
-
 }

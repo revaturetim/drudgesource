@@ -21,6 +21,8 @@ final static String notitle = "NO TITLE FOUND";
 final static private String nowords = "NO KEYWORDS FOUND";
 final static private String Null = "null";
 final static private String encoding = "UTF-8";
+final static String html = "text/html";
+final static String plain = "text/plain";
 
 	static void checkHtmlFile(final URL url) throws InvalidURLException, URISyntaxException {
 	//Debug.startWatch();
@@ -39,7 +41,7 @@ final static private String encoding = "UTF-8";
 	//final boolean isfile = schm.equals("file");
 	final boolean isemail = schm.equals("mailto");
 	final boolean isimage = ftype != null && ftype.startsWith("image");
-	final boolean istext = ftype == null || ftype.equals("text/html") || ftype.equals("text/plain");
+	final boolean istext = ftype == null || ftype.equals(P.html) || ftype.equals(P.plain);
 		if (isemail) {
 		throw new EmailURLException(url);
 		}
@@ -414,120 +416,6 @@ final static private String encoding = "UTF-8";
 		D.error(I.getClass().getName(), I, "Location", "P.getCreateURL(URL, String)", "link", file);
 		}
 	return url;
-	}
-	
-
-	static void checkResponse(final int response, String page) throws NoContentURLException, RedirectedURLException, NotOKURLException {
-		if (response >= 200 && response < 300) {//does the most common first 
-			if (response == 204) {
-			throw new NoContentURLException(page);
-			}
-		}
-		else if (response >= 300 && response < 400) {
-		throw new RedirectedURLException(page);
-		}
-		else {
-		throw new NotOKURLException(page, Integer.valueOf(response));
-		}
-		
-	Debug.time("...Response-Code");		
-	}
-
-	static void checkResponse(final String response, final String page) throws NoContentURLException, RedirectedURLException, NotOKURLException {
-		if (response != null) {
-		String[] values = response.split(" ");
-			if (values[0].equals("HTTP/1.1")) {
-				try { 
-				Integer num = Integer.parseInt(values[1]);
-				int code = num.intValue();
-				checkResponse(code, page);
-				}
-				catch (NumberFormatException N) {
-				D.error(N.getClass(), N, "Location", "P.checkResponse(string, string)");	
-				}
-			}	
-		}
-	Debug.time("...Response-Code");		
-	}
-
-	static void checkContentType(final String contype, final String con) throws InvalidURLException {
-		if (contype != null) {
-		boolean ishtml = false;
-		String[] values = contype.split(" ");
-			for (String value : values) {
-				String[] colon = value.split(";");
-				value = colon[0];
-				if ((value.equalsIgnoreCase("text/html") | value.equalsIgnoreCase("text/plain"))) {
-				ishtml = true;
-				break;
-				}
-			}
-			if (!ishtml) {
-			throw new InvalidURLException(con, contype);
-			}
-		}
-	Debug.time("...Content-Type");		
-	}
-
-	static void checkContentLength(final int conlen, final String con) throws NoContentURLException {
-	/*DON'T USE CONLEN VARIABLE FROM HEADER OR IT WILL NOT INDEX PAGE!!!!!*/
-		if (conlen == 0) {
-		throw new NoContentURLException(con);
-		}	
-	Debug.time("...Content-Length");		
-	}
-
-	static void checkContentEncoding(final String contenc, final String con) throws BadEncodingURLException {
-		if (contenc != null) {
-			/*if (contenc.equals("")) {
-			throw new BadEncodingURLException(con.toString());
-			}
-			I don't know what to do with this one yet so I am going to comment it out
-			*/
-		}
-	Debug.time("...Content-Encoding");			
-	}
-
-	/*checkHeaders methods do not throw all uselessurl exceptions so -U option may not catch them all*/
-	static void checkHeaders(final URLConnection con) throws BadEncodingURLException, NoContentURLException, RedirectedURLException, NotOKURLException, InvalidURLException {
-	final String u = con.toString();
-		try {
-		String response = ((HttpURLConnection)con).getResponseMessage();
-		checkResponse(response, u);
-		}
-		catch (IOException I) {
-		D.error(I.getClass(), I, "Location", "P.checkHeaders(URLConnection)");
-		}
-		catch (ClassCastException C) {
-		D.error(C.getClass(), C, "Location", "P.checkHeaders(URLConnection)");
-		}
-
-	final String contype = con.getContentType();
-	final String contenc = con.getContentEncoding();
-	final int conlen = con.getContentLength();
-
-	checkContentType(contype, u);	
-	checkContentLength(conlen, u);
-	checkContentEncoding(contenc, u);
-	}
-
-
-	static void checkHeaders(final Page.Header h, final String u) throws BadEncodingURLException, NoContentURLException, RedirectedURLException, NotOKURLException, InvalidURLException {
-	final String response = h.getResponse();
-	final String contype = h.getContentType();
-	final String contenc = h.getContentEncoding();
-	final int conlen = h.getContentLength(); 
-	
-	checkResponse(response, u);
-	checkContentType(contype, u);
-	checkContentLength(conlen, u);
-	checkContentEncoding(contenc, u);
-	}
-
-	static void checkHeaders(final Page p) throws BadEncodingURLException, NoContentURLException, RedirectedURLException, NotOKURLException, InvalidURLException {
-	final Page.Header h = p.header();
-	final String u = p.toString();
-	checkHeaders(h, u);
 	}
 	
 	/* Use String.append() instead of String + String for all getSouce() methods

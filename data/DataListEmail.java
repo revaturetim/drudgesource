@@ -22,7 +22,11 @@ public class DataListEmail extends DataListExclude {
 		}
 	email_writer.close();
 	}
-	
+
+	public void truncate() {
+	D.flush(source());//erases file contents
+	}
+
 	public boolean checkError() {
 	D.writeBeginningResponse(source());
 	boolean duplicate = false;

@@ -16,7 +16,7 @@ private Random random = new Random();
 	}
 
 	protected void links(Page p) {
-	p.getSource();
+	p.source().fill();
 	DataList pages = (DataList)p.getLinks();
 	Collections.shuffle(pages, random);
 	DataEnum.links.data.put(pages);

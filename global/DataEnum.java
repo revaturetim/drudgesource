@@ -31,7 +31,7 @@ public Data data;
 			thing.data.begin();
 			}
 			catch (Exception E) {
-			D.error(E.getClass(), E);
+			D.error(E.getClass(), E, "Where", "DataEnum.beginAll()");
 			}
 		}
 	}
@@ -42,7 +42,7 @@ public Data data;
 			thing.data.end();
 			}
 			catch (Exception E) {
-			D.error(E.getClass(), E);
+			D.error(E.getClass(), E, "where", "DataEnum.endAll()");
 			}
 		}
 	}

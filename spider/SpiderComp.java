@@ -10,14 +10,14 @@ import drudge.global.*;
 
 public class SpiderComp extends Spider {
 private Page top;
-private Comparator<Page> compare = new TopComparator<Page>();
+private Comparator compare = new TopComparator();
 
-	public SpiderComp(Comparator<Page> co) {
+	public SpiderComp(Comparator co) {
 	compare = co;
 	}
 
 	protected void links(Page p) {
-	p.getSource();
+	p.source().fill();
 	DataList pages = (DataList)p.getLinks();
 	Collections.sort(pages, compare);//this sorts it the way it should be sorted for this spider	
 	DataEnum.links.data.put(pages);

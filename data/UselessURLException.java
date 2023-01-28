@@ -33,16 +33,12 @@ private final static long serialVersionUID = 0;
 	return object2;
 	}
 
-	public void printRow(String...m) {
-	String[] n = {m[0], m[1], m[2], m[3], m[4], getFirstObject().toString()};
+	public void printRow() {
 		
 		if (Print.UselessClass == UselessURLException.class || Print.UselessClass == this.getClass()) {
+		String[] n = {"", "", "", "", this.message, this.getFirstObject().toString()};
 		Print.row(n);
 		}
-	}
-	
-	public void printRow() {
-	printRow("", "", "", "", this.message);
 	}
 
 }

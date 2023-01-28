@@ -37,7 +37,7 @@ public class SpiderFactory {
 			break;
 
 			case 6:
-			spider = new SpiderComp(new TopComparator<Page>()); 
+			spider = new SpiderComp(new TopComparator()); 
 			break;
 
 			case 7:
@@ -45,7 +45,7 @@ public class SpiderFactory {
 			break;
 
 			case 8:
-			spider = new SpiderComp(new NaturalComparator<Page>());
+			spider = new SpiderComp(new NaturalComparator());
 			break;
 
 			default:

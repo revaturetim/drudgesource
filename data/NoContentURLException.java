@@ -12,4 +12,9 @@ private final static long serialVersionUID = 0;
 	message = UselessMessages.NOCONTENT.mes;
 	}
 
+	public NoContentURLException(Object p, Object q) {
+	super(p, q);
+	message = UselessMessages.NOCONTENT.mes;
+	}
+
 }

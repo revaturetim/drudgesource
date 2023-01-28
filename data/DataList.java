@@ -111,10 +111,9 @@ private Object[] objs = new Object[10];
 	}
 	
 	public void truncate() {
-	File linkfile = new File(source());
 		try {
-		linkfile.delete();
-		linkfile.createNewFile();
+		FileWriter writer = new FileWriter(source());
+		writer.close();
 		}
 		catch (IOException I) {
 		D.error(I);

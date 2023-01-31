@@ -40,14 +40,15 @@ protected boolean skip = false;
 	}
 
 	public int crawl(final int max) {
-		for (Page p = (Page)DataEnum.links.data.get(Print.cycle - 1); p != null && Print.cycle < max; p = (Page)DataEnum.links.data.get(Print.cycle - 1)) {
+	final int cminus = DataEnum.links.data.firstIndexNumber() - 1;//it is + cminus so that the Data.offset works correctly!
+		for (Page p = (Page)DataEnum.links.data.get(Print.cycle + cminus); p != null && Print.cycle < max; p = (Page)DataEnum.links.data.get(Print.cycle + cminus)) {
 			boolean notok = this.crawl(p);
 			/* This has the same effect as skipping since when -nok option is on it 
 			 * sees all urls as acceptables since the default return value in crawls
 			 * is false.
 			 */
 			if (notok == true) {
-			DataEnum.links.data.remove(Print.cycle - 1);
+			DataEnum.links.data.remove(Print.cycle + cminus);
 			}
 			else {
 			Print.row(p);

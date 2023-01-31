@@ -16,6 +16,8 @@ private Comparator compare = new TopComparator();
 	compare = co;
 	}
 
+	//I put this annotation in because I think Colections.sort(List) and Collections.sort(List, Comparator) are being confused by the compiler which results in a compiler warning
+	@SuppressWarnings(value="unchecked")
 	protected void links(Page p) {
 	p.source().fill();
 	DataList pages = (DataList)p.getLinks();

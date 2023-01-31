@@ -25,7 +25,7 @@ private Object[] objs = new Object[10];
 	
 	public DataList(String s, int i) {
 	this(s);
-	this.objs = new Object[i];
+	this.firstindex = i;
 	}
 
 	public void put(Object page) throws DuplicateURLException, IllegalArgumentException {
@@ -37,7 +37,7 @@ private Object[] objs = new Object[10];
 			if (this.size >= objs.length - 1) {
 			this.objs = Arrays.copyOf(objs, objs.length * 2);
 			}
-			if (this.objs[size] == null) {	
+			if (this.objs[this.size] == null) {	
 			this.objs[this.size] = page;
 			this.size++;//increases size by 1
 			}

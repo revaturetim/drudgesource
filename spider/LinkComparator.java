@@ -6,13 +6,13 @@ import drudge.page.Page;
 import java.io.*;
 import drudge.*;
 
-public class LinkComparator<T extends Page> implements Comparator<T> {
+public class LinkComparator<T> implements Comparator<T> {
 
 	public LinkComparator() {
 	}
 
 
-	public int compare(Page p1, Page p2) {
+	public int compare(T p1, T p2) {
 	String link1 = p1.toString();
 	String link2 = p2.toString();
 	int num1 = link1.split("/").length;//count(link1, "/");

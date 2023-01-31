@@ -127,23 +127,23 @@ private int linkcount = 0;
 	}
 
 	public boolean isIncluded() throws ExcludedURLException {
-	P.checkIncluded(this.url);
+	P.checkIncluded(this.url, DataEnum.include.data);	
 	return true;
 	}
 	
 	public boolean isExcluded() throws ExcludedURLException {
-	P.checkExcluded(this.url);
+	P.checkExcluded(this.url, DataEnum.exclude.data, true);
 	return false;
 	}
 
 	public boolean isRobotExcluded() throws RobotsExcludedURLException {
 		try {
 		final URLConnection c = roboturl.openConnection(Page.proxyserver);
-			for (Data disallowed = DataEnum.norobots.get(roboturl); disallowed == null; disallowed = DataEnum.norobots.get(roboturl)) {
+			for (Data disallowed = DataEnum.norobots.get(this.roboturl); disallowed == null; disallowed = DataEnum.norobots.get(this.roboturl)) {
 			disallowed = P.readRobotFile(c);
 			DataEnum.norobots.put(roboturl, disallowed);
 			}
-			Data urls = DataEnum.norobots.get(roboturl);
+			Data urls = DataEnum.norobots.get(this.roboturl);
 				if (urls.contains(this.url)) { 
 				throw new RobotsExcludedURLException(this.url);
 				}

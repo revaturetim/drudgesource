@@ -21,10 +21,10 @@ static public boolean donotgetexcluded = false;
 		P.checkHtmlFile(newurl);
 			/*this should be in this order so that you can use include and exclude at the same time*/
 			if (PageFactory.donotgetexcluded) {
-			P.checkExcluded(newurl);
+			P.checkExcluded(newurl, DataEnum.exclude.data, true);
 			}
 			if (PageFactory.getincluded) {
-			P.checkIncluded(newurl);
+			P.checkIncluded(newurl, DataEnum.include.data);
 			}
 		page = PageFactory.create(newurl);
 		}

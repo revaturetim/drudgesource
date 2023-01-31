@@ -20,6 +20,7 @@ public interface Data extends Iterable, RandomAccess {
 	public String source();
 	public void setLevel(int l);
 	public int level();
+	public int firstIndexNumber();
 	public boolean checkError();
 	public void begin() throws Exception;
 	public void end() throws Exception;

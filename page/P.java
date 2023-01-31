@@ -54,27 +54,23 @@ final static String plain = "text/plain";
 		
 	}
 
-	static void checkIncluded(final URL url) throws ExcludedURLException {
+	//This is the default exlcude method.  if exclude boolen is set to true then it excludes otherwise it checksincluded
+	static void checkExcluded(final URL url, final Data data, boolean exclude) throws ExcludedURLException {
+		if (data.contains(url.toString()) == exclude) {
+		throw new ExcludedURLException(url);
+		}
+	}
+	
+	static void checkIncluded(final URL url, final Data data) throws ExcludedURLException {
 	final String urlstring = url.toString();
 	boolean in = false;
-		for (Object includedurl : DataEnum.include.data) {
-		in = urlstring.contains((String)includedurl); 
+		for (Object includedurlstring : DataEnum.include.data) {
+		in = urlstring.contains((String)includedurlstring); 
 			if (in) {
 			break;
 			}
 		}
 		if (in == false) {
-		throw new ExcludedURLException(url);
-		}
-
-	}
-
-	static void checkExcluded(final URL url) throws ExcludedURLException {
-		checkIE(url, DataEnum.exclude.data, true);
-	}
-	
-	static private void checkIE(final URL url, final Data data, boolean ix) throws ExcludedURLException {//if ix variable is true then it checkexcluded otherwise it checksincluded
-		if (data.contains(url) == ix) {
 		throw new ExcludedURLException(url);
 		}
 	}

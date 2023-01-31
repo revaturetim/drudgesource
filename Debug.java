@@ -117,11 +117,10 @@ INNER:					while (true) {
 				else if (action.startsWith("call ")) {
 				String[] params = action.split(" ");
 					try {
-					
-					Class[] cs = new Class[params.length - 2];
+					Class<?>[] cs = new Class<?>[params.length - 2];
 						for (int i = 2; i < params.length; i++) {
 							try {
-							Class c = Class.forName(params[i]);
+							Class<?> c = Class.forName(params[i]);
 							cs[i - 2] = c;
 							}
 							catch (ClassNotFoundException C) {
@@ -131,7 +130,6 @@ INNER:					while (true) {
 						}
 					Method m = klass.getMethod(params[1], cs);
 					m.invoke(klass, new Object[0]);
-					
 					}
 					catch (NoSuchMethodException N) {
 					

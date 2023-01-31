@@ -6,7 +6,7 @@ import java.net.*;
 import java.util.*;
 
 public enum DataEnum {
-links(new DataList(FileNames.links)), 
+links(new DataList(FileNames.links, 0)), 
 emails(new DataListEmail(FileNames.emails)),
 exclude(new DataListExclude(FileNames.exclude)),
 include(new DataListExclude(FileNames.include)),

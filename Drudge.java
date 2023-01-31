@@ -530,7 +530,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
 					try {
-					DataEnum.include.data.begin();
+					DataEnum.exclude.data.begin();
 						try {
 						p.isExcluded();
 						System.out.println(p.toString() + " is NOT in the " + FileNames.exclude + " file.");	

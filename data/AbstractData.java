@@ -7,7 +7,8 @@ import java.util.*;
 abstract class AbstractData extends AbstractList implements Data, Serializable {
 protected String source;
 protected int level = 1;
-	
+protected int firstindex = 0;
+
 	public void setSource(String s) {
 	source = s;
 	}
@@ -22,6 +23,10 @@ protected int level = 1;
 	
 	public int level() {
 	return level;
+	}
+	
+	public int firstIndexNumber() {
+	return firstindex;
 	}
 
 }

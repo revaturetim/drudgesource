@@ -71,9 +71,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {	
 				DataEnum.emails.data.begin();
 				}
-				catch (IOException I) {
-				Print.error(I);
-				}
 				catch (Exception E) {
 				Print.error(E);
 				}
@@ -82,9 +79,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			PageFactory.donotgetexcluded = true;
 				try {
 				DataEnum.exclude.data.begin();
-				}
-				catch (IOException I) {
-				Print.error(I);
 				}
 				catch (Exception E) {
 				Print.error(E);
@@ -96,9 +90,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {
 				DataEnum.exclude.data.setSource(file);
 				DataEnum.exclude.data.begin();
-				}
-				catch (IOException I) {
-				Print.error(I);
 				}
 				catch (Exception E) {
 				Print.error(E);
@@ -145,9 +136,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				try {
 				DataEnum.include.data.begin();
 				}	
-				catch (IOException I) {
-				Print.error(I);
-				}
 				catch (Exception E) {
 				Print.error(E);
 				}
@@ -159,9 +147,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				DataEnum.include.data.setSource(file);
 				DataEnum.include.data.begin();
 				}	
-				catch (IOException I) {
-				Print.error(I);
-				}
 				catch (Exception E) {
 				Print.error(E);
 				}
@@ -171,12 +156,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(Help.m.parameter)) {
-			Print.UselessClass = UselessMessages.getClass(1);
+			Print.uselessmessage = UselessMessages.ALL;
 			}
 			else if (a.startsWith(Help.m.parameter + Drudge.sep)) {
 				try {
 				final int c = getNumber(a);
-				Print.UselessClass = UselessMessages.getClass(c);
+				Print.uselessmessage = UselessMessages.get(c);
 				}
 				catch (NumberFormatException N) {
 				Print.helpMenu(a);
@@ -444,7 +429,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (p != null) {
 					try {
 					final long pt = System.currentTimeMillis();
-					final URL url = p.getURL();
+					final URL url = p.url();
 					URLConnection connection = url.openConnection();
 					connection.connect();
 					//successful connection
@@ -465,7 +450,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			else if (a.equals(DevHelp.R.parameter) && arg.length == 2 && i == 0) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
-				URL roboturl = p.getRobotURL();
+				URL roboturl = p.robotUrl();
 				Page robotpage = PageFactory.create(roboturl);
 				System.out.println(robotpage.source().fill());
 				}
@@ -557,9 +542,6 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					try {
 					Print.cycle = CountFile.get();
 					DataEnum.beginAll();
-					}
-					catch (IOException I) {
-					Print.error(I);
 					}
 					catch (Exception E) {
 					Print.error(E);

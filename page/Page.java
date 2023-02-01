@@ -62,7 +62,7 @@ private int linkcount = 0;
 			links.add(p);
 			}
 		};
-		if (content.wasFilled() && content.size() > 0) {
+		if (content.wasFilled()) {
 		P.Links.find(content, action);
 		}
 	this.linkcount = links.size();
@@ -102,11 +102,11 @@ private int linkcount = 0;
 	return true;
 	}
 
-	public URL getURL() {
+	public URL url() {
 	return url;
 	}
 
-	public URL getRobotURL() {
+	public URL robotUrl() {
 	return roboturl;
 	}
 
@@ -273,9 +273,8 @@ private int linkcount = 0;
 	
 	final public class Source implements CharSequence, Serializable { 
 	/*This is really an attempt to make my own string object to increase efficiency of string, stringbuffer classes */
-	private int size = 0;
+	private int size = 0;//a size of 0 indicates the source was not filled at all.
 	private char[] allc = null;	
-	private boolean filled = false;
 
 		private Source(int s) {
 		allc = new char[s];	
@@ -286,9 +285,8 @@ private int linkcount = 0;
 		}
 
 		void append(char c, int i) {
+		size++; 
 		allc[i] = c;
-		size++;
-		filled = true;
 		}
 		
 		public boolean isComplete() {
@@ -316,7 +314,7 @@ private int linkcount = 0;
 		}
 	
 		public boolean wasFilled() {
-		return filled;
+		return size > 0;
 		}
 		
 		public char charAt(int i) {

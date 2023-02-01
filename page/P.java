@@ -106,8 +106,8 @@ final static String plain = "text/plain";
 				final Page p = PageFactory.create(rcon.getURL(), dir);
 					try {
 					DataEnum.links.data.add(p);//this will add robotexcluded link to data and throw duplicateurlexception
-						if (user != null && !action.equalsIgnoreCase(sitemap) && (user.equals(star) || user.equalsIgnoreCase(ThisProgram.useragent))) {
-						norob.add(p.getURL());//this throws duplicatedurlexception
+						if (user != null && action.equalsIgnoreCase(disallow) && (user.equals(star) || user.equalsIgnoreCase(ThisProgram.useragent))) {
+						norob.add(p.url());//this throws duplicatedurlexception
 						}
 					}
 					catch (IllegalArgumentException I) {
@@ -494,8 +494,8 @@ final static String plain = "text/plain";
 	}
 	
 	public static boolean sameHost(Page a, Page b) {
-	final String hosta = a.getURL().getHost();
-	final String hostb = b.getURL().getHost();
+	final String hosta = a.url().getHost();
+	final String hostb = b.url().getHost();
 	return hosta.equals(hostb);
 	}
 	

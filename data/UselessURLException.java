@@ -34,11 +34,7 @@ private final static long serialVersionUID = 0;
 	}
 
 	public void printRow() {
-		
-		if (Print.UselessClass == UselessURLException.class || Print.UselessClass == this.getClass()) {
-		String[] n = {"", "", "", "", this.message, this.getFirstObject().toString()};
-		Print.row(n);
-		}
+	Print.row(this, this.getFirstObject());	
 	}
 
 }

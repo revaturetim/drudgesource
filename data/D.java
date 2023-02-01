@@ -2,7 +2,7 @@ package drudge.data;
 
 import drudge.global.*;
 import drudge.*;
-import drudge.page.Page;
+import drudge.page.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
@@ -119,6 +119,25 @@ final public class D implements FileNames {
 			}
 		}
 	writer.append("\n");
+	}
+
+	static void readEntries(Data data) throws IOException {
+	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(data.source())));//this throws IOException and breaks the method if it can't read from soruce
+		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+		String[] alink = line.split(CountFile.sep);
+		Page page = PageFactory.createFromString(alink[0]);
+		data.add(page);
+		}
+	reader.close();
+	}
+
+	static void writeEntries(Data data) throws IOException {
+	final BufferedWriter writer = new BufferedWriter(new FileWriter(data.source()));
+		for (Object t : data) {
+		Page page = (Page)t;
+		D.writeEntry(page, writer, data.level());
+		}
+	writer.close();
 	}
 
 	static void writeResponse(String...responses ) {

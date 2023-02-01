@@ -8,7 +8,7 @@ import java.net.*;
 
 final public class Print {
 static PrintStream GSTREAM = System.out; 
-static public Class<?> UselessClass = null;  
+static public UselessMessages uselessmessage = UselessMessages.NONE;
 static public int cycle = 1;	
 final private static int LEFT = 0;
 final private static int CENTER = 1;
@@ -59,9 +59,9 @@ final private static String[] H = {
 	}
 	
 	public static void row(Exception exc, Object obj) {
-	
-		if (Print.UselessClass == UselessURLException.class || Print.UselessClass == exc.getClass()) {
-		String mexc = exc.getClass().getSimpleName().toUpperCase();
+	String mexc =  (exc instanceof UselessURLException) ? exc.toString().toUpperCase() : exc.getClass().getSimpleName().toUpperCase();
+
+		if (Print.uselessmessage == UselessMessages.ALL || Print.uselessmessage.cls == exc.getClass()) {
 		String url = obj.toString();
 		Print.row(GSTREAM, "", "", "", "", mexc, url);
 		}
@@ -223,7 +223,7 @@ final private static String[] H = {
 		}
 		else if (key.equals(Help.m.parameter)) {
 			for (UselessMessages U : UselessMessages.values()) {
-			System.out.printf("%-4s %s\n", U.num, U.hlp);
+			System.out.printf("%-4s %s\n", U.ordinal(), U.hlp);
 			}
 		System.out.printf("See if you can find them all!\n");
 		}

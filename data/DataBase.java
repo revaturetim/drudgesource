@@ -187,7 +187,7 @@ insert into drudge values (link, title, keywords);
 				URL url = new URL(pagelink);//this throws malformedurlexception
 				Page p = new Page(url);//this throws IOException
 				p.isValid();//this throws InvalidURLException, URISyntaxException
-				URL u = p.getURL();
+				URL u = p.url();
 					if (u.getAuthority() == null) {
 					throw new MalformedURLException("No Host");
 					}

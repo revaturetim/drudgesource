@@ -4,14 +4,14 @@ import java.util.*;
 import java.net.*;
 import drudge.page.Page;
 
-public class TopComparator implements Comparator {
+public class TopComparator<T extends Page> implements Comparator<T> {
 
 
 
-	public int compare(Object p1, Object p2) {
-	URL purl = ((Page)p1).getURL();
+	public int compare(T p1, T p2) {
+	URL purl = p1.url();
 	String domain1 = purl.getAuthority();
-	URL purl2 = ((Page)p2).getURL();
+	URL purl2 = p2.url();
 	String domain2 = purl2.getAuthority();
 	int rvalue = 0;
 		if (domain1.equals(domain2)) {

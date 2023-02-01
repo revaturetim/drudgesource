@@ -1,8 +1,8 @@
 user-agent: *
 #Disallow: sample.html
-disallow: /noacccess.html
-Disallow:/null.html 
-Allow:all
+disallow: /norobots1.html
+Disallow:/norobots2.html 
+Allow: *
 user-agent: another-damn-robot
 disallow: *
 #these are comments and should be ignored

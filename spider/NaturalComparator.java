@@ -1,8 +1,9 @@
 package drudge.spider;
 
 import java.util.*;
+import drudge.page.Page;
 
-public class NaturalComparator<T> implements Comparator<T> {
+public class NaturalComparator<T extends Page> implements Comparator<T> {
 
 			
 	public int compare(T p1, T p2) {

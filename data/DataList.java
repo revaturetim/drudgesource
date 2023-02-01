@@ -91,35 +91,29 @@ private Object[] objs = new Object[10];
 	}
 	
 	/*The default assumes that it is working with a page object*/
-	public void begin() throws IOException, Exception {
-	LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));//this throws IOException and breaks the method if it can't read from soruce
-		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-		String[] alink = line.split(CountFile.sep);
-		Page page = PageFactory.createFromString(alink[0]);
-		this.add(page);
-		}
+	public void begin() throws Exception {
+	D.readEntries(this);
 	}
 
 	/*The default assumes you are working with a page object.  Subclasses should override*/
-	public void end() throws IOException, Exception {
-	final BufferedWriter link_writer = new BufferedWriter(new FileWriter(source()));
-		for (Object t : this) {
-		Page page = (Page)t;
-		D.writeEntry(page, link_writer, level());
-		}
-	link_writer.close();
+	public void end() throws Exception {
+	D.writeEntries(this);	
 	}
 	
 	public void truncate() {
-		try {
-		FileWriter writer = new FileWriter(source());
-		writer.close();
-		}
-		catch (IOException I) {
-		D.error(I);
-		}
+	D.flush(this.source());
 	}
+
+	public void checkError2() {
 	
+
+
+
+
+
+	}
+
+
 	public boolean checkError() {
 	D.writeBeginningResponse(source());
 	boolean duplicate = false;

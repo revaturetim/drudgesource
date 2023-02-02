@@ -7,7 +7,7 @@ import drudge.page.Page;
 public class UselessURLException extends Exception {
 protected Object object1;//this way it will cover different types of page units like page, string, or url
 protected Object object2;
-protected String message = UselessMessages.USELESS.mes;
+protected String message = UselessMessages.USELESS.name();
 
 //this has to be here in order to prevent dumb serialversionid warnings from showing up 
 private final static long serialVersionUID = 0;

@@ -9,8 +9,12 @@ private final static long serialVersionUID = 0;
 
 	NoLinksURLException(Object p) {
 	super(p);
-	message = UselessMessages.NOLINKS.mes;
+	message = UselessMessages.NOLINKS.name();
 	}
 
+	NoLinksURLException(Object p, Object q) {
+	super(p, q);
+	message = UselessMessages.NOLINKS.name();
+	}
 
 }

@@ -63,7 +63,7 @@ final private static String[] H = {
 
 		if (Print.uselessmessage == UselessMessages.ALL || Print.uselessmessage.cls == exc.getClass()) {
 		String url = obj.toString();
-		Print.row(GSTREAM, "", "", "", "", mexc, url);
+		Print.row("", "", "", "", mexc, url);
 		}
 	}
 	

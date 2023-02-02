@@ -11,7 +11,11 @@ private final static long serialVersionUID = 0;
 
 	public ExcludedURLException(Object p) {
 	super(p);
-	message = UselessMessages.EXCLUDED.mes;
+	message = UselessMessages.EXCLUDED.name();
 	}
 	
+	public ExcludedURLException(Object p, Object q) {
+	super(p, q);
+	message = UselessMessages.EXCLUDED.name();
+	}
 }

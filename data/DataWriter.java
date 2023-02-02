@@ -104,25 +104,19 @@ abstract class DataWriter extends AbstractData {
 	}
 	
 	public void truncate() {
-		try {
-		FileWriter writer = new FileWriter(source());
-		writer.flush();//this should erase everything in the file
-		}
-		catch (IOException I) {
-		D.error(I);
-		}
+	D.flush(source());
 	}
 	
 	public boolean checkError() {
 	return false;
 	}
 	
-	public void begin() {
-
+	public void begin() throws Exception {
+	D.readEntries(this);
 	}
 
-	public void end() {
-
+	public void end() throws Exception {
+	D.writeEntries(this);
 	}
 
 	

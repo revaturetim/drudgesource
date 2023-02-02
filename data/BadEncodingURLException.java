@@ -9,7 +9,11 @@ private final static long serialVersionUID = 0;
 
 	BadEncodingURLException(Page p) {
 	super(p);
-	message = UselessMessages.BADENCODE.mes;
+	message = UselessMessages.BADENCODE.name();
 	}
 
+	BadEncodingURLException(Page p, Page q) {
+	super(p, q);
+	message = UselessMessages.BADENCODE.name();
+	}
 }

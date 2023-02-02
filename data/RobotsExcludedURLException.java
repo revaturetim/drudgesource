@@ -9,7 +9,7 @@ private final static long serialVersionUID = 0;
 
 	public RobotsExcludedURLException(Object p) {
 	super(p);
-	message = UselessMessages.NOROBOTS.mes;
+	message = UselessMessages.NOROBOTS.name();
 	}
 
 

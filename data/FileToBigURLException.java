@@ -9,7 +9,11 @@ private final static long serialVersionUID = 0;
 
 	FileToBigURLException(Object p) {
 	super(p);
-	message = UselessMessages.FILETOBIG.mes;
+	message = UselessMessages.FILETOBIG.name();
 	}
 
+	FileToBigURLException(Object p, Object q) {
+	super(p, q);
+	message = UselessMessages.FILETOBIG.name();
+	}
 }

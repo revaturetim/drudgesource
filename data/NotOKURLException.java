@@ -9,12 +9,12 @@ private final static long serialVersionUID = 0;
 
 	public NotOKURLException(Object p) {
 	super(p);
-	message = UselessMessages.NOTOK.mes;
+	message = UselessMessages.NOTOK.name();
 	}
 
 	public NotOKURLException(Object p, Object r) {
 	super(p, r);
-	message = UselessMessages.NOTOK.mes;
+	message = UselessMessages.NOTOK.name();
 	}
 	
 	public void printRow() {

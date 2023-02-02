@@ -9,7 +9,7 @@ private final static long serialVersionUID = 0;
 
 	public DuplicateURLException(Object p) {
 	super(p);
-	message = UselessMessages.DUPLICATE.mes;//this has to be assigned
+	message = UselessMessages.DUPLICATE.name();//this has to be assigned
 	}
 
 }

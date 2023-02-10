@@ -17,10 +17,8 @@ public class DataListImage extends DataListEmail {
 	super(s);
 	}
 	
-	public boolean checkError() {
+	public void checkError() {
 	D.writeBeginningResponse(source());
-	boolean duplicate = false;
-	boolean linkerror = false;
 		try { 
 		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 			for (String image1 = reader.readLine(); image1 != null; image1 = reader.readLine()) {
@@ -31,17 +29,14 @@ public class DataListImage extends DataListEmail {
 					/*This will check for duplicates in the data*/
 					for (String image2 = reader2.readLine(); reader2.getLineNumber() < reader.getLineNumber(); image2 = reader2.readLine()) {
 						if (image1.equals(image2)) {
-						duplicate = true;
 						D.writeDuplicateResponse(String.valueOf(reader.getLineNumber()), image1, image2);	
 						}
 					}
 				}
 				catch (MalformedURLException M) {
-				linkerror = true;
 				D.writeResponse(String.valueOf(reader.getLineNumber()), image1, M.toString());
 				}
 				catch (URISyntaxException U) {
-				linkerror = true;
 				D.writeResponse(String.valueOf(reader.getLineNumber()), image1, U.toString());
 				}
 			}
@@ -53,7 +48,6 @@ public class DataListImage extends DataListEmail {
 		catch (IOException I) {
 		System.out.println(I);
 		}
-	return (duplicate || linkerror);
 	}
 
 }

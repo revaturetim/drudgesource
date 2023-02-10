@@ -21,13 +21,14 @@ public interface Data extends Iterable, RandomAccess {
 	public void setLevel(int l);
 	public int level();
 	public int firstIndexNumber();
-	public boolean checkError();
+	public void checkError();
 	public void begin() throws Exception;
 	public void end() throws Exception;
 	public void truncate();
 	public int size();
 	public boolean contains(Object link);
 	public Iterator iterator();
+	public boolean add(Object p);//this is different than put(Object) because it doesn't check for duplicates and other errors.  This should only be used for data.begin methods!
 
 	default public void put(Data links) {
 		for (Object link : links) {
@@ -38,25 +39,9 @@ public interface Data extends Iterable, RandomAccess {
 			Du.printRow();
 			}
 			catch (IllegalArgumentException I) {
-			D.error(I);
+			Print.row(I, link);
 			}
 		}
-	}
-
-
-
-	default public boolean add(Object page) {
-	boolean added = false;
-		if (page != null) {
-			try {
-			this.put(page);
-			added = true;
-			}
-			catch (DuplicateURLException Du) {
-			Du.printRow();
-			}
-		}
-	return false;
 	}
 
 }

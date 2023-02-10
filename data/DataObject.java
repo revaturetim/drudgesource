@@ -113,8 +113,7 @@ private File dir;
 	link_writer.close();
 	}
 	
-	public boolean checkError() {
-	return true;
+	public void checkError() {
 	}
 	
 	public void truncate() {

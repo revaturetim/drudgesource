@@ -107,8 +107,8 @@ abstract class DataWriter extends AbstractData {
 	D.flush(source());
 	}
 	
-	public boolean checkError() {
-	return false;
+	public void checkError() {
+	
 	}
 	
 	public void begin() throws Exception {

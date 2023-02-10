@@ -11,7 +11,8 @@ import java.sql.*;
 //this is basically a utility class for this package and other packages
 
 final public class D implements FileNames {
-
+final static private String encoding = "UTF-8";
+final static private String NVAL = "NULL VALUE";
 
 	public static  void error(Object...errors) {
 			if (errors.length % 2 != 0) {
@@ -28,15 +29,12 @@ final public class D implements FileNames {
 		err.write("\n");
 			
 			for (int i = 0; i < errors.length; i += 2) {
-			String message = errors[i].toString();
-			Object the_error = errors[i + 1];
-				if (the_error == null) {
-				the_error = "NULL VALUE";
-				}
+			String the_error = (errors[i + 1] == null) ? NVAL : errors[i + 1].toString();
+			String the_error_message = (errors[i] == null) ? NVAL : errors[i].toString();
 			err.append("[");
-			err.append(message);
+			err.append(the_error_message);
 			err.append("]-[");
-			err.append(the_error.toString());
+			err.append(the_error);
 			err.append("]\n");
 			}
 
@@ -78,6 +76,43 @@ final public class D implements FileNames {
 		}
 	}
 	
+	static public String decode(String string) {
+		try {
+		string = URLDecoder.decode(string, D.encoding);
+		}
+		catch (UnsupportedEncodingException U) {
+		D.error(U.getClass(), U, "Location", "D.decode(string)");
+		}
+		catch (IllegalArgumentException I) {
+		D.error(I.getClass(), I, "Location", "D.decode(string)");
+		}
+	return string;
+	}	
+
+	static public String encode(String string) {
+		try {
+		string = URLEncoder.encode(string, D.encoding);
+		}
+		catch (UnsupportedEncodingException U) {
+		D.error(U.getClass(), U, "Location", "D.encode(string)");
+		}
+	return string;
+	}
+	
+	static public String toASCII(String string) {
+		try {
+		string = IDN.toASCII(string);
+		}
+		catch (IllegalArgumentException I) {
+		D.error("Exception", I, "Location", "D.toASCII(String)");	
+		}
+	return string;
+	}
+
+	static public String toUnicode(String string){
+	return IDN.toUnicode(string);
+	}
+
 	public static String getDate() {
 	GregorianCalendar G = new GregorianCalendar();
 	Locale L = Locale.getDefault();

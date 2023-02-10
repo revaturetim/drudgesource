@@ -23,7 +23,6 @@ private Comparator compare = new TopComparator();
 	DataList pages = (DataList)p.getLinks();
 	Collections.sort(pages, compare);//this sorts it the way it should be sorted for this spider	
 	DataEnum.links.data.put(pages);
-	Debug.time("End Links");
 	}
 
 }

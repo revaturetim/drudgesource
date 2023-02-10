@@ -20,10 +20,8 @@ public class DataListWord extends DataListEmail {
 	super(s);
 	}
 	
-	public boolean checkError() {
+	public void checkError() {
 	D.writeBeginningResponse(source());
-	boolean duplicate = false;
-	boolean linkerror = false;
 		try { 
 		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
@@ -31,7 +29,6 @@ public class DataListWord extends DataListEmail {
 			final LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));
 				for (String line2 = reader2.readLine(); reader2.getLineNumber() < reader.getLineNumber(); line2 = reader2.readLine()) {
 					if (line.equals(line2)) {
-					duplicate = true;
 					D.writeDuplicateResponse(line, String.valueOf(reader.getLineNumber()), String.valueOf(reader2.getLineNumber()));
 					}
 				}				
@@ -44,6 +41,5 @@ public class DataListWord extends DataListEmail {
 		catch (IOException I) {
 		System.out.println(I);
 		}
-	return (duplicate || linkerror);
 	}
 }

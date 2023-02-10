@@ -27,10 +27,8 @@ public class DataListEmail extends DataListExclude {
 	D.flush(source());//erases file contents
 	}
 
-	public boolean checkError() {
+	public void checkError() {
 	D.writeBeginningResponse(source());
-	boolean duplicate = false;
-	boolean linkerror = false;
 		try { 
 		final LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 			for (String email1 = reader.readLine(); email1 != null; email1 = reader.readLine()) {
@@ -41,7 +39,6 @@ public class DataListEmail extends DataListExclude {
 					final LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));
 						for (String email2 = reader2.readLine(); reader2.getLineNumber() < reader.getLineNumber(); email2= reader2.readLine())  {
 							if (email1.equals(email2)) {
-							duplicate = true;
 							D.writeDuplicateResponse(String.valueOf(reader.getLineNumber()), email1, email2);	
 							}
 						}
@@ -51,7 +48,6 @@ public class DataListEmail extends DataListExclude {
 					}
 				}
 				catch (URISyntaxException U) {
-				linkerror = true;
 				D.writeResponse(String.valueOf(reader.getLineNumber()), email1, U.toString());
 				}
 			}
@@ -63,7 +59,6 @@ public class DataListEmail extends DataListExclude {
 		catch (IOException I) {
 		System.out.println(I);
 		}
-	return (duplicate || linkerror);
 	}
 
 

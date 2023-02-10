@@ -20,7 +20,6 @@ private Random random = new Random();
 	DataList pages = (DataList)p.getLinks();
 	Collections.shuffle(pages, random);
 	DataEnum.links.data.put(pages);
-	Debug.time("End Links");
 	}
 
 }

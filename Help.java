@@ -16,10 +16,11 @@ c("-c", "This will tell you about the different crawl methods available.",
 		"Option c is used for the different crawl methods that are available to this program.\n"
 		+ "Method 1 is the basic web spider of this program.  It spiders links in the order that it finds them.\n"
 		+ "Method 2 is meant to be a website overload tool and not to be used by nice people.\n"
+		/*+ "Method 3 is a standard spider that stops between each crawl.\n"*/
 		+ "Method 4 will place long links at the top to be crawled first to get subdirectories first.\n"
 		+ "Method 5 randomizes the order of the links so that it doesn't spiders them in the order that they are found.\n"
 		+ "Method 6 searches links that are not a not from the same domain first.\n"
-		+ "Method 7 crawls redirected links as they are found.\n"
+		//+ "Method 7 crawls redirected links as they are found.\n"
 		+ "Method 8 sorts data in purley alpha-numeric order and is faster than other methods\n"),
 d("-d", "This wil let you store different amounts of data from the webpages.", 
 	"This is used to set how much data you wish to collect from individual webpages\n"
@@ -75,6 +76,7 @@ output("-output", "This is to write all output to a file you specify",
 p("-p", "This will let you set a proxy server to use while crawling.", 
 	"This option is used in case you want to use a proxy server\n"
 	+ "	Example: -p=www.proxyserver.com\n"),
+red("-red", "This will set " + ThisProgram.name + " to immediately follow 301 redirects upon crawl vs crawling them in their assigned order in data."),
 rob("-rob", "This will set " + ThisProgram.name + " to respect a robots.txt policy if the website has one.", 
 	"This will read the robots.txt file of a webserver and will not crawl any file listed in it\n"),
 t("-t", "This will use the test option from a sample file called " + FileNames.samphtml + ".", 

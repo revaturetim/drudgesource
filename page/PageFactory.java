@@ -17,7 +17,7 @@ static public boolean donotgetexcluded = false;
 	static public Page create(final URL url, final String link) {
 	Page page = null;
 		try {
-		URL newurl = new URL(url, P.decode(link));
+		URL newurl = new URL(url, D.decode(link));
 		P.checkHtmlFile(newurl);
 			/*this should be in this order so that you can use include and exclude at the same time*/
 			if (PageFactory.donotgetexcluded) {

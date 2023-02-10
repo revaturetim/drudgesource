@@ -23,9 +23,12 @@ private static final String sep = "=";
 	long delay = 0;//default value
 	boolean skip = false;
 	boolean norobotsallowed = false;//default value
+	boolean stop = false;
+	boolean follow = false;
 	Spider spider = null;
 	D.flush(FileNames.error);//ensures error file is clean on start
-	
+	HttpURLConnection.setFollowRedirects(false);//this is to ensure program wide status of the value for all httpurlconnections
+		
 		//this is the main program loop
 LOOP:		for (int i = 0; i < arg.length; i++) {
 		final String a = arg[i];
@@ -228,6 +231,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 		
 			}
+			else if (a.equals(Help.red.parameter)) {
+			follow = true;
+			}
 			else if (a.equals(Help.rob.parameter)) {
 			norobotsallowed = true;
 			}
@@ -259,24 +265,15 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals(DevHelp.C.parameter) && arg.length == 2 && i == 0) {
+			else if (a.equals(DevHelp.C.parameter) && i == 0) {
 			Debug.cycletimeon = true;
 			continue;
 			}
 			else if (a.equals(DevHelp.D.parameter) && arg.length == 2 && i == 0) {
-				try {
-				System.out.println(arg[i + 1] + " decoded : " + URLDecoder.decode(arg[i + 1], "UTF-8"));
-				System.out.println(arg[i + 1] + " encoded : " + URLEncoder.encode(arg[i + 1], "UTF-8"));		
-				System.out.println(arg[i + 1] + " ASCII   : " + IDN.toASCII(arg[i + 1]));
-				System.out.println(arg[i + 1] + " UNICODE : " + IDN.toUnicode(arg[i + 1]));
-				}
-				catch (IllegalArgumentException I) {
-				Print.error(I);
-
-				}
-				catch (UnsupportedEncodingException U) {
-				Print.error(U);
-				}
+			System.out.println(arg[i + 1] + " decoded : " + D.decode(arg[i + 1]));
+			System.out.println(arg[i + 1] + " encoded : " + D.encode(arg[i + 1]));		
+			System.out.println(arg[i + 1] + " ASCII   : " + D.toASCII(arg[i + 1]));
+			System.out.println(arg[i + 1] + " UNICODE : " + D.toUnicode(arg[i + 1]));
 			break;
 			}
 			else if (a.equals(DevHelp.E.parameter) && arg.length == 1) {
@@ -456,6 +453,9 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;	
 			}
+			else if (a.equals(DevHelp.STOP.parameter) && i == 0) {
+			stop = true;
+			}
 			else if (a.equals(DevHelp.S.parameter) && arg.length == 2 && i == 0) {
 			Page p = PageFactory.createTestPage(arg[i + 1]);
 				if (p != null) {
@@ -604,11 +604,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			spider.setCheckOK(okays);
 			spider.setDelay(delay);
 			spider.setNoRobotsAllowed(norobotsallowed);
+			spider.setStop(stop);
+			spider.setFollowRedirect(follow);
 
 			final long begintime = System.currentTimeMillis();
-			Print.cycle = spider.crawl(Print.cycle + maxcyc);
+			Print.cycle = spider.loop(Print.cycle + maxcyc);
 			
-			Debug.time("Spider Crawl");
+			Debug.time("Spider Done!");
 				try {
 				DataEnum.links.data.end();
 				}
@@ -632,14 +634,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}
 				}
 			final long endtime = System.currentTimeMillis();
-			Debug.time("DataBase disconnect");
+			Debug.time("DataBase(s) Closed");
 				try {
 				CountFile.set(Print.cycle);
 				}
 				catch (IOException I) {
 				Print.error(I);
 				}
-			Debug.time("Writing Countfile");
+			Debug.time("Countfile Written");
 				
 			//this is to print out last stats of progam	
 			System.out.printf("Links:\t\t%d\n",  DataEnum.links.data.size());
@@ -656,6 +658,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			System.out.println("Option " + a + " was ignored by this program.");
 			}//end of lastarg of loop
 		}//end of loop
+	Debug.time("*******The End******");
 	}//end of program
 	
 

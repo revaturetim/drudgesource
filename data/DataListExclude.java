@@ -52,10 +52,8 @@ public class DataListExclude extends DataList {
 	return 1;
 	}
 	
-	public boolean checkError() {
+	public void checkError() {
 	D.writeBeginningResponse(source());
-	boolean duplicate = false;
-	boolean linkerror = false;
 		try { 
 		LineNumberReader reader = new LineNumberReader(new BufferedReader(new FileReader(source())));
 			for (String link1 = reader.readLine(); link1 != null; link1 = reader.readLine()) {
@@ -75,25 +73,20 @@ public class DataListExclude extends DataList {
 				final LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));
 					for (String link2 = reader2.readLine(); reader2.getLineNumber() < reader.getLineNumber(); link2 = reader2.readLine()) {
 						if (link1.equals(link2)) {
-						duplicate = true;
 						D.writeDuplicateResponse(String.valueOf(reader.getLineNumber()), link1, link2);
 						}
 					}
 				}
 				catch (InvalidURLException I) {
-				linkerror = true;
 				D.writeResponse(String.valueOf(reader.getLineNumber()), link1, I.toString());
 				}
 				catch (URISyntaxException U) {
-				linkerror = true;
 				D.writeResponse(String.valueOf(reader.getLineNumber()), link1, U.toString());
 				}
 				catch (MalformedURLException M) {
-				linkerror = true;
 				D.writeResponse(String.valueOf(reader.getLineNumber()), link1, M.toString());
 				}
 				catch (IOException I) {
-				linkerror = true;
 				D.writeResponse(String.valueOf(reader.getLineNumber()), link1, I.toString());
 				}
 			}
@@ -105,6 +98,5 @@ public class DataListExclude extends DataList {
 		catch (IOException I) {
 		System.out.println(I);
 		}
-	return (duplicate || linkerror);
 	}
 }

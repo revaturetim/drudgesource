@@ -152,12 +152,8 @@ insert into drudge values (link, title, keywords);
 	return false;
 	}
 	
-	public boolean checkError() {
+	public void checkError() {
 	System.out.println("Checking " + source() + " file for errors.");
-	boolean duplicate = false;
-	boolean linkerror = false;
-	
-	
 		try { 
 		final String query = "SELECT * FROM " + table;
 		final ResultSet result = query(query);
@@ -196,28 +192,23 @@ insert into drudge values (link, title, keywords);
 				ResultSet result2 = query(query2);
 				int duplicatecount = result2.getInt(link);
 					if (duplicatecount > 1) {
-					duplicate = true;
 					System.out.print(
 					"...There are " + String.valueOf(duplicatecount) + " duplicates of " + pagelink);
 					}
 				}
 				catch (InvalidURLException N) {
-				linkerror = true;
 				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't an html file: ");
 				System.out.println(link);
 				}
 				catch (URISyntaxException U) {
-				linkerror = true;
 				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
 				System.out.println(link);
 				}
 				catch (MalformedURLException M) {
-				linkerror = true;
 				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
 				System.out.println(link);
 				}
 				catch (IOException I) {
-				linkerror = true;
 				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
 				System.out.println(link);
 				}
@@ -229,7 +220,6 @@ insert into drudge values (link, title, keywords);
 		catch (SQLException S) {
 		D.error(S);
 		}
-	return (duplicate || linkerror);
 	}
 	
 	public void begin() throws Exception {

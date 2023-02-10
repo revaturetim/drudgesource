@@ -58,8 +58,16 @@ private int linkcount = 0;
 		LinkFilter<String> action = new LinkFilter<String>() {
 			
 			public void act(String link) {
-			Page p = PageFactory.create(url, link);
-			links.add(p);
+			Page p = PageFactory.create(url, D.decode(link));
+				try {
+				links.put(p);
+				}
+				catch (DuplicateURLException D) {
+				D.printRow();
+				}
+				catch (IllegalArgumentException I) {
+				Print.row(I, link);
+				}
 			}
 		};
 		if (content.wasFilled()) {
@@ -156,10 +164,10 @@ private int linkcount = 0;
 
 	//inner classes - Header - Source 
 	final public class Header implements Serializable {
-	public String response = "";
+	public String response = null;
 	public String contentlength = "";
 	public String contentencoding = "";
-	public String contenttype = "";
+	public String contenttype = null;
 	public String redirectlocation = "";
 		/* While Java URLConnection class may do the same thing this was
 		 * the only way I could make sure it wasn't establishing a new

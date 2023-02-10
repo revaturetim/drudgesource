@@ -12,15 +12,13 @@ import drudge.data.*;
 class P {
 
 //this are the standard strings for checkEntry descriptions
-final static String nopag = "You are attempting to add, create, or use a null page object";
-final static String nocon = "You did not create connection object first!  Program terminated!";
-final static String nolnk = "You did not call page.connect() for";
-final static String nosrc = "You did not call the getSource() method"; 
-final static String nohed = "You did not call the getHeader() method";
-final static String notitle = "NO TITLE FOUND";
+final static private String nopag = "You are attempting to add, create, or use a null page object";
+final static private String nocon = "You did not create connection object first!  Program terminated!";
+final static private String nolnk = "You did not call page.connect() for";
+final static private String nosrc = "You did not call the getSource() method"; 
+final static private String nohed = "You did not call the getHeader() method";
+final static private String notitle = "NO TITLE FOUND";
 final static private String nowords = "NO KEYWORDS FOUND";
-final static private String Null = "null";
-final static private String encoding = "UTF-8";
 final static String html = "text/html";
 final static String plain = "text/plain";
 
@@ -119,29 +117,6 @@ final static String plain = "text/plain";
 	return norob;
 	}
 
-	static String decode(String link) {
-		try {
-		link = URLDecoder.decode(link, P.encoding);
-		}
-		catch (UnsupportedEncodingException U) {
-		D.error(U.getClass(), U, "Location", "P.decode(string)");
-		}
-		catch (IllegalArgumentException I) {
-		D.error(I.getClass(), I, "Location", "P.decode(string)");
-		}
-	return link;
-	}	
-
-	static String encode(String link) {
-		try {
-		link = URLEncoder.encode(link, P.encoding);
-		}
-		catch (UnsupportedEncodingException U) {
-		D.error(U.getClass(), U, "Location", "P.encode(string)");
-		}
-	return link;
-	}
-
 	static Data getEmails(CharSequence src, Data data) {
 	final String s = src.toString().toLowerCase();
 		
@@ -200,19 +175,26 @@ final static String plain = "text/plain";
 					r = tag.indexOf("src=");	
 					}
 				}
-
 				if (r != -1) { 
 				//this is for normal two quotes
 				int rbeg = tag.indexOf("\"", r);
 				int rend = tag.indexOf("\"", rbeg + 1);
-					//this is for no quotes
+					//this is for single quotes
 					if (rbeg == -1) {
-					rbeg = tag.indexOf("=", r);
-					rend = tag.length();
+					rbeg = tag.indexOf("\'", r);
+					rend = tag.indexOf("\'", rbeg + 1);
+						/*this is for no quotes*/
+						if (rbeg == -1) {
+						rbeg = tag.indexOf("=", r);
+						rend = tag.indexOf(" ", rbeg);
+						}
 					}
-					//this is for one quote or more
-					else if (rend == -1) {
-					rend = tag.length();
+					//this is to make sure rend has a usable value
+					if (rend == -1) {
+					rend = tag.indexOf(" ", rbeg);
+						if (rend == -1) {
+						rend = tag.length();
+						}
 					}
 				String link = tag.substring(rbeg + 1, rend);
 				findInPath(link, action);

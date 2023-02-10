@@ -37,8 +37,8 @@ final private StringBuilder builder = new StringBuilder();
 	return barray.length;
 	}
 
-	public boolean checkError() {
-	return true;
+	public void checkError() {
+	
 	}
 	
 }

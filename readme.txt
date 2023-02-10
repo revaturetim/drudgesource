@@ -19,27 +19,21 @@
 4.  Must find broken links in code;
 5.  Have alternate commands for help options like -nok and -skp;
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
-7.  Must find url with 'single quotes';
+8.  Figure out better way for spider class to handle redirects;
 10. Figure out why isUseless seems to bottleneck everything;
-11. BUG! Why does it store unencoded links?
-12. Develop SpiderSpam some more;
+11. BUG! Figure out why // is coming up in when IllegalArgumentExceptions are thrown in the Data.put(Object) method;
 13. BUG! Must find broken link where there is only one quote quoting it
-14. Consider having a robots added to DataEnum and have robot urls be a data of data types to store them;
-15. Update Debug.cycletime to correct locations in program;
 16. Work on TRUE skip option that doesn't remove non-oks;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
-19. Figure out if you can have debug methods automatically discover what method and class they are being called from;
 20. Investigate to see if translating international urls unicode to american ascii will be useful;
 22. Have Page find sitmap files to find extra urls;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 25. Consider have Help enums have own object that can execute the help command;
 27. See if Debug should be its own independent package instead of something attached to Drudge project;
-28. Sample.html should have delibertly broken links
 29. Create sample sitemap file for testing purposes;
 32. Update license option to make sure license printed is up to date and can't be used to undo the license in readme.txt;
 42. Create findlinks using xml api;
 43. Link all the page objects together as a way of storing them;
-44. Make Data.checkError methods more efficient as in eliminating repeat code in them;
 
 *************************OFFICIAL FORMAT OF THIS FILE*********************************************************
 1. All sections of this file must have ******Section title********** to seperate it from the rest of the file;
@@ -49,6 +43,11 @@
 5. The numbers on the other items do not change if an item is removed;
 6. A new item can be appended to the end or inserted bebetween two items.  The only thing it has to be is in proper numerical order;
 7. Anyone can add to the list of things to do but don't expect people to immediatly work on it since your idea may not be that great;
+8. This file must always have a data in the form of Month/Day/Year in number format like 01/01/2001 to indicate when it was last updated;
 
 ************************End User License Agreement*************************************************************************************
 This software is free for personal use only so if you are a business then you have to pay the author of this program.
+
+**************************************Last Updated****************************************************************************
+02/07/2023
+

@@ -21,6 +21,9 @@ public class SpiderFactory {
 			spider = new SpiderSpam();
 			break;
 
+			/*case 3:
+			break;
+			*/
 			case 4:
 			spider = new SpiderComp(new LinkComparator<Page>());
 			break;
@@ -40,9 +43,8 @@ public class SpiderFactory {
 			spider = new SpiderComp(new TopComparator<Page>()); 
 			break;
 
-			case 7:
-			spider = new SpiderCrawlRedirects();
-			break;
+			/*case 7:
+			break;*/
 
 			case 8:
 			spider = new SpiderComp(new NaturalComparator<Page>());

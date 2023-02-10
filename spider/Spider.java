@@ -10,17 +10,22 @@ import java.io.*;
 import java.util.*;
 
 public class Spider {
+static protected final int ok = 0;
+static protected final int notok = 1;
+static protected final int redir = 2;
+static protected final int nobot = 3;
 protected boolean checkok = true;
 protected long delay = 0L;
 protected boolean norobotsallowed = false;
 protected boolean skip = false;
+protected boolean stop = false;
+protected boolean follow = false;
 
 	//a convenience method for handling links and it makes other spiders do different things
 	protected void links(final Page p) {
 	p.source().fill();
 	Data pages = p.getLinks();
 	DataEnum.links.data.put(pages);
-	Debug.time("End Links");
 	}
 	
 	//you can override this to create different delaying methods if you choose to do so
@@ -36,31 +41,68 @@ protected boolean skip = false;
 	protected void redirect(final Page p) {
 	final Page.Header h = p.header();
 	final Page redirect = PageFactory.create(h.redirectlocation);
-	DataEnum.links.data.add(redirect);
+		try {
+		DataEnum.links.data.put(redirect);
+			if (this.follow) {
+			crawl(redirect);
+			}
+		}
+		catch (DuplicateURLException D) {
+		D.printRow();
+		}
+		catch (IllegalArgumentException I) {
+		Print.row(I, h.redirectlocation);
+		}
 	}
 
-	public int crawl(final int max) {
+	public int loop(final int max) {
 	final int cminus = DataEnum.links.data.firstIndexNumber() - 1;//it is + cminus so that the Data.offset works correctly!
 		for (Page p = (Page)DataEnum.links.data.get(Print.cycle + cminus); p != null && Print.cycle < max; p = (Page)DataEnum.links.data.get(Print.cycle + cminus)) {
-			boolean notok = this.crawl(p);
+			final int cval = this.crawl(p);
 			/* This has the same effect as skipping since when -nok option is on it 
 			 * sees all urls as acceptables since the default return value in crawls
 			 * is false.
 			 */
-			if (notok == true) {
+			if (cval == Spider.notok) {
 			DataEnum.links.data.remove(Print.cycle + cminus);
+			Debug.time("Removing Link");
 			}
 			else {
 			Print.row(p);
 			}
+			/*this is for STOP debug option and nothing else*/
+			if (this.stop) {
+			System.out.print("\tEnter N to continue; Q to quit; M for useless messages; or a cycle number: ");
+			Scanner scan = new Scanner(System.in);
+				if (scan.hasNextInt()) {
+				int c = scan.nextInt();
+				Print.cycle = c;
+				}
+				else if (scan.hasNext()) {
+				String response = scan.next();
+					if (response.equalsIgnoreCase("n")) continue;
+					else if (response.equalsIgnoreCase("q")) break;
+					else if (response.equalsIgnoreCase("m")) {
+						if (Print.uselessmessage == UselessMessages.NONE) {
+						Print.uselessmessage = UselessMessages.ALL;
+						}
+						else {
+						Print.uselessmessage = UselessMessages.NONE;
+						}
+					}
+				}
+				else continue;
+			System.out.println();
+			}
+		Debug.time("End of Cycle " + String.valueOf(Print.cycle + cminus));
 		}
 	return Print.cycle;//Print.cycle is incremented inside of Print.row which is why we have Print.cycle - 1 everywere
 	}
 
-	public boolean crawl(Page p) {
-	boolean notok = false;
+	public int crawl(Page p) {
+	int crawlvalue = Spider.ok;
 	delay();//this will be universal for all crawlers since delay=0 is the same as no delay
-
+	Debug.time("Crawler Delayed");
 		try {
 			/* I generally felt that if a website is robot excluded or considered useless due to 
 			 * it being not OK response that it should be collected when it finds it in a html page but it 
@@ -77,19 +119,23 @@ protected boolean skip = false;
 			Debug.time("Checking Robot Allowed");
 			}
 		links(p);
+		Debug.time("End Links");
+		crawlvalue = Spider.ok;
 		}
 		catch (RedirectedURLException R) {
 		R.printRow();
 		redirect(p);
+		Debug.time("Redirected");
+		crawlvalue = Spider.redir;
 		}
 		//these must be caught here so it can remove it once it is found in data object
 		catch (NotOKURLException N) {
-		notok = true;
 		N.printRow();
+		crawlvalue = Spider.notok;
 		}
 		catch (InvalidURLException I) {
-		notok = true;
 		I.printRow();
+		crawlvalue = Spider.notok;
 		}
 		catch (NoContentURLException N) {
 		N.printRow();
@@ -99,8 +145,9 @@ protected boolean skip = false;
 		}
 		catch (RobotsExcludedURLException R) {
 		R.printRow();
+		//crawlvalue = Spider.nobot;
 		}
-	return notok;
+	return crawlvalue;
 	}
 
 	public void setCheckOK(boolean b) {
@@ -117,6 +164,14 @@ protected boolean skip = false;
 
 	public void setSkip(boolean b) {
 	skip = b;
+	}
+
+	public void setStop(boolean b) {
+	stop = b;
+	}
+
+	public void setFollowRedirect(boolean b) {
+	follow = b;
 	}
 
 }

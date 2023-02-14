@@ -25,6 +25,7 @@ private static final String sep = "=";
 	boolean norobotsallowed = false;//default value
 	boolean stop = false;
 	boolean follow = false;
+	boolean readsitemap = false;
 	Spider spider = null;
 	D.flush(FileNames.error);//ensures error file is clean on start
 	HttpURLConnection.setFollowRedirects(false);//this is to ensure program wide status of the value for all httpurlconnections
@@ -33,22 +34,21 @@ private static final String sep = "=";
 LOOP:		for (int i = 0; i < arg.length; i++) {
 		final String a = arg[i];
 		/*TRY TO PUT OPTIONS IN ALPHABETICAL ORDER*/
-			if ((a.equals(Help.about.parameter) || a.equals(Help.a.parameter)) && arg.length == 1) {
+			if ((a.equals(Help.about.parameter1) || a.equals(Help.about.parameter2)) && arg.length == 1) {
 			Print.helpMenu(a);
 			break;
 			}
-			//the only commands that should have startWith vs equals are ones that use a combination like c=xxxxx
-			else if (a.startsWith(Help.c.parameter + Drudge.sep)) {
+			else if (a.startsWith(Help.c.parameter1 + Drudge.sep) || a.startsWith(Help.c.parameter2 + Drudge.sep)) {
 				try {
-				crawlmethod = getNumber(a);
+				maxcyc = getNumber(a);
 				}
 				catch (NumberFormatException N) {
 				Print.error(N);
 				break;
 				}
-				
 			}
-			else if (a.startsWith(Help.d.parameter + Drudge.sep)) {
+			//the only commands that should have startWith vs equals are ones that use a combination like c=xxxxx
+			else if (a.startsWith(Help.d.parameter1 + Drudge.sep) || a.startsWith(Help.d.parameter2 + Drudge.sep)) {
 				try {
 				int pagedata = getNumber(a);
 				DataEnum.links.data.setLevel(pagedata);
@@ -69,16 +69,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				break;
 				}
 			}
-			else if (a.equals(Help.e.parameter)) {
+			else if (a.equals(Help.eml.parameter1) || a.equals(Help.eml.parameter2)) {
 			PageFactory.getemails = true;
-				try {	
-				DataEnum.emails.data.begin();
-				}
-				catch (Exception E) {
-				Print.error(E);
-				}
 			}	
-			else if (a.equals(Help.exc.parameter)) {
+			else if (a.equals(Help.exc.parameter1)) {
 			PageFactory.donotgetexcluded = true;
 				try {
 				DataEnum.exclude.data.begin();
@@ -87,7 +81,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(E);
 				}	
 			}
-			else if (a.startsWith(Help.exclude.parameter + Drudge.sep)) {
+			else if (a.startsWith(Help.exc.parameter2 + Drudge.sep)) {
 			PageFactory.donotgetexcluded = true;
 			String file = getString(a);
 				try {
@@ -98,17 +92,17 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(E);
 				}	
 			}
-			else if ((a.equals(Help.help.parameter) || a.equals(Help.h.parameter)) && arg.length == 1) {
+			else if ((a.equals(Help.help.parameter1) || a.equals(Help.help.parameter2)) && arg.length == 1) {
 			Print.helpMenu(a);
 			break;
 			}
-			else if ((a.equals(Help.help.parameter) || a.equals(Help.h.parameter)) && i == 0 && arg.length == 2) {
+			else if ((a.equals(Help.help.parameter1) || a.equals(Help.help.parameter2)) && i == 0 && arg.length == 2) {
 			Print.helpMenu(arg[i + 1]);
 			break;	
 			}
-			else if ((a.equals(Help.i.parameter) || a.startsWith(Help.input.parameter + Drudge.sep)) && arg.length == 1) {
+			else if ((a.equals(Help.i.parameter1) || a.startsWith(Help.i.parameter2 + Drudge.sep)) && arg.length == 1) {
 			String file = FileNames.in;
-				if (a.startsWith(Help.input.parameter + Drudge.sep)) {
+				if (a.startsWith(Help.i.parameter2 + Drudge.sep)) {
 				file = getString(a);
 				}
 				try {
@@ -131,10 +125,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			break;
 			}
-			else if (a.equals(Help.img.parameter)) {
+			else if (a.equals(Help.img.parameter1) || a.equals(Help.img.parameter2)) {
 			PageFactory.getimages = true;
 			}
-			else if (a.equals(Help.inc.parameter)) {
+			else if (a.equals(Help.inc.parameter1)) {
 			PageFactory.getincluded = true;
 				try {
 				DataEnum.include.data.begin();
@@ -143,7 +137,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(E);
 				}
 			}
-			else if (a.startsWith(Help.include.parameter + Drudge.sep)) {
+			else if (a.startsWith(Help.inc.parameter2 + Drudge.sep)) {
 			PageFactory.getincluded = true;
 			String file = getString(a);
 				try {
@@ -154,14 +148,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				Print.error(E);
 				}
 			}
-			else if (a.equals(Help.l.parameter) && arg.length == 1) {
+			else if ((a.equals(Help.l.parameter1) || a.equals(Help.l.parameter2)) && arg.length == 1) {
 			System.out.println(ThisProgram.license);
 			break;
 			}
-			else if (a.equals(Help.m.parameter)) {
+			else if (a.equals(Help.m.parameter1) || a.equals(Help.m.parameter2)) {
 			Print.uselessmessage = UselessMessages.ALL;
 			}
-			else if (a.startsWith(Help.m.parameter + Drudge.sep)) {
+			else if (a.startsWith(Help.m.parameter1 + Drudge.sep) || a.startsWith(Help.m.parameter2 + Drudge.sep)) {
 				try {
 				final int c = getNumber(a);
 				Print.uselessmessage = UselessMessages.get(c);
@@ -172,19 +166,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				break;
 				}
 			}
-			else if (a.startsWith(Help.n.parameter + Drudge.sep)) {
-				try {
-				maxcyc = getNumber(a);
-				}
-				catch (NumberFormatException N) {
-				Print.error(N);
-				break;
-				}
-			}
-			else if (a.equals(Help.nok.parameter) || a.equals(Help.skp.parameter)) {
+			else if (a.equals(Help.nok.parameter1) || a.equals(Help.skp.parameter1) || a.equals(Help.nok.parameter2) || a.equals(Help.skp.parameter2)) {
 			okays = false;//this means it won't check for ok responses in spider
 			}
-			else if (a.equals(Help.o.parameter)) {
+			else if (a.equals(Help.o.parameter1)) {
 			final String outfile = FileNames.out;	
 				try {
 				PrintStream p = new PrintStream(outfile);
@@ -196,7 +181,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				break;
 				}
 			}
-			else if (a.startsWith(Help.output.parameter + Drudge.sep)) {
+			else if (a.startsWith(Help.o.parameter2 + Drudge.sep)) {
 			final String outfile = getString(a);	
 				try {
 				PrintStream p = new PrintStream(outfile);
@@ -208,7 +193,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				break;
 				}
 			}
-			else if (a.startsWith(Help.p.parameter + Drudge.sep)) {
+			else if (a.startsWith(Help.p.parameter1 + Drudge.sep) || a.startsWith(Help.p.parameter2 + Drudge.sep)) {
 				try {
 				String p = getString(a);
 				InetAddress inetadress = InetAddress.getByName(p);//I net a dress funny :)
@@ -231,13 +216,26 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 		
 			}
-			else if (a.equals(Help.red.parameter)) {
+			else if (a.equals(Help.red.parameter1) || a.equals(Help.red.parameter2)) {
 			follow = true;
 			}
-			else if (a.equals(Help.rob.parameter)) {
+			else if (a.equals(Help.rob.parameter1) || a.equals(Help.rob.parameter2)) {
 			norobotsallowed = true;
 			}
-			else if (a.startsWith(Help.w.parameter + Drudge.sep)) {
+			else if (a.startsWith(Help.s.parameter1 + Drudge.sep) || a.startsWith(Help.s.parameter2 + Drudge.sep)) {
+				try {
+				crawlmethod = getNumber(a);
+				}
+				catch (NumberFormatException N) {
+				Print.error(N);
+				break;
+				}
+				
+			}
+			else if (a.equals(Help.site.parameter1) || a.equals(Help.site.parameter2)) {
+			readsitemap = true;
+			}
+			else if (a.startsWith(Help.w.parameter1 + Drudge.sep) || a.startsWith(Help.w.parameter2 + Drudge.sep)) {
 				try {
 				delay = (long)getNumber(a);
 				}
@@ -247,16 +245,18 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 			
 			}
-			else if (a.startsWith(Help.x.parameter + Drudge.sep)) {
+			else if (a.startsWith(Help.x.parameter1 + Drudge.sep) || a.startsWith(Help.x.parameter2 + Drudge.sep)) {
 			Drudge.XFACTOR = getString(a);
 			}
 	
 			//secret debugger options down here
 			else if (a.equals(DevHelp.A.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 					try {
 					p.isRobotExcluded();
+					Print.row(p);
 					System.out.println("Yes!  " + ThisProgram.name + " is allowed");
 					}
 					catch (RobotsExcludedURLException N) {
@@ -293,9 +293,11 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			continue;//this will make sure it continues to the next the loop	
 			}
 			else if ((a.equals(DevHelp.H.parameter)) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
-				URLConnection c = p.getConnection();
+				URLConnection c = p.connection();
+				Print.row(p);
 				System.out.println("----------------Request-Fields------------------");
 				Map<String, List<String>> request = c.getRequestProperties();
 					for (Map.Entry<String, List<String>> entry: request.entrySet()) {
@@ -315,12 +317,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.I.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);	
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);	
 				if (p != null) {
 					try {
 					DataEnum.include.data.begin();
 						try {
 						p.isIncluded();
+						Print.row(p);
 						System.out.println(p.toString() + " is in the " + FileNames.include + " file.");	
 						}
 						catch (ExcludedURLException E) {
@@ -337,11 +341,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.startsWith(DevHelp.IMG.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			//Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				p.source().fill();
 				PageFactory.getimages = true;
 				p.getLinks();//collects emails as well as links
+				Print.row(p);
 					for (Object image : DataEnum.images.data) {
 					System.out.println(image);
 					}
@@ -383,10 +389,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.K.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				p.source().fill();
 				Data keywords = p.getKeywords();
+				Print.row(p);
 					for (Object keyword : keywords) {
 					System.out.println(keyword);
 					}	
@@ -394,8 +402,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.L.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			//Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
+				Print.row(p);
 				p.source().fill();
 				Data pages = p.getLinks();
 					for (Object page : pages) {
@@ -405,11 +415,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.M.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			//Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				p.source().fill();
 				PageFactory.getemails = true;
 				p.getLinks();//called because getlinks also collects emails
+				Print.row(p);
 					for (Object email : DataEnum.emails.data) {
 					System.out.println(email);
 					}
@@ -422,7 +434,8 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;	
 			}
 			else if (a.startsWith(DevHelp.P.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 					try {
 					final long pt = System.currentTimeMillis();
@@ -432,6 +445,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					//successful connection
 					final long et = System.currentTimeMillis();
 					final long time = et - pt;
+					Print.row(p);
 					System.out.print("The total time it took to connect to ");
 					System.out.print(arg[i + 1]);
 					System.out.print(" was ");
@@ -445,10 +459,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.R.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				URL roboturl = p.robotUrl();
 				Page robotpage = PageFactory.create(roboturl);
+				Print.row(p);
 				System.out.println(robotpage.source().fill());
 				}
 			break;	
@@ -457,26 +473,32 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			stop = true;
 			}
 			else if (a.equals(DevHelp.S.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
+				Print.row(p);
 				System.out.println(p.source().fill());
 				}
 			break;
 			}
 			else if (a.equals(DevHelp.T.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				p.source().fill(); 
 				String title = p.getTitle();
+				Print.row(p);
 				System.out.println(title);
 				}
 			break;
 			}
 			else if (a.equals(DevHelp.U.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 					try {	
 					p.header().checkUseless();
+					Print.row(p);
 					System.out.println(p.toString() + " is not a useless url for this program");	
 					}
 					catch (UselessURLException U) {
@@ -486,8 +508,10 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.V.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
+				Print.row(p);
 				System.out.println(p.toString() + " is a valid html file for " + ThisProgram.name);
 				}
 			break;
@@ -512,12 +536,14 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.X.parameter) && arg.length == 2 && i == 0) {
-			Page p = PageFactory.createTestPage(arg[i + 1]);
+			Print.uselessmessage = UselessMessages.ALL;
+			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 					try {
 					DataEnum.exclude.data.begin();
 						try {
 						p.isExcluded();
+						Print.row(p);
 						System.out.println(p.toString() + " is NOT in the " + FileNames.exclude + " file.");	
 						}
 						catch (ExcludedURLException E) {
@@ -538,7 +564,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Print.columnHeaders();//this should be called first to show errors correctly in output columns
 			Debug.time("Print Column Headers");
 			final String lastarg = a;//this exist only as a naming convention
-				if (lastarg.equals(Help.s.parameter)) {
+				if (lastarg.equals(Help.b.parameter1) || lastarg.equals(Help.b.parameter2)) {
 					try {
 					Print.cycle = CountFile.get();
 					DataEnum.beginAll();
@@ -548,7 +574,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					}				
 
 				}
-				else if (lastarg.startsWith(Help.s.parameter + Drudge.sep)) {
+				else if (lastarg.startsWith(Help.b.parameter1 + Drudge.sep) || lastarg.startsWith(Help.b.parameter2 + Drudge.sep)) {
 					try {
 					Print.cycle = getNumber(lastarg);
 					DataEnum.beginAll();
@@ -564,18 +590,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				else {
 				DataEnum.truncateAll();
 				Page page = null;
-					if (lastarg.equals(Help.t.parameter) || lastarg.equals(Help.samp.parameter)) {
-						try {
-						page = new Page();//creates default sample page
-						}
-						catch (MalformedURLException M) {
-						D.error(M);
-						}
-						catch (IOException I) {
-						D.error(I);
-						}
-					}
-					else if (lastarg.startsWith(Help.samp.parameter + Drudge.sep)) {
+					if (lastarg.startsWith(Help.t.parameter2 + Drudge.sep)) {
 					String file = getString(lastarg);
 					File sampfile = new File(file);
 					page = PageFactory.create(sampfile.toURI().toString());
@@ -601,11 +616,13 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				}
 
 			spider = SpiderFactory.create(crawlmethod);
+			if (spider == null) break;
 			spider.setCheckOK(okays);
 			spider.setDelay(delay);
 			spider.setNoRobotsAllowed(norobotsallowed);
 			spider.setStop(stop);
 			spider.setFollowRedirect(follow);
+			spider.setReadSitemap(readsitemap);
 
 			final long begintime = System.currentTimeMillis();
 			Print.cycle = spider.loop(Print.cycle + maxcyc);

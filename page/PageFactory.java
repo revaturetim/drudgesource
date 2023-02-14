@@ -13,10 +13,21 @@ static public boolean getimages = false;
 static public boolean getincluded = false;
 static public boolean donotgetexcluded = false;
 
-
+	/*This is the master creator of all pages*/
 	static public Page create(final URL url, final String link) {
 	Page page = null;
 		try {
+			if (link.equals(Help.t.parameter1) || link.equals(Help.t.parameter2)) {
+				try {
+				page = new Page();
+				}
+				catch (MalformedURLException M) {
+				D.error(M, link);
+				}
+				catch (IOException I) {
+				D.error(I, link);
+				}
+			}
 		URL newurl = new URL(url, D.decode(link));
 		P.checkHtmlFile(newurl);
 			/*this should be in this order so that you can use include and exclude at the same time*/
@@ -100,25 +111,5 @@ static public boolean donotgetexcluded = false;
 		}
 	return page;
 	}	
-
-	static public Page createTestPage(final String link) {
-	Page testpage = null;
-		if (link.equals(Help.t.parameter) || link.equals(Help.samp.parameter)) {
-			try {
-			testpage = new Page();
-			}
-			catch (MalformedURLException M) {
-			D.error(M, link);
-			}
-			catch (IOException I) {
-			D.error(I, link);
-			}
-		}
-		else {
-		testpage = PageFactory.create(link);
-		}
-	return testpage;
-	}
-
 
 }

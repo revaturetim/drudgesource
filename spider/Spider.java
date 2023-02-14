@@ -20,6 +20,7 @@ protected boolean norobotsallowed = false;
 protected boolean skip = false;
 protected boolean stop = false;
 protected boolean follow = false;
+protected boolean readsitemap = true;
 
 	//a convenience method for handling links and it makes other spiders do different things
 	protected void links(final Page p) {
@@ -43,9 +44,7 @@ protected boolean follow = false;
 	final Page redirect = PageFactory.create(h.redirectlocation);
 		try {
 		DataEnum.links.data.put(redirect);
-			if (this.follow) {
-			crawl(redirect);
-			}
+		crawl(redirect);
 		}
 		catch (DuplicateURLException D) {
 		D.printRow();
@@ -118,15 +117,23 @@ protected boolean follow = false;
 			p.isRobotExcluded();//this throws RobotsExcludedURLException	
 			Debug.time("Checking Robot Allowed");
 			}
+			if (readsitemap) {
+			DataEnum.links.data.put(p.sitemapurls());
+			}
 		links(p);
 		Debug.time("End Links");
 		crawlvalue = Spider.ok;
 		}
 		catch (RedirectedURLException R) {
 		R.printRow();
-		redirect(p);
-		Debug.time("Redirected");
-		crawlvalue = Spider.redir;
+			if (this.follow) {
+			redirect(p);
+			Debug.time("Redirected");
+			crawlvalue = Spider.redir;
+			}
+			else {
+			crawlvalue = Spider.notok;
+			}
 		}
 		//these must be caught here so it can remove it once it is found in data object
 		catch (NotOKURLException N) {
@@ -172,6 +179,10 @@ protected boolean follow = false;
 
 	public void setFollowRedirect(boolean b) {
 	follow = b;
+	}
+
+	public void setReadSitemap(boolean b) {
+	readsitemap = b;
 	}
 
 }

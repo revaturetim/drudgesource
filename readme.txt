@@ -17,20 +17,16 @@
 2.  Elimnate unnescessary variables, methods, and classes in programs for efficiency;
 3.  Use D.error in more places so I have a written log of errors that I would like to see more data on;
 4.  Must find broken links in code;
-5.  Have alternate commands for help options like -nok and -skp;
 6.  BUG! DataObject doesn't save content field of the Page class.  It doesn't write title, or keywords;
-8.  Figure out better way for spider class to handle redirects;
 10. Figure out why isUseless seems to bottleneck everything;
-11. BUG! Figure out why // is coming up in when IllegalArgumentExceptions are thrown in the Data.put(Object) method;
 13. BUG! Must find broken link where there is only one quote quoting it
 16. Work on TRUE skip option that doesn't remove non-oks;
 17. BUG! It is picking up non-link objects when I search for url links in P class. Must refine a little bit;
 20. Investigate to see if translating international urls unicode to american ascii will be useful;
-22. Have Page find sitmap files to find extra urls;
 23. Think of way of making each crawler a seperate thread that can run indepently or have multiple threads running at once;
 25. Consider have Help enums have own object that can execute the help command;
 27. See if Debug should be its own independent package instead of something attached to Drudge project;
-29. Create sample sitemap file for testing purposes;
+29. Create a good sample sitemap.xml file for testing purposes;
 32. Update license option to make sure license printed is up to date and can't be used to undo the license in readme.txt;
 42. Create findlinks using xml api;
 43. Link all the page objects together as a way of storing them;
@@ -50,4 +46,5 @@ This software is free for personal use only so if you are a business then you ha
 
 **************************************Last Updated****************************************************************************
 02/07/2023
-
+02/11/2023
+02/13/2023

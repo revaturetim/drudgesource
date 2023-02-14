@@ -181,7 +181,7 @@ insert into drudge values (link, title, keywords);
 				
 				try {
 				URL url = new URL(pagelink);//this throws malformedurlexception
-				Page p = new Page(url);//this throws IOException
+				Page p = PageFactory.create(url);
 				p.isValid();//this throws InvalidURLException, URISyntaxException
 				URL u = p.url();
 					if (u.getAuthority() == null) {
@@ -208,10 +208,10 @@ insert into drudge values (link, title, keywords);
 				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
 				System.out.println(link);
 				}
-				catch (IOException I) {
+				/*catch (IOException I) {
 				System.out.print("...Line " + String.valueOf(linecount) + " has a link that isn't quite right: ");
 				System.out.println(link);
-				}
+				}*/
 
 			} 
 		System.out.println("...The number of lines in " + source() +  " is "  + linecount + ".");

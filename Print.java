@@ -25,7 +25,7 @@ final private static String[] H = {
 };
 
 	static public void row(final Page p) {
-	final int n = p.getLinkCount();
+	final int n = p.linkcount();
 	String nump = String.valueOf(n);
 		if (p.didConnect()) {
 			if (p.source().isComplete()) {
@@ -214,14 +214,14 @@ final private static String[] H = {
 				}
 			}
 		}
-		else if (key.equals(Help.help.parameter) || key.equals(Help.h.parameter)) {
+		else if (key.equals(Help.help.parameter1) || key.equals(Help.help.parameter2)) {
 			for (Help h : Help.values()) {
 				if (!h.message.isEmpty()) {
-				System.out.printf("%-10s" + h.message + "\n", h.parameter);
+				System.out.printf("%-10s%-10s" + h.message + "\n", h.parameter1, h.parameter2);
 				}
 			}
 		}
-		else if (key.equals(Help.m.parameter)) {
+		else if (key.equals(Help.m.parameter1) || key.equals(Help.m.parameter2)) {
 			for (UselessMessages U : UselessMessages.values()) {
 			System.out.printf("%-4s %s\n", U.ordinal(), U.hlp);
 			}
@@ -229,7 +229,7 @@ final private static String[] H = {
 		}
 		else {
 			for (Help h : Help.values()) {
-				if (key.equals(h.parameter)) {
+				if (key.equals(h.parameter1) || key.equals(h.parameter2)) {
 				System.out.println(h.submessage);
 				}
 

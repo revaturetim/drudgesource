@@ -29,20 +29,15 @@ private Object[] objs = new Object[10];
 	}
 
 	public void put(Object page) throws DuplicateURLException, IllegalArgumentException {
-		if (page != null) {
-			if (contains(page) == false) {
-			this.add(page);
-			}
-			else {
-			throw new DuplicateURLException(page);
-			}
+		if (contains(page) == false) {
+		this.add(page);//this throws illegalagumentexception
 		}
 		else {
-		throw new IllegalArgumentException("Attempting to put a null object into data");
+		throw new DuplicateURLException(page);
 		}
 	}
 		
-	/* Do not erase remove, get, set, or add(T) methods!!!!!!!!!!!!!!!!!!!*/
+	/* Do not erase remove, get, set, or add(i, T) methods!!!!!!!!!!!!!!!!!!!*/
 	public void add(final int i, final Object obj) {
 		if (obj != null) {
 			if (this.size >= objs.length - 1) {
@@ -53,6 +48,9 @@ private Object[] objs = new Object[10];
 			}
 		this.objs[i] = obj;
 		size++;
+		}
+		else {
+		throw new IllegalArgumentException("Attempting to put a null object into data");
 		}
 	}
 
@@ -112,7 +110,7 @@ private Object[] objs = new Object[10];
 			/*This will check for duplicates in the data*/
 				try {
 				URL url = new URL(link1);//this throws malformedurlexception
-				Page p = new Page(url);//this throws ioexception
+				Page p = PageFactory.create(url);//this throws ioexception
 				p.isValid();//this throws InvalidURLException, URISyntaxException
 					if (url.getAuthority() == null) throw new MalformedURLException("No Host");
 				LineNumberReader reader2 = new LineNumberReader(new BufferedReader(new FileReader(source())));

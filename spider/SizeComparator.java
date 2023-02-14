@@ -12,8 +12,8 @@ public class SizeComparator<T extends Page> implements Comparator<T> {
 	p2.source().fill();
 	p1.getLinks();
 	p2.getLinks();
-	int c1 = p1.getLinkCount();
-	int c2 = p1.getLinkCount();
+	int c1 = p1.linkcount();
+	int c2 = p1.linkcount();
 	return c1 - c2;
 	}
 }	

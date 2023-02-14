@@ -19,6 +19,7 @@ static public Proxy proxyserver = Proxy.NO_PROXY;
 //The default value for MOST of these should be null
 final private Source content = new Source(pagesize);
 final private Header header = new Header();
+final private DataList sitemapurls = new DataList();
 private URL url = null; 
 private URL roboturl = null;
 private URLConnection connection = null;
@@ -26,16 +27,16 @@ private boolean didconnect = false;
 private int linkcount = 0;
 
 	/*This will be the sample page constructor*/
-	public Page() throws MalformedURLException, IOException {
+	Page() throws MalformedURLException, IOException {
 	this.url = new File(FileNames.samphtml).toURI().toURL();//this will throw malformedurlexception
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
 	this.roboturl = new File(FileNames.samprobot).toURI().toURL();//this will throw a malformedurlexception
 	}
 
-	public Page(URL u) throws IOException {
+	Page(URL u) throws IOException {
 	this.url = u;
 	this.connection = P.createConnection(this.url, Page.proxyserver);//this will throw the IOException
-	roboturl = P.createURL(this.url, "/robots.txt");// /robots.txt denotes top level directory
+	this.roboturl = P.createURL(this.url, "/robots.txt");// /robots.txt denotes top level directory
 	}
 	
 	public boolean equals(Object obj) {
@@ -77,12 +78,22 @@ private int linkcount = 0;
 	Debug.time("Getting Links");
 	return links;
 	}
+	
+	public Data sitemapurls() {
+		/*this has to be created here simpy because doing so anywhere else isn't feasable*/
+		if (sitemapurls.isEmpty()) {
+		sitemapurls.add(PageFactory.create(url, "sitemap.txt"));
+		sitemapurls.add(PageFactory.create(url, "sitmap.html"));
+		//sitemapurls.add(PageFactory.create(url, "./sitemap.xml"));
+		}
+	return sitemapurls;
+	}
 
-	public int getLinkCount() {
+	public int linkcount() {
 	return linkcount;
 	}
 
-	public URLConnection getConnection() {
+	public URLConnection connection() {
 	return connection;
 	}
 

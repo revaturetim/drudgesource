@@ -65,7 +65,7 @@ public class DataListExclude extends DataList {
 				try {
 				URL url = new URL(link1);//this throws malformedurlexception
 				url.toURI();//throws urisyntaxexception
-				Page p = new Page(url);//this throws ioexception
+				Page p = PageFactory.create(url);//this throws ioexception
 				p.isValid();//this throws InvalidURLException, URISyntaxException
 					if (url.getAuthority() == null) {
 					throw new MalformedURLException("No Host");

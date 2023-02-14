@@ -88,28 +88,27 @@ final static String plain = "text/plain";
 	String user = null;
 	
 		for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-			
-			//Debug.here(line);
-			if (line.startsWith(comment)) {
-			continue;
-			}
+			if (line.startsWith(comment)) continue;
 		String[] spaces = line.split(colon, 2);
 			if (spaces.length == 2) {
-			final String action = spaces[0];
+			final String action = spaces[0].trim();
+			final String input = spaces[1].trim();
 				if (action != null && action.equalsIgnoreCase(useragent)) {
-				user = spaces[1];//this could throw an exception 
+				user = input;//this could throw an exception 
 				}
-				else if (action != null && (action.equalsIgnoreCase(sitemap) || action.equalsIgnoreCase(allow) || action.equalsIgnoreCase(disallow))) {
-				final String dir = spaces[1];
-				final Page p = PageFactory.create(rcon.getURL(), dir);
+				else if (action != null && !input.equals(star) && (action.equalsIgnoreCase(sitemap) || action.equalsIgnoreCase(allow) || action.equalsIgnoreCase(disallow))) {
+				final Page p = PageFactory.create(rcon.getURL(), input);
 					try {
-					DataEnum.links.data.add(p);//this will add robotexcluded link to data and throw duplicateurlexception
+					DataEnum.links.data.put(p);//this will add link to data by default for all allow, disallow, and sitemap actions 
 						if (user != null && action.equalsIgnoreCase(disallow) && (user.equals(star) || user.equalsIgnoreCase(ThisProgram.useragent))) {
-						norob.add(p.url());//this throws duplicatedurlexception
+						norob.put(p.url());//this will add url to norob for dissallow actions
 						}
 					}
+					catch (DuplicateURLException D) {
+					D.printRow();
+					}
 					catch (IllegalArgumentException I) {
-					D.error("Exception", I);
+					Print.row(I, input);
 					}
 				}
 			}	
@@ -149,12 +148,10 @@ final static String plain = "text/plain";
 		
 		private static void findInPath(final String link, LinkFilter<String> action) {
 		/*Ths is to catch all subdirectories of a link*/
-		final int doubleslash = link.indexOf("//");
-			for (int slash = link.indexOf("/");slash != -1; slash = link.indexOf("/", slash + 1)) {
-				if (slash > doubleslash + 1 && slash > doubleslash) {
-				String sublink = link.substring(0, slash + 1);
-				action.act(sublink);
-				}
+		final int doubleslash = link.indexOf("://");
+			for (int slash = link.lastIndexOf("/");slash != -1 && (slash > doubleslash + 2); slash = link.lastIndexOf("/", slash - 1)) {
+			String sublink = link.substring(0, slash + 1);
+			action.act(sublink);
 			}
 		action.act(link);
 		}
@@ -223,8 +220,8 @@ final static String plain = "text/plain";
 						|| word.startsWith("./")) {
 					findInPath(word, action);
 					}
-					else if (word.contains("@")/*this is for emails*/) {
-					//findInPath("mailto:" + word, action);
+					else if (word.matches("[a-zA-Z\\.]*@[a-zA-Z\\.]*")) {
+						action.act("mailto:" + word);
 					}
 				}
 			}
@@ -390,8 +387,8 @@ final static String plain = "text/plain";
 		try {
 		url = new URL(parent, file);
 		}
-		catch (IOException I) {
-		D.error(I.getClass().getName(), I, "Location", "P.getCreateURL(URL, String)", "link", file);
+		catch (MalformedURLException M) {
+		D.error(M.getClass().getName(), M, "Location", "P.getCreateURL(URL, String)", "link", file);
 		}
 	return url;
 	}

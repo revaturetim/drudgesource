@@ -23,7 +23,7 @@ final private static String[] H = {
 	"Actual Link                                                "
 };
 
-		public static void columnHeaders() {
+	public static void columnHeaders() {
 	Print.row(System.out, H);
 	}
 	

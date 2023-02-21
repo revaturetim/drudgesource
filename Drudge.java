@@ -43,7 +43,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				maxcyc = getNumber(a);
 				}
 				catch (NumberFormatException N) {
-				Print.error(N);
+				Print.error(N, a);
 				break;
 				}
 			}
@@ -153,12 +153,12 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(Help.m.parameter1) || a.equals(Help.m.parameter2)) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			}
 			else if (a.startsWith(Help.m.parameter1 + Drudge.sep) || a.startsWith(Help.m.parameter2 + Drudge.sep)) {
 				try {
 				final int c = getNumber(a);
-				Print.uselessmessage = UselessMessages.get(c);
+				UselessMessages.uselessmessage = UselessMessages.get(c);
 				}
 				catch (NumberFormatException N) {
 				Print.helpMenu(a);
@@ -251,7 +251,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 	
 			//secret debugger options down here
 			else if (a.equals(DevHelp.A.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 					try {
@@ -293,7 +293,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			continue;//this will make sure it continues to the next the loop	
 			}
 			else if ((a.equals(DevHelp.H.parameter)) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				URLConnection c = p.connection();
@@ -317,7 +317,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.I.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);	
 				if (p != null) {
 					try {
@@ -341,7 +341,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.startsWith(DevHelp.IMG.parameter) && arg.length == 2 && i == 0) {
-			//Print.uselessmessage = UselessMessages.ALL;
+			//UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				p.source().fill();
@@ -389,7 +389,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.K.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				p.source().fill();
@@ -402,7 +402,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.L.parameter) && arg.length == 2 && i == 0) {
-			//Print.uselessmessage = UselessMessages.ALL;
+			//UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				Print.row(p);
@@ -415,7 +415,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.M.parameter) && arg.length == 2 && i == 0) {
-			//Print.uselessmessage = UselessMessages.ALL;
+			//UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				p.source().fill();
@@ -434,7 +434,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;	
 			}
 			else if (a.startsWith(DevHelp.P.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 					try {
@@ -459,7 +459,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.R.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				URL roboturl = p.robotUrl();
@@ -473,7 +473,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			stop = true;
 			}
 			else if (a.equals(DevHelp.S.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				Print.row(p);
@@ -482,7 +482,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.T.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				p.source().fill(); 
@@ -493,7 +493,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.U.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 					try {	
@@ -508,7 +508,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.V.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				Print.row(p);
@@ -536,7 +536,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			break;
 			}
 			else if (a.equals(DevHelp.X.parameter) && arg.length == 2 && i == 0) {
-			Print.uselessmessage = UselessMessages.ALL;
+			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 					try {

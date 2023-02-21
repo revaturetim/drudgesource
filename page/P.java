@@ -99,9 +99,9 @@ final static String plain = "text/plain";
 				else if (action != null && !input.equals(star) && (action.equalsIgnoreCase(sitemap) || action.equalsIgnoreCase(allow) || action.equalsIgnoreCase(disallow))) {
 				final Page p = PageFactory.create(rcon.getURL(), input);
 					try {
-					DataEnum.links.data.put(p);//this will add link to data by default for all allow, disallow, and sitemap actions 
+					DataEnum.links.data.insert(p);//this will add link to data by default for all allow, disallow, and sitemap actions 
 						if (user != null && action.equalsIgnoreCase(disallow) && (user.equals(star) || user.equalsIgnoreCase(ThisProgram.useragent))) {
-						norob.put(p.url());//this will add url to norob for dissallow actions
+						norob.insert(p.url());//this will add url to norob for dissallow actions
 						}
 					}
 					catch (DuplicateURLException D) {
@@ -132,7 +132,7 @@ final static String plain = "text/plain";
 				if (frag != null) {
 				address = address.replace(frag, "");
 				}*/
-			data.put(address);
+			data.insert(address);
 			}
 			catch (URISyntaxException U) {
 			D.error(U.getClass(), U, "Location", "P.getEmails(Charsequence, data)", "url", address);	
@@ -294,7 +294,7 @@ final static String plain = "text/plain";
 		for (String word : somewords) {
 			if (word.length() > 2 && !DataEnum.words.data.contains(word)) {	
 				try {
-				words.put(word);
+				words.insert(word);
 				}
 				catch (DuplicateURLException D) {
 
@@ -335,7 +335,7 @@ final static String plain = "text/plain";
 		for (String text : texts) {
 			if (text.length() > 2 && !DataEnum.words.data.contains(text)) {	
 				try {
-				keywords.put(text);
+				keywords.insert(text);
 				}
 				catch (DuplicateURLException D) {
 
@@ -354,7 +354,7 @@ final static String plain = "text/plain";
 	String[] keywords = text.split(" ");
 		for (String word : keywords) {
 			try {
-			words.put(word);
+			words.insert(word);
 			}
 			catch (DuplicateURLException D) {
 	

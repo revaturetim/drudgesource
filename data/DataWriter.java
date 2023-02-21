@@ -15,7 +15,7 @@ abstract class DataWriter extends AbstractData {
 	abstract LineNumberReader createReader();
 	abstract PrintWriter createWriter();
 	
-	public void put(Object page) throws DuplicateURLException, IllegalArgumentException {
+	public void insert(Object page) throws DuplicateURLException, IllegalArgumentException {
 		if (page == null) {
 		throw new IllegalArgumentException("Attempting to add a null object into the database");
 		}
@@ -35,7 +35,7 @@ abstract class DataWriter extends AbstractData {
 		}
 	}
 
-	public Object get(final int n) {
+	public Object select(final int n) {
 	Object entry = null;
 		try {
 		LineNumberReader READER = createReader();
@@ -56,8 +56,7 @@ abstract class DataWriter extends AbstractData {
 	}
 
 
-	public Object remove(final int l) {
-	Object p = null;
+	public void delete(final int l) {
 	StringBuffer buff = new StringBuffer();
 		try {
 		LineNumberReader reader = createReader();
@@ -68,7 +67,7 @@ abstract class DataWriter extends AbstractData {
 				buff.append("\n");
 				}
 				else {
-				p = PageFactory.createFromString(line);			
+				Object p = PageFactory.createFromString(line);			
 				}
 			} 
 		reader.close();
@@ -84,9 +83,12 @@ abstract class DataWriter extends AbstractData {
 		catch (IOException I) {
 		D.error(I);
 		}
-	return p;
 	}
-	
+
+	public void update(int i, Object page) {
+
+	}
+
 	public int size() {
 	int size = 0;
 		try {

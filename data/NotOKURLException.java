@@ -19,7 +19,7 @@ private final static long serialVersionUID = 0;
 	
 	public void printRow() {
 		
-		if (Print.uselessmessage == UselessMessages.ALL || Print.uselessmessage.cls == this.getClass()) {
+		if (UselessMessages.uselessmessage == UselessMessages.ALL || UselessMessages.uselessmessage.cls == this.getClass()) {
 		String[] n = {"", "", "", this.getSecondObject().toString(), this.message, this.getFirstObject().toString()};
 		Print.row(n);
 		}

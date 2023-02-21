@@ -29,4 +29,9 @@ protected int firstindex = 0;
 	return firstindex;
 	}
 
+	/*this is to fullfill the requirements of having to override get(int) in abstractlist*/
+	public Object get(int c) {
+	throw new UnsupportedOperationException("This is an empty method");
+	}
+
 }

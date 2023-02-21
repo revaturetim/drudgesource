@@ -8,7 +8,6 @@ import java.net.*;
 
 final public class Print {
 static PrintStream GSTREAM = System.out; 
-static public UselessMessages uselessmessage = UselessMessages.NONE;
 static public int cycle = 1;	
 final private static int LEFT = 0;
 final private static int CENTER = 1;
@@ -61,7 +60,7 @@ final private static String[] H = {
 	public static void row(Exception exc, Object obj) {
 	String mexc =  (exc instanceof UselessURLException) ? exc.toString().toUpperCase() : exc.getClass().getSimpleName().toUpperCase();
 
-		if (Print.uselessmessage == UselessMessages.ALL || Print.uselessmessage.cls == exc.getClass()) {
+		if (UselessMessages.uselessmessage == UselessMessages.ALL || UselessMessages.uselessmessage.cls == exc.getClass()) {
 		String url = obj.toString();
 		Print.row("", "", "", "", mexc, url);
 		}

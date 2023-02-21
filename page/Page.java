@@ -61,7 +61,7 @@ private int linkcount = 0;
 			public void act(String link) {
 			Page p = PageFactory.create(url, D.decode(link));
 				try {
-				links.put(p);
+				links.insert(p);
 				}
 				catch (DuplicateURLException D) {
 				D.printRow();

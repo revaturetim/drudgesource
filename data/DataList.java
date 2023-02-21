@@ -28,7 +28,7 @@ private Object[] objs = new Object[10];
 	this.firstindex = i;
 	}
 
-	public void put(Object page) throws DuplicateURLException, IllegalArgumentException {
+	public void insert(Object page) throws DuplicateURLException, IllegalArgumentException {
 		if (contains(page) == false) {
 		this.add(page);//this throws illegalagumentexception
 		}
@@ -36,7 +36,28 @@ private Object[] objs = new Object[10];
 		throw new DuplicateURLException(page);
 		}
 	}
-		
+
+	public void delete(int c) {
+	remove(c);
+	}
+
+	public void update(int c, Object page) {
+	this.set(c, page);
+	}
+
+	public Object select(int c) {
+	return this.get(c);
+	}
+
+	public void replace(final int c, final Object page) throws IllegalArgumentException {
+		if (c < this.size) {
+		set(c, page);
+		}
+		else {
+		throw new IllegalArgumentException("Index of Object does not exit in data!");
+		}
+	}
+
 	/* Do not erase remove, get, set, or add(i, T) methods!!!!!!!!!!!!!!!!!!!*/
 	public void add(final int i, final Object obj) {
 		if (obj != null) {

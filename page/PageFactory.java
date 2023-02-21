@@ -50,7 +50,7 @@ static public boolean donotgetexcluded = false;
 			if (PageFactory.getemails) {
 				try {
 				URL mailurl = (URL)E.getFirstObject();//must cast to ensure it is correct
-				DataEnum.emails.data.put(mailurl);
+				DataEnum.emails.data.insert(mailurl);
 				}
 				catch (DuplicateURLException Du) {
 				/*do nothing because I don't need to know if exception is thrown*/
@@ -62,7 +62,7 @@ static public boolean donotgetexcluded = false;
 			if (PageFactory.getimages) {
 				try {
 				URL imageurl = (URL)I.getFirstObject();//must cast to ensure it is correct
-				DataEnum.images.data.put(imageurl);
+				DataEnum.images.data.insert(imageurl);
 				}
 				catch (DuplicateURLException Du) {
 				/*do nothing because I don't need to know if exception is thrown*/	

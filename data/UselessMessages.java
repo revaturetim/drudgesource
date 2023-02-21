@@ -41,8 +41,11 @@ BINDEXCEPTION(BindException.class, "Indicates an error has been made trying to c
 SQLEXCEPTION(SQLException.class, "This is used for all SQL exceptions!"),	
 //unusual exceptions
 NULLPOINTER(NullPointerException.class, "This is used to indicate a null pointer value was thrown"),
-ILLEGALARGUMENT(IllegalArgumentException.class, "Somewhere an illegal value was passed into a method")
-;
+ILLEGALARGUMENT(IllegalArgumentException.class, "Somewhere an illegal value was passed into a method");
+
+/*this is a standard variable for determining which messages get printed*/
+static public UselessMessages uselessmessage = UselessMessages.NONE;
+
 /*This is for the actual class for the enum values above*/
 public String hlp = "No Help at all!";
 public Class<?> cls = null;

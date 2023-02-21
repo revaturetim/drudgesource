@@ -21,14 +21,13 @@ private File dir;
 	return dir.list().length;
  	}
 	
-	public Object remove(int cycle) {
+	public void delete(int cycle) {
 	Object obj = get(cycle);
 	File d = new File(dir, String.valueOf(obj.hashCode()));
 	d.delete();	
-	return obj;
 	}
 	
-	public Object get(int cycle) {
+	public Object select(int cycle) {
 	File[] files = dir.listFiles();
 	Object obj = null;
 	Arrays.sort	(files, (A, B) -> {	File a = (File)A; 
@@ -58,7 +57,7 @@ private File dir;
 	return obj;
 	}
 	
-	public void put(Object obj) {
+	public void insert(Object obj) {
 	Page p = (Page)obj;
 	File f = new File(dir, String.valueOf(p.hashCode()));
 	
@@ -77,7 +76,12 @@ private File dir;
 		Debug.here("found a matching file");
 		}
 	}
-	
+
+	public void update(int i, Object page) {
+
+
+	}
+
 	public boolean contains(Object obj) {
 	boolean has = false;
 		if (obj instanceof Page) {

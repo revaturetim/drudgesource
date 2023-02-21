@@ -19,7 +19,7 @@ final private StringBuilder builder = new StringBuilder();
 	return new LineNumberReader(new BufferedReader(new StringReader(builder.toString())));	
 	}
 	
-	public Object delete(int l) {
+	public void delete(int l) {
 	int L = 1;
 		for (int i = 0; i != -1; i = builder.indexOf("\n", i + 1)) {
 			if (L == l) {
@@ -28,7 +28,6 @@ final private StringBuilder builder = new StringBuilder();
 			}		
 		L++;
 		}
-	return null;
 	}
 
 	public int size() {

@@ -18,6 +18,8 @@ private final String words = "keywords";
 create table drudge (link varchar(100) not null primary key, title varchar(25), keywords varchar(255));    
 insert into drudge values (link, title, keywords);
 */
+	public Object get(int c) {return null;}
+
 	public DataBase() {
 
 	}
@@ -49,7 +51,7 @@ insert into drudge values (link, title, keywords);
 	}
 
 	@SuppressWarnings("unchecked")	
-	public Object get(final int i) {
+	public Object select(final int i) {
 	Object page = null;
 	final String query = "SELECT " + link + " FROM " + table;
 		try {
@@ -66,8 +68,7 @@ insert into drudge values (link, title, keywords);
 	return page; 
 	}
 
-	public Object remove(int i) {
-	Object page = null;	
+	public void delete(int i) {
 	final String query = "SELECT * FROM " + table;
 		try {
 		ResultSet result = query(query);
@@ -76,12 +77,11 @@ insert into drudge values (link, title, keywords);
 			}
 		}
 		catch (SQLException S) {
-		Print.row(S, page);
+		Print.row(S, null);
 		}
-	return page;
 	}
 
-	public void put(Object page) {
+	public void insert(Object page) {
 	final Page p = (Page)page;
 	final String pagelink = p.toString();
 	String pagetitle = "null";
@@ -112,7 +112,12 @@ insert into drudge values (link, title, keywords);
 		Print.row(S, page);
 		}
 	}
-	
+
+	public void update(int c, Object page) {
+
+
+	}
+
 	/*this should always return false since only unique entries are allowed--no repeats possible*/
 	public boolean contains(Object page) {
 	boolean exist = false;

@@ -26,7 +26,7 @@ protected boolean readsitemap = true;
 	protected void links(final Page p) {
 	p.source().fill();
 	Data pages = p.getLinks();
-	DataEnum.links.data.put(pages);
+	DataEnum.links.data.insert(pages);
 	}
 	
 	//you can override this to create different delaying methods if you choose to do so
@@ -43,7 +43,7 @@ protected boolean readsitemap = true;
 	final Page.Header h = p.header();
 	final Page redirect = PageFactory.create(h.redirectlocation);
 		try {
-		DataEnum.links.data.put(redirect);
+		DataEnum.links.data.insert(redirect);
 		crawl(redirect);
 		}
 		catch (DuplicateURLException D) {
@@ -56,14 +56,14 @@ protected boolean readsitemap = true;
 
 	public int loop(final int max) {
 	final int cminus = DataEnum.links.data.firstIndexNumber() - 1;//it is + cminus so that the Data.offset works correctly!
-		for (Page p = (Page)DataEnum.links.data.get(Print.cycle + cminus); p != null && Print.cycle < max; p = (Page)DataEnum.links.data.get(Print.cycle + cminus)) {
+		for (Page p = (Page)DataEnum.links.data.select(Print.cycle + cminus); p != null && Print.cycle < max; p = (Page)DataEnum.links.data.select(Print.cycle + cminus)) {
 			final int cval = this.crawl(p);
 			/* This has the same effect as skipping since when -nok option is on it 
 			 * sees all urls as acceptables since the default return value in crawls
 			 * is false.
 			 */
 			if (cval == Spider.notok) {
-			DataEnum.links.data.remove(Print.cycle + cminus);
+			DataEnum.links.data.delete(Print.cycle + cminus);
 			Debug.time("Removing Link");
 			}
 			else {
@@ -118,7 +118,7 @@ protected boolean readsitemap = true;
 			Debug.time("Checking Robot Allowed");
 			}
 			if (readsitemap) {
-			DataEnum.links.data.put(p.sitemapurls());
+			DataEnum.links.data.insert(p.sitemapurls());
 			}
 		links(p);
 		Debug.time("End Links");

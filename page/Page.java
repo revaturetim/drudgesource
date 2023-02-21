@@ -172,6 +172,32 @@ private int linkcount = 0;
 		}
 	return true;
 	}
+	
+	public void printRow() {
+	final int n = this.linkcount;
+	String nump = String.valueOf(n);
+		if (this.didconnect) {
+			if (this.content.isComplete()) {
+			nump = nump + "/" + nump; 
+			}
+			else {
+			nump = nump + "/?";
+			}
+		}
+		else {
+		nump = "-> <-";
+		}
+	String[] fields = new String[6];
+	fields[0] = String.valueOf(Print.cycle);
+	fields[1] = String.valueOf(DataEnum.links.data.size());
+	fields[2] = nump;
+	fields[3] = header.response;
+	fields[4] = header.contenttype;
+	fields[5] = this.toString();
+	Print.row(fields);
+	Print.cycle++;//must increment to get correct cyclecount
+	}
+
 
 	//inner classes - Header - Source 
 	final public class Header implements Serializable {

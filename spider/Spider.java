@@ -67,7 +67,7 @@ protected boolean readsitemap = true;
 			Debug.time("Removing Link");
 			}
 			else {
-			Print.row(p);
+			p.printRow();
 			}
 			/*this is for STOP debug option and nothing else*/
 			if (this.stop) {
@@ -82,11 +82,11 @@ protected boolean readsitemap = true;
 					if (response.equalsIgnoreCase("n")) continue;
 					else if (response.equalsIgnoreCase("q")) break;
 					else if (response.equalsIgnoreCase("m")) {
-						if (Print.uselessmessage == UselessMessages.NONE) {
-						Print.uselessmessage = UselessMessages.ALL;
+						if (UselessMessages.uselessmessage == UselessMessages.NONE) {
+						UselessMessages.uselessmessage = UselessMessages.ALL;
 						}
 						else {
-						Print.uselessmessage = UselessMessages.NONE;
+						UselessMessages.uselessmessage = UselessMessages.NONE;
 						}
 					}
 				}

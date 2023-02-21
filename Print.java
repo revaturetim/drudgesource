@@ -23,33 +23,7 @@ final private static String[] H = {
 	"Actual Link                                                "
 };
 
-	static public void row(final Page p) {
-	final int n = p.linkcount();
-	String nump = String.valueOf(n);
-		if (p.didConnect()) {
-			if (p.source().isComplete()) {
-			nump = nump + "/" + nump; 
-			}
-			else {
-			nump = nump + "/?";
-			}
-		}
-		else {
-		nump = "-> <-";
-		}
-	Page.Header h = p.header();
-	String[] fields = new String[6];
-	fields[0] = String.valueOf(Print.cycle);
-	fields[1] = String.valueOf(DataEnum.links.data.size());
-	fields[2] = nump;
-	fields[3] = h.response;
-	fields[4] = h.contenttype;
-	fields[5] = p.toString();
-	Print.row(fields);
-	Print.cycle++;//must increment to get correct cyclecount
-	}
-
-	public static void columnHeaders() {
+		public static void columnHeaders() {
 	Print.row(System.out, H);
 	}
 	

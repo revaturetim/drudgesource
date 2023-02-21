@@ -22,7 +22,7 @@ private Comparator compare = new TopComparator();
 	p.source().fill();
 	DataList pages = (DataList)p.getLinks();
 	Collections.sort(pages, compare);//this sorts it the way it should be sorted for this spider	
-	DataEnum.links.data.put(pages);
+	DataEnum.links.data.insert(pages);
 	}
 
 }

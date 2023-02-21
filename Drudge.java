@@ -256,7 +256,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (p != null) {
 					try {
 					p.isRobotExcluded();
-					Print.row(p);
+					p.printRow();
 					System.out.println("Yes!  " + ThisProgram.name + " is allowed");
 					}
 					catch (RobotsExcludedURLException N) {
@@ -297,7 +297,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
 				URLConnection c = p.connection();
-				Print.row(p);
+				p.printRow();
 				System.out.println("----------------Request-Fields------------------");
 				Map<String, List<String>> request = c.getRequestProperties();
 					for (Map.Entry<String, List<String>> entry: request.entrySet()) {
@@ -324,7 +324,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					DataEnum.include.data.begin();
 						try {
 						p.isIncluded();
-						Print.row(p);
+						p.printRow();
 						System.out.println(p.toString() + " is in the " + FileNames.include + " file.");	
 						}
 						catch (ExcludedURLException E) {
@@ -347,7 +347,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				p.source().fill();
 				PageFactory.getimages = true;
 				p.getLinks();//collects emails as well as links
-				Print.row(p);
+				p.printRow();
 					for (Object image : DataEnum.images.data) {
 					System.out.println(image);
 					}
@@ -394,7 +394,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (p != null) {
 				p.source().fill();
 				Data keywords = p.getKeywords();
-				Print.row(p);
+				p.printRow();
 					for (Object keyword : keywords) {
 					System.out.println(keyword);
 					}	
@@ -405,7 +405,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			//UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
-				Print.row(p);
+				p.printRow();
 				p.source().fill();
 				Data pages = p.getLinks();
 					for (Object page : pages) {
@@ -421,7 +421,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				p.source().fill();
 				PageFactory.getemails = true;
 				p.getLinks();//called because getlinks also collects emails
-				Print.row(p);
+				p.printRow();
 					for (Object email : DataEnum.emails.data) {
 					System.out.println(email);
 					}
@@ -445,7 +445,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					//successful connection
 					final long et = System.currentTimeMillis();
 					final long time = et - pt;
-					Print.row(p);
+					p.printRow();
 					System.out.print("The total time it took to connect to ");
 					System.out.print(arg[i + 1]);
 					System.out.print(" was ");
@@ -464,7 +464,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (p != null) {
 				URL roboturl = p.robotUrl();
 				Page robotpage = PageFactory.create(roboturl);
-				Print.row(p);
+				p.printRow();
 				System.out.println(robotpage.source().fill());
 				}
 			break;	
@@ -476,7 +476,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
-				Print.row(p);
+				p.printRow();
 				System.out.println(p.source().fill());
 				}
 			break;
@@ -487,7 +487,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (p != null) {
 				p.source().fill(); 
 				String title = p.getTitle();
-				Print.row(p);
+				p.printRow();
 				System.out.println(title);
 				}
 			break;
@@ -498,7 +498,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 				if (p != null) {
 					try {	
 					p.header().checkUseless();
-					Print.row(p);
+					p.printRow();
 					System.out.println(p.toString() + " is not a useless url for this program");	
 					}
 					catch (UselessURLException U) {
@@ -511,7 +511,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 			UselessMessages.uselessmessage = UselessMessages.ALL;
 			Page p = PageFactory.create(arg[i + 1]);
 				if (p != null) {
-				Print.row(p);
+				p.printRow();
 				System.out.println(p.toString() + " is a valid html file for " + ThisProgram.name);
 				}
 			break;
@@ -543,7 +543,7 @@ LOOP:		for (int i = 0; i < arg.length; i++) {
 					DataEnum.exclude.data.begin();
 						try {
 						p.isExcluded();
-						Print.row(p);
+						p.printRow();
 						System.out.println(p.toString() + " is NOT in the " + FileNames.exclude + " file.");	
 						}
 						catch (ExcludedURLException E) {

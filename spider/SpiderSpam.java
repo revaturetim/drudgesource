@@ -19,13 +19,13 @@ public class SpiderSpam extends Spider {
 	Scanner scan = new Scanner(System.in);
 	String answer = scan.next();
 		if (answer.equalsIgnoreCase("Y")) {
-		final Page victim = (Page)DataEnum.links.data.get(DataEnum.links.data.firstIndexNumber());
+		final Page victim = (Page)DataEnum.links.data.select(DataEnum.links.data.firstIndexNumber());
 			while (true) {
 			System.out.print("How many times do you want to spam " + victim.toString() + "? ");
 			final int howmanytimes = scan.nextInt();
 				for (int i = 0; i < howmanytimes; i++) {
 				this.links(victim);
-				Print.row(victim);
+				victim.printRow();
 				}
 			System.out.println("Do you wish to do that again? Y|N " );
 			String repeat = scan.next();

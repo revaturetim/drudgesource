@@ -12,7 +12,7 @@ import drudge.data.*;
 import drudge.global.*;
 
 /*this is the skeletal class of all page objects*/
-final public class Page implements Serializable {
+final public class Page implements Serializable, PrintRow {
 final static private int pagesize = 35_000;
 static public Proxy proxyserver = Proxy.NO_PROXY;
 //private variables for info about page itself which are set to the default values
@@ -141,10 +141,6 @@ private int linkcount = 0;
 	return url.toString();
 	}
 
-	public boolean didConnect() {
-	return didconnect;
-	}
-
 	public boolean isIncluded() throws ExcludedURLException {
 	P.checkIncluded(this.url, DataEnum.include.data);	
 	return true;
@@ -174,8 +170,7 @@ private int linkcount = 0;
 	}
 	
 	public void printRow() {
-	final int n = this.linkcount;
-	String nump = String.valueOf(n);
+	String nump = String.valueOf(this.linkcount);
 		if (this.didconnect) {
 			if (this.content.isComplete()) {
 			nump = nump + "/" + nump; 

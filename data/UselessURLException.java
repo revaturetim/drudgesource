@@ -1,10 +1,10 @@
 package drudge.data;
 
 import java.io.Serializable;
-import drudge.Print;
+import drudge.*;
 import drudge.page.Page;
 
-public class UselessURLException extends Exception {
+public class UselessURLException extends Exception implements PrintRow {
 protected Object object1;//this way it will cover different types of page units like page, string, or url
 protected Object object2;
 protected String message = UselessMessages.USELESS.name();

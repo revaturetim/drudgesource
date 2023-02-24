@@ -64,7 +64,7 @@ INNER:					while (true) {
 		}
 	}
 	
-	public static void stop(Class klass) {
+	public static void stop(Class<?> klass) {
 	
 		BiConsumer<String, String> thing = new BiConsumer<String, String>() {
 		
@@ -117,10 +117,10 @@ INNER:					while (true) {
 				else if (action.startsWith("call ")) {
 				String[] params = action.split(" ");
 					try {
-					Class<?>[] cs = new Class<?>[params.length - 2];
+					Class[] cs = new Class[params.length - 2];
 						for (int i = 2; i < params.length; i++) {
 							try {
-							Class<?> c = Class.forName(params[i]);
+							Class c = Class.forName(params[i]);
 							cs[i - 2] = c;
 							}
 							catch (ClassNotFoundException C) {
